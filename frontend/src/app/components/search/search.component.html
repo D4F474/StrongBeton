@@ -1,0 +1,14 @@
+<div>
+        <div class="position-relative">
+            <input 
+            #input
+            type="text"
+            class="form-control rounded-pill search-bar pe-5"
+            placeholder="Search..."
+            aria-label="Search" >
+            <button class="btn position-absolute top-50 end-0 translate-middle-y" type="button"[enterKeyHint]="doSearch(input.value)" (click)="doSearch(input.value)">
+                <i class="fa fa-search" aria-hidden="true">
+                </i>
+            </button>
+        </div>
+    </div>

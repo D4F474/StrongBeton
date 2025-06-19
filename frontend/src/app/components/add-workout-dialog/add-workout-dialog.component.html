@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <form [formGroup]="addWorkoutForm!" (ngSubmit)="onSubmit()">
+  <div class="row justify-content-center">
+    
+          <div class="container" formGroupName="workout">
+
+            <div class="col-md-6">
+              <input
+              type="text"
+              class="form-control mb-3"
+              placeholder="Тренировка"
+              formControlName ="workoutName"
+              />
+              <div *ngIf="workoutName?.invalid && (workoutName?.dirty || workoutName?.touched)" class="alert alert-danger mt-1">
+                <div *ngIf="workoutName?.errors?.['required'] || workoutName?.errors?.['notOnlyWhitespace']">
+                Моля въведете име!
+                </div>
+              </div>
+              <div *ngIf="workoutName?.errors?.['minlength']">
+                Моля въведете име!
+              </div>
+              <div class="mb-3">
+                <label for="traningDate" class="form-label">Кога тренира бате?</label>
+                <input
+                type="date"
+                id="traningDate"
+                name="traningDate"
+                class="form-control"
+                formControlName="traningDate"
+                required
+                />
+                
+                <div *ngIf="traningDate?.invalid && (traningDate?.dirty || traningDate?.touched)" class="alert alert-danger mt-1">
+                  <div *ngIf="traningDate?.errors?.['required']">
+                  Моля въведете дата!
+                  </div>
+                </div>
+
+              </div>
+              <button class="btn btn-primary w-100" type="submit" >
+                Запази
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>

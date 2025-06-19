@@ -1,0 +1,19 @@
+<header>
+  <app-navbar></app-navbar>
+</header>
+
+<div class="container">
+  <aside class="logo">
+    <app-log-in *ngIf="!isLogged()"></app-log-in>
+  <app-user-profile *ngIf="isLogged()"></app-user-profile>
+  </aside>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+
+<footer>
+  <p>&copy; 2025 Strong Beton. Всички права запазени.</p>
+</footer>

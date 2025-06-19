@@ -1,0 +1,28 @@
+
+.rounded-lg {
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .rounded-top-left {
+    border-top-left-radius: 0.5rem !important;
+  }
+  
+  .rounded-top-right {
+    border-top-right-radius: 0.5rem !important;
+  }
+  
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  thead tr {
+    background-color: #3b5998 !important;
+    color: white;
+  }
+  
+  thead th {
+    border-color: #3b5998 !important;
+    padding: 12px 8px;
+  }

@@ -1,0 +1,12 @@
+package com.strongBeton.strongBeton.service;
+
+import com.strongBeton.strongBeton.DTO.UserDTO;
+import com.strongBeton.strongBeton.dao.UserRepository;
+import com.strongBeton.strongBeton.entity.User;
+
+import java.util.List;
+
+public interface UserService {
+    public UserDTO loadUserDataByUsername(String username);
+    public List<User> allUsers();
+}

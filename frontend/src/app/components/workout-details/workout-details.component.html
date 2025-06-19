@@ -1,0 +1,79 @@
+<h1>Детайл за тренировка</h1>
+<div class="table-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Име на упражнение</th>
+        <th>Серии</th>
+        <th>Общо килограми</th>
+        <th>Мускулна група</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+
+    <tbody class="form-area">
+      <tr *ngFor="let tempWorkout of workouts | keyvalue; let i = index">
+        <td class="index">{{i + 1}}</td>
+          <td class="exercise-name">
+            <input type="text" class="set-item" [(ngModel)]="tempWorkout.key.exercise.name" (blur)="updateWorkoutDetail(tempWorkout.key)" />
+          </td>
+          
+          <!-- Sets Section -->
+          <td class="sets-section">
+            <div class="set-row header">
+              <div class="set-item">Серия</div>
+              <div class="set-item">Кг</div>
+              <div class="set-item">Повторения</div>
+            </div>
+            <tr *ngFor="let tempSet of tempWorkout.value">
+              <td>
+                <p>{{ tempSet.setNumber }}</p>
+              </td>
+              <td>
+                <input type="text" class="set-item" (keyup)="addKgOrReps(tempWorkout.key, tempSet)" [(ngModel)]="tempSet.kg" />
+              </td>
+              <td>
+                <input type="number" class="set-item" (keyup)="addKgOrReps(tempWorkout.key, tempSet)" [(ngModel)]="tempSet.reps" />
+              </td>
+            </tr>
+          </td>
+          
+          <!-- Total Weight -->
+        <p>{{ sumOfWeights(tempWorkout.value) }}</p>
+
+        <!-- Muscle Group -->
+        <td class="muscle-group">
+          <select class="form-select" (change)="changeMuscleGroup($event, tempWorkout.key)">
+            <option *ngIf=" tempWorkout?.key?.muscleGroup !== '' " [value]="tempWorkout.key.muscleGroup">
+              {{ tempWorkout.key.muscleGroup }}
+            </option>
+            
+            <option *ngFor="let muscle of muscleGroups" [value]="muscle">
+              {{ muscle }}
+            </option>
+          </select>
+        </td>
+        <!-- Actions -->
+        <td class="actions">
+          <div class="action-buttons">
+            <button class="btn-icon" (click)="addNewSet(tempWorkout.key.id)">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <button class="btn-icon" (click)="removeSet(tempWorkout.key)">
+              <i class="fa-solid fa-minus"></i>
+            </button>
+            <button class="btn-icon" (click)="removeExercise(tempWorkout.key)">
+              <i class="fa-solid fa-ban"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="add-row">
+    <button class="btn-primary" (click)="addNewExercise()">
+      <i class="fa-solid fa-plus"></i> Добави упражнение
+    </button>
+  </div>
+</div>
