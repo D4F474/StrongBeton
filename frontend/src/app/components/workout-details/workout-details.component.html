@@ -19,7 +19,6 @@
             <input type="text" class="set-item" [(ngModel)]="tempWorkout.key.exercise.name" (blur)="updateWorkoutDetail(tempWorkout.key)" />
           </td>
           
-          <!-- Sets Section -->
           <td class="sets-section">
             <div class="set-row header">
               <div class="set-item">Серия</div>
@@ -28,7 +27,7 @@
             </div>
             <tr *ngFor="let tempSet of tempWorkout.value">
               <td>
-                <p>{{ tempSet.setNumber }}</p>
+                <p class="index-item">{{ tempSet.setNumber }}</p>
               </td>
               <td>
                 <input type="text" class="set-item" (keyup)="addKgOrReps(tempWorkout.key, tempSet)" [(ngModel)]="tempSet.kg" />
@@ -39,10 +38,8 @@
             </tr>
           </td>
           
-          <!-- Total Weight -->
         <p>{{ sumOfWeights(tempWorkout.value) }}</p>
 
-        <!-- Muscle Group -->
         <td class="muscle-group">
           <select class="form-select" (change)="changeMuscleGroup($event, tempWorkout.key)">
             <option *ngIf=" tempWorkout?.key?.muscleGroup !== '' " [value]="tempWorkout.key.muscleGroup">
@@ -54,7 +51,7 @@
             </option>
           </select>
         </td>
-        <!-- Actions -->
+
         <td class="actions">
           <div class="action-buttons">
             <button class="btn-icon" (click)="addNewSet(tempWorkout.key.id)">

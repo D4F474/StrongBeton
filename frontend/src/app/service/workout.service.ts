@@ -16,9 +16,9 @@ export class WorkoutService {
   private baseUrl = 'http://localhost:8081/api';
   constructor(private httpClient: HttpClient) { }
 
-  getWorkouts(userId : number): Observable<Workout[]>{
+  getWorkouts(userId : number): Observable<Map<String,Workout[]>>{
     const Url = `${this.baseUrl}/workout/user/${userId}`;
-      return this.httpClient.get<Workout[]>(Url);
+      return this.httpClient.get<Map<String,Workout[]>>(Url);
   }
 
   saveWorkout(JSONFile : string, userId : number){
@@ -46,9 +46,9 @@ export class WorkoutService {
     return this.httpClient.post<WorkoutDetails>(Url, workoutDetailJSON);
   }
 
-  getSearchBarData(word:String, userId: number): Observable<Workout[]>{
+  getSearchBarData(word:String, userId: number): Observable<Map<String,Workout[]>>{
     const Url = `${this.baseUrl}/search/${userId}/word/${word}`;
-    return this.httpClient.get<Workout[]>(Url);
+    return this.httpClient.get<Map<String,Workout[]>>(Url);
   }
   
   updateWorkoutDetail(workoutDetailJSON: Exercise, workoutId: number){

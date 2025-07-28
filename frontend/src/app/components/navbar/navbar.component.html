@@ -1,23 +1,17 @@
-<nav>
-    <div class="nav-links">
-<svg width="150" height="31" viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg">
-  <rect width="280" height="60" fill="#3b5998"/>  
-  <g transform="translate(10, 15)">
-    <rect x="8" y="14" width="24" height="2" fill="white"/>
-    <rect x="2" y="10" width="8" height="10" rx="1" fill="white"/>
-    <rect x="4" y="8" width="4" height="14" rx="1" fill="white"/>
-    <rect x="30" y="10" width="8" height="10" rx="1" fill="white"/>
-    <rect x="32" y="8" width="4" height="14" rx="1" fill="white"/>
-  </g>
-  <text x="58" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white">STRONG</text>
-  <text x="58" y="42" font-family="Arial, sans-serif" font-size="16" font-weight="600" fill="white" letter-spacing="1px">BETON</text>
-</svg>
+<nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <strong>STRONG BETON</strong>
+      </div>
 
-      <a routerLink="/home" href="#home">Начало</a>
-      <a href="#about">За нас</a>
-      <a href="#contact">Контакти</a>
-      <a *ngIf="isLogged()" href="#workouts" routerLink="/workouts">Тренировки</a>
-      <a *ngIf="!isLogged()" href="#login" routerLink="/register-form">Стани бетон</a>
-      <a *ngIf="isLogged()" href="#login" routerLink="/home" (click)="logout()">Почивай</a>
+      <div class="nav-links">
+        <a routerLink="/home" href="#home">Начало</a>
+        <a href="#about" routerLink="/app-about-us">За нас</a>
+        <a href="#contact" routerLink="/app-help-site">Подкрепете ни</a>
+        <a *ngIf="isLogged()" href="#workouts" routerLink="/workouts">Тренировки</a>
+        <a *ngIf="!isLogged()" href="#login" routerLink="/register-form">Стани бетон</a>
+        <a *ngIf="isLogged()" href="#friends" routerLink="/app-my-friend-list">Приятели</a>
+        <a *ngIf="isLogged()" href="#login" routerLink="/home" (click)="logout()">Почивай</a>
+      </div>
     </div>
   </nav>

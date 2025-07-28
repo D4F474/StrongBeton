@@ -1,0 +1,30 @@
+
+<table class="workout-table">
+    <tr>
+        <th class="column-index">
+            #
+        </th>
+        <th>
+            Дата
+        </th>
+        <th>
+            Килограми
+        </th>
+        <th>
+            Действия
+        </th>
+    </tr>
+    <tr *ngFor="let tempWorkout of data let i = index">
+        <td class="column-index">{{i+1}}</td>
+        <td >{{tempWorkout.date}}</td>
+        <td>{{tempWorkout.total_tonnage_kg}}</td>
+        <td class="action-buttons">
+            <a class="icon-button clipboard" (click)="onclick()" routerLink="workouts/{{tempWorkout.id}}">
+                <i class="fa-regular fa-clipboard"></i>
+            </a>
+            <button class="icon-button delete" (click)="deleteWorkout(tempWorkout.id)"  title="Изтрий">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </td>
+    </tr>
+</table>

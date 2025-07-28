@@ -1,8 +1,9 @@
 package com.strongBeton.strongBeton.DTO;
 
-import com.strongBeton.strongBeton.entity.City;
+import com.strongBeton.strongBeton.entity.FriendView;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class UserDTO {
     private int id;
@@ -18,6 +19,9 @@ public class UserDTO {
     private float totalTonnageKgThisMonth;
     private int trainingCounter;
     private int trainingCounterThisMonth;
+    private String exerciseName;
+    private int mostUsedExerciseCount;
+    private List<FriendView> friends;
 
     public UserDTO() {
     }
@@ -29,7 +33,8 @@ public class UserDTO {
                    int cm,
                    float kg,
                    LocalDate born_date,
-                   String gender) {
+                   String gender,
+                   List<FriendView> friends) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,6 +43,7 @@ public class UserDTO {
         this.kg = kg;
         this.born_date = born_date;
         this.gender = gender;
+        this.friends = friends;
     }
 
     public String getUsername() {
@@ -142,6 +148,30 @@ public class UserDTO {
 
     public void setTrainingCounterThisMonth(int trainingCounterThisMonth) {
         this.trainingCounterThisMonth = trainingCounterThisMonth;
+    }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
+    }
+
+    public int getMostUsedExerciseCount() {
+        return mostUsedExerciseCount;
+    }
+
+    public void setMostUsedExerciseCount(int mostUsedExerciseCount) {
+        this.mostUsedExerciseCount = mostUsedExerciseCount;
+    }
+
+    public List<FriendView> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<FriendView> friends) {
+        this.friends = friends;
     }
 
     @Override

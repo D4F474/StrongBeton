@@ -32,8 +32,12 @@ public class Workout {
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "workout_name")
-    private String workoutName;
+
+    @ManyToOne(fetch = FetchType.LAZY,
+                cascade = {CascadeType.DETACH, CascadeType.MERGE,
+                CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "workout_template_id")
+    private WorkoutTemplate workoutTemplate;
 
     public Workout() {
     }
@@ -41,11 +45,11 @@ public class Workout {
     public Workout(User user,
                    Set<WorkoutDetails> workoutDetails,
                    LocalDate date,
-                   String workoutName) {
+                   WorkoutTemplate workoutTemplate) {
         this.user = user;
         this.workoutDetails = workoutDetails;
         this.date = date;
-        this.workoutName = workoutName;
+        this.workoutTemplate = workoutTemplate;
     }
 
     public int getId() {
@@ -80,12 +84,12 @@ public class Workout {
         this.workoutDetails = workoutDetails;
     }
 
-    public String getWorkoutName() {
-        return workoutName;
+    public WorkoutTemplate getWorkoutTemplate() {
+        return workoutTemplate;
     }
 
-    public void setWorkoutName(String workoutName) {
-        this.workoutName = workoutName;
+    public void setWorkoutTemplate(WorkoutTemplate workoutTemplate) {
+        this.workoutTemplate = workoutTemplate;
     }
 
     @Override
@@ -95,7 +99,7 @@ public class Workout {
                 ", user=" + user +
                 ", workoutDetails=" + workoutDetails +
                 ", date=" + date +
-                ", workoutName='" + workoutName + '\'' +
+                ", workoutName='" + workoutTemplate + '\'' +
                 '}';
     }
 

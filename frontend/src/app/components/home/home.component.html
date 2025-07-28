@@ -1,27 +1,31 @@
-<div class="container mt-1">
-  <h1 class="text-center mb-3">Сцепена класация!</h1>
-  <div class="text-center mb-4">
-    <i class="lead text-muted">Чувствам се силен защото съм българин!</i>
-  </div>
-  
-  <div class="table-responsive rounded-lg">
-    <table class="table table-striped table-hover table-bordered mb-0">
-      <thead>
-        <tr>
-          <th scope="col" class="text-center rounded-top-left">#</th>
-          <th scope="col">Потребител</th>
-          <th scope="col" class="text-right">Сума (кг)</th>
-          <th scope="col" class="text-center rounded-top-right">Тренировки</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of leaderBoard; let i = index">
-          <th scope="row" class="text-center">{{i+1}}</th>
-          <td class="font-weight-bold">{{user.username}}</td>
-          <td class="text-right">{{user.sumKg | number:'1.2-2'}}</td>
-          <td class="text-center">{{user.workoutCounter}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<!-- HTML Template -->
+<div class="leaderboard-card">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">Сцепена класация!</h2>
+                <p class="leaderboard-subtitle">Чувствам се силен защото съм българин!</p>
+            </div>
+
+    
+        <table class="leaderboard-table">
+            <thead class="table-header">
+                <tr class="table-row">
+                    <th class="rank-col">#</th>
+                    <th class="user-col">Потребител</th>
+                    <th class="weight-col">Сума (кг)</th>
+                    <th class="workout-col">Тренировки</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of leaderBoard; let i = index" class="table-row">
+                    <td class="rank-cell">{{i+1}}</td>
+                    <td class="username-cell">{{user.username}}</td>
+                    <td class="weight-cell">{{user.sumKg | number:'1.2-2'}}
+                        <div class="weight-progress">
+                                <div class="weight-progress-bar" style="width: 100%"></div>
+                        </div>
+                    </td>
+                    <td class="workouts-cell"><span class="workout-badge">{{user.workoutCounter}}</span></td>
+                </tr>
+            </tbody>
+        </table>
 </div>

@@ -1,10 +1,52 @@
-<div>
-    <p>Здравей нацепен: {{userData.username}}</p>
-    <i>Общо тренировки {{userData.trainingCounter}}</i>
-    <br>
-    <i>Общо тренировки за месеца {{userData.trainingCounterThisMonth}}</i>
-    <br>
-    <i>Общо килограми {{userData.totalTonnage_kg}}</i>
-    <br>
-    <i>Общо килограми за месеца {{userData.totalTonnageKgThisMonth}}</i>
-</div>
+<div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-icon">👤</div>
+                <div>
+                    <div class="profile-name">Здравей: {{userData.username}}</div>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">🏋️</span>
+                        Общо тренировки
+                    </span>
+                    <span class="stat-value stat-highlight">{{userData.trainingCounter}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">📅</span>
+                        Общо тренировки за месеца
+                    </span>
+                    <span class="stat-value">{{userData.trainingCounterThisMonth}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">⚖️</span>
+                        Общо килограми
+                    </span>
+                    <span class="stat-value">{{userData.totalTonnage_kg}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">📊</span>
+                        Общо килограми за месеца
+                    </span>
+                    <span class="stat-value">{{userData.totalTonnageKgThisMonth}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">❤️</span>
+                        Любимо упражнение
+                    </span>
+                    <span class="stat-value">{{userData.exerciseName}}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <span class="stat-icon">🔥</span>
+                        Правил си любимото си упражнение
+                    </span>
+                    <span class="stat-value">{{userData.mostUsedExerciseCount}} пъти</span>
+                </div>
+            </div>
+        </div>

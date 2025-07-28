@@ -16,13 +16,17 @@ export class HomeComponent implements OnInit {
 
   }
   
-
   ngOnInit(): void {
      this.leaderboardService.getLeaderBoard().subscribe(
       (data: Leaderboard[]) =>{
-              this.leaderBoard = data;
+        if(data != null){
+          this.leaderBoard = data;
+        }else{
+          
+        }
             }
     );
+    
     
   }
 

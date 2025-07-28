@@ -1,214 +1,195 @@
-.table-container {
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th {
-    background: #f8f9fa;
-    padding: 12px;
-    text-align: left;
-    border-bottom: 2px solid #dee2e6;
-  }
-  
-  td {
-    padding: 12px;
-    vertical-align: top;
-    border-bottom: 1px solid #dee2e6;
-  }
-  
-  .sets-section {
-    min-width: 200px;
-  }
-  
-  .set-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  
-  .set-row.header {
-    font-weight: bold;
-    margin-bottom: 12px;
-  }
-  
-  .set-item {
-    width: 100%;
-    padding: 6px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-  }
-  
-  .form-control, .form-select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-  }
-  
-  .actions {
-    min-width: 160px;
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .btn-icon {
-    padding: 8px;
-    border: none;
-    background: none;
-    color: #6c757d;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  
-  .btn-icon:hover {
-    color: #0d6efd;
-  }
-  
-  .add-row {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .btn-primary {
-    background: #0d6efd;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .total-weight {
-    font-weight: bold;
-    color: #0d6efd;
-  }
-  /* Добавяме следните медии заявители към съществуващия CSS */
+        .table-container {
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            font-family: 'Segoe UI', sans-serif;
+        }
 
-@media (max-width: 768px) {
-    .table-container {
-      padding: 10px;
-      overflow-x: auto;
-    }
-    
-    table {
-      display: block;
-      min-width: 600px;
-    }
-    
-    th, td {
-      padding: 8px;
-      font-size: 14px;
-    }
-    
-    .set-item {
-      padding: 4px;
-      font-size: 14px;
-    }
-    
-    .form-control, .form-select {
-      padding: 6px;
-      font-size: 14px;
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-      gap: 4px;
-    }
-    
-    .btn-icon {
-      padding: 6px;
-    }
-    
-    .add-row .btn-primary {
-      width: 100%;
-      padding: 12px;
-      font-size: 14px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .table-container {
-      border-radius: 0;
-      box-shadow: none;
-    }
-    
-    tr {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-    }
-    
-    td, th {
-      border: none;
-      padding: 4px;
-      width: 100%;
-    }
-    
-    .index {
-      order: -1;
-      width: 30px!important;
-      font-size: 16px;
-    }
-    
-    .exercise-name {
-      order: 0;
-      width: calc(100% - 40px)!important;
-    }
-    
-    .sets-section {
-      order: 3;
-      margin-top: 10px;
-    }
-    
-    .total-weight {
-      order: 4;
-      width: 50%!important;
-      text-align: left!important;
-    }
-    
-    .muscle-group {
-      order: 5;
-      width: 50%!important;
-    }
-    
-    .actions {
-      order: 6;
-      margin-top: 10px;
-    }
-    
-    .set-row {
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 4px;
-    }
-    
-    .set-row.header {
-      display: none;
-    }
-    
-    .action-buttons {
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    
-    .btn-icon {
-      padding: 8px;
-      background: #f8f9fa;
-      border-radius: 4px;
-      border: 1px solid #dee2e6;
-    }
-  }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+
+        th {
+            background: #f0f2f5;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .set-item {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .index-item {
+            padding: 8px 0px;
+            font-size: 14px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .set-item:focus {
+            border-color: #0066ff;
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            outline: none;
+        }
+
+        .sets-section {
+            min-width: 260px;
+        }
+
+        .set-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .set-row.header {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .set-row.header > div {
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-select {
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        .actions {
+            min-width: 140px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+
+        .btn-icon {
+            padding: 6px 8px;
+            background: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background-color: #e0e7ff;
+            color: #0a58ca;
+        }
+
+        .add-row {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background-color: #0a58ca;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0041a8;
+        }
+
+        .total-weight {
+            font-weight: bold;
+            color: #198754;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .exercise-name-cell {
+            min-width: 50px;
+        }
+
+        .index-cell {
+            text-align: center;
+            width: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .set-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-select,
+            .set-item {
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-icon {
+                width: 100%;
+                text-align: center;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .table-container {
+                padding: 16px;
+            }
+
+            th, td {
+                font-size: 13px;
+                padding: 8px;
+            }
+
+            .set-row {
+                gap: 6px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }

@@ -10,6 +10,7 @@ import { UserDetails } from '../../common/user-details';
 import { AuthService } from '../../service/auth.service';
 import { switchMap } from 'rxjs';
 import { SaveWorkout } from '../../common/save-workout';
+import { ShowWorkoutDialogComponent } from '../show-workout-dialog/show-workout-dialog.component';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { SaveWorkout } from '../../common/save-workout';
 })
 export class WorkoutListComponent implements OnInit {
   
-  workouts : Workout[] = [];
+  workouts : Map<String, Workout[]> = new Map();
   currentWorkoutId: number = 1;
   newWorkoutName: String = '';
   user!: UserDetails;
@@ -52,7 +53,7 @@ export class WorkoutListComponent implements OnInit {
     .subscribe(userData => {
       this.user = userData;
       if (this.searchMode) {
-        this.workoutService.getWorkouts(this.user.id).subscribe((data: Workout[]) => {
+        this.workoutService.getWorkouts(this.user.id).subscribe((data: Map<String,Workout[]>) => {
           this.workouts = data;
           this.findTraning();
         });
@@ -69,17 +70,12 @@ export class WorkoutListComponent implements OnInit {
   if (this.searchMode && this.wordToFind && this.wordToFind.trim() !== '') {
     const findedWorkouts = [];
     this.workoutService.getSearchBarData(this.wordToFind,this.user.id).subscribe(
-      (data: Workout[]) =>{
-        this.workouts = data;
+      (data: Map<String,Workout[]>) =>{        
+         this.workouts = new Map<String, Workout[]>(
+        Object.entries(data)
+      );
       }
     );
-    /*for (let i = 0; i < this.workouts.length; i++) {
-      if (this.workouts[i].workoutName.toLowerCase().includes(this.wordToFind.toLowerCase())) {
-        findedWorkouts.push(this.workouts[i]);
-      }
-    }
-    this.workouts = findedWorkouts;
-    */
   } else {
     this.listWorkouts();
   }
@@ -87,8 +83,10 @@ export class WorkoutListComponent implements OnInit {
 
   listWorkouts() {  
     this.workoutService.getWorkouts(this.user.id)
-    .subscribe((data: Workout[]) => {
-      this.workouts = data;
+    .subscribe((data: Map<String,Workout[]>) => {
+      this.workouts = new Map<String, Workout[]>(
+        Object.entries(data)
+      );
     });
   }
 
@@ -118,6 +116,15 @@ export class WorkoutListComponent implements OnInit {
   deleteWorkout(theId : number){
     this.workoutService.deleteWorkout(theId).subscribe();
     
+  }
+
+  openWorkoutDialog(key: String){
+    
+    const dialogRef = this.dialog.open(ShowWorkoutDialogComponent, {
+      height: '300px',
+      width:'1200px',
+      data: this.workouts.get(key)
+    });
   }
 }
 

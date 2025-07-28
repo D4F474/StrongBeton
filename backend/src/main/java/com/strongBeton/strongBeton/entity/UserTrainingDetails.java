@@ -15,19 +15,25 @@ public class UserTrainingDetails {
     private float totalTonnage_kg;
     @Column(name="tonnage_this_month_kg")
     private float totalTonnageKgThisMonth;
-    @Column(name="Counter_Trainings")
+    @Column(name="total_trainings")
     private int trainingCounter;
-    @Column(name="Counter_This_Month_Tranings")
+    @Column(name="trainings_this_month")
     private int trainingCounterThisMonth;
+    @Column(name="most_used_exercise")
+    private String exerciseName;
+    @Column(name="most_used_exercise_count")
+    private int mostUsedExerciseCount;
 
     public UserTrainingDetails() {
     }
 
-    public UserTrainingDetails(float totalTonnage_kg, float totalTonnageKgThisMonth, int trainingCounter, int trainingCounterThisMonth) {
+    public UserTrainingDetails(float totalTonnage_kg, float totalTonnageKgThisMonth, int trainingCounter, int trainingCounterThisMonth, String exerciseName, int mostUsedExerciseCount) {
         this.totalTonnage_kg = totalTonnage_kg;
         this.totalTonnageKgThisMonth = totalTonnageKgThisMonth;
         this.trainingCounter = trainingCounter;
         this.trainingCounterThisMonth = trainingCounterThisMonth;
+        this.exerciseName = exerciseName;
+        this.mostUsedExerciseCount = mostUsedExerciseCount;
     }
 
     public float getTotalTonnage_kg() {
@@ -60,5 +66,29 @@ public class UserTrainingDetails {
 
     public void setTrainingCounterThisMonth(int trainingCounterThisMonth) {
         this.trainingCounterThisMonth = trainingCounterThisMonth;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
+    }
+
+    public int getMostUsedExerciseCount() {
+        return mostUsedExerciseCount;
+    }
+
+    public void setMostUsedExerciseCount(int mostUsedExerciseCount) {
+        this.mostUsedExerciseCount = mostUsedExerciseCount;
     }
 }

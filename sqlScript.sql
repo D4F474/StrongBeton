@@ -350,3 +350,70 @@ BEGIN
         AND w.workout_name LIKE CONCAT('%', keyword, '%');
 END //
 DELIMITER ;
+
+CREATE VIEW leader_board_view AS
+SELECT 
+    ROW_NUMBER() OVER (ORDER BY SUM(wwt.total_tonnage_kg) DESC) AS id, 
+    u.username, 
+    COUNT(w.id_workout) AS workout_counter, 
+    SUM(wwt.total_tonnage_kg) AS sum_kg
+FROM workout w
+JOIN user u ON w.user_id = u.id_user,
+     workout_with_tonnage wwt
+WHERE w.user_id = u.id_user AND wwt.id_workout = w.id_workout
+GROUP BY w.user_id, u.username;
+
+DELIMITER $$
+DROP FUNCTION IF EXISTS get_current_month_start$$
+
+CREATE FUNCTION get_current_month_start()
+RETURNS DATE
+DETERMINISTIC
+BEGIN
+    RETURN DATE_FORMAT(CURDATE(), '%Y-%m-01');
+END$$
+
+DELIMITER ;
+
+CREATE OR REPLACE VIEW user_workout_summary_view AS
+SELECT 
+    u.id_user,
+    SUM(s.reps * s.kg) AS total_tonnage_kg,
+    COUNT(DISTINCT w.id_workout) AS total_trainings,
+    COALESCE(SUM(
+        CASE 
+            WHEN w.date >= get_current_month_start()
+             AND w.date < DATE_ADD(get_current_month_start(), INTERVAL 1 MONTH)
+            THEN s.reps * s.kg
+            ELSE 0
+        END
+    ), 0) AS tonnage_this_month_kg,
+    COUNT(DISTINCT 
+        CASE
+            WHEN w.date >= get_current_month_start()
+             AND w.date < DATE_ADD(get_current_month_start(), INTERVAL 1 MONTH)
+            THEN w.id_workout
+        END
+    ) AS trainings_this_month,
+    (SELECT e2.name 
+     FROM workout_details wd2
+     JOIN workout w2 ON wd2.workout_id = w2.id_workout
+     JOIN exercise e2 ON wd2.exercise_id = e2.id
+     WHERE w2.user_id = u.id_user
+     GROUP BY e2.id, e2.name
+     ORDER BY COUNT(*) DESC
+     LIMIT 1
+    ) AS most_used_exercise,
+    (SELECT COUNT(*)
+     FROM workout_details wd2
+     JOIN workout w2 ON wd2.workout_id = w2.id_workout
+     WHERE w2.user_id = u.id_user
+     GROUP BY wd2.exercise_id
+     ORDER BY COUNT(*) DESC
+     LIMIT 1
+    ) AS most_used_exercise_count
+FROM sets s
+JOIN workout_details wd ON s.workout_details_id = wd.id
+JOIN workout w ON wd.workout_id = w.id_workout
+JOIN user u ON w.user_id = u.id_user 
+GROUP BY u.id_user, u.username;

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface WorkoutRepository extends JpaRepository<Workout,Integer> {
     Optional<Workout> findByDate(LocalDate date);
-    Optional<Workout> findByWorkoutName(String name);
 
     List<Workout> findByUserId(int userId);
     @Query(value = "SELECT total_tonnage_kg FROM workout_with_tonnage WHERE id_workout = :workoutId", nativeQuery = true)

@@ -1,28 +1,220 @@
 
-.rounded-lg {
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-  
-  .rounded-top-left {
-    border-top-left-radius: 0.5rem !important;
-  }
-  
-  .rounded-top-right {
-    border-top-right-radius: 0.5rem !important;
-  }
-  
-  table {
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-  
-  thead tr {
-    background-color: #3b5998 !important;
-    color: white;
-  }
-  
-  thead th {
-    border-color: #3b5998 !important;
-    padding: 12px 8px;
-  }
+ .leaderboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .leaderboard-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .leaderboard-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .leaderboard-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #4a6fa5, #5a7fb5);
+            border-radius: 2px;
+        }
+
+        .leaderboard-subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Table */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .table-header th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-header th:first-child {
+            text-align: center;
+            width: 60px;
+        }
+
+        .table-header th:nth-child(3) {
+            text-align: right;
+        }
+
+        .table-header th:nth-child(4) {
+            text-align: center;
+            width: 120px;
+        }
+
+        .table-row {
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .table-row:hover {
+            background: linear-gradient(90deg, #f8f9fa, #f1f3f4);
+            transform: translateX(4px);
+            box-shadow: 4px 0 8px rgba(74, 111, 165, 0.1);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row td {
+            padding: 16px 12px;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .rank-cell {
+            text-align: center;
+            font-weight: 700;
+            font-size: 16px;
+            width: 60px;
+            position: relative;
+        }
+
+        .username-cell {
+            font-weight: 600;
+            color: #2c3e50;
+            position: relative;
+        }
+
+        .weight-cell {
+            text-align: right;
+            font-weight: 600;
+            color: #27ae60;
+            position: relative;
+        }
+
+        .weight-progress {
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .weight-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            border-radius: 1px;
+            transition: width 0.8s ease;
+        }
+
+        .workouts-cell {
+            text-align: center;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+.leaderboard-table tbody tr:nth-child(1) .rank-cell {
+    color: #f39c12;
+    font-weight: 700;
+}
+
+.leaderboard-table tbody tr:nth-child(1) .rank-cell::after{
+     content: '🥇';
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+}
+.leaderboard-table tbody tr:nth-child(2) .rank-cell {
+    color: #95a5a6;
+    font-weight: 700;
+}
+
+.leaderboard-table tbody tr:nth-child(2) .rank-cell::after{
+     content: '🥈';
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+}
+
+.leaderboard-table tbody tr:nth-child(3) .rank-cell {
+    color: #e67e22;
+    font-weight: 700;
+}
+
+.leaderboard-table tbody tr:nth-child(3) .rank-cell::after{
+     content: '🥉';
+            position: absolute;
+            right: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+}
+
+.workout-badge {
+            background: linear-gradient(135deg, #4a6fa5, #5a7fb5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(74, 111, 165, 0.2);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workout-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .workout-badge:hover::before {
+            left: 100%;
+        }
+
+        .workout-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(74, 111, 165, 0.3);
+        }

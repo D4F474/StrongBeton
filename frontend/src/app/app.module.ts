@@ -20,12 +20,19 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { SearchComponent } from './components/search/search.component';
 import { AddWorkoutDialogComponent } from './components/add-workout-dialog/add-workout-dialog.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ShowWorkoutDialogComponent } from './components/show-workout-dialog/show-workout-dialog.component';
+import { HelpSiteComponent } from './components/help-site/help-site.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
+import { MyFriendListComponent } from './components/my-friend-list/my-friend-list.component';
 
 
 const routes: Routes =[
   {path: 'home', component:HomeComponent},
   {path: 'workouts', component: WorkoutListComponent, canActivate:[AuthGuard]},
   {path: 'workouts/:id', component: WorkoutDetailsComponent, canActivate:[AuthGuard]},
+  {path: 'app-my-friend-list', component: MyFriendListComponent, canActivate:[AuthGuard]},
+  {path: 'app-help-site', component: HelpSiteComponent},
+  {path: 'app-about-us', component: AboutUsComponent},
   {path: 'login-form', component: LogInComponent },
   {path: 'register-form', component: RegisterComponent},
   {path: 'search/:keyword', component: WorkoutListComponent},
@@ -44,7 +51,11 @@ const routes: Routes =[
     NavbarComponent,
     SearchComponent,
     AddWorkoutDialogComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    ShowWorkoutDialogComponent,
+    MyFriendListComponent,
+    HelpSiteComponent,
+    AboutUsComponent,
   ],
   imports: [
     FormsModule,

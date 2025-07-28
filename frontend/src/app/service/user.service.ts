@@ -19,7 +19,7 @@ export class UserService  {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    
+      
     return this.httpClient.get<UserDetails>(Url, { headers });
   }
   

@@ -1,29 +1,25 @@
-<div class="login-form text-center">
-    <h3 class="text-center">Вход</h3>
+<div class="login-form">
+    <h3>Вход</h3>
     <form [formGroup]="logInForm!" (ngSubmit)="onSubmit()">
-      <div formGroupName="user">
-        <div class="mb-3">
-          <label for="username" class="form-label">Имейл</label>
-          <input type="email" class="form-control" formControlName="email" id="email" required>
-          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="alert alert-danger mt-1">
-            <div *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace'] || email?.errors?.['pattern']">
-              Моля въведете валиден имейл!
+        <div formGroupName="user">
+            <div class="form-field">
+                <label for="email">Имейл</label>
+                <input type="email" id="email" formControlName="email" required>
+                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
+                    Моля въведете валиден имейл!
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Парола</label>
-          <input type="password" class="form-control" formControlName="password" id="password" required>
-          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="alert alert-danger mt-1">
-            <div *ngIf="password?.errors?.['required'] || password?.errors?.['notOnlyWhitespace']">
-              Моля въведете парола!
+            
+            <div class="form-field">
+                <label for="password">Парола</label>
+                <input type="password" id="password" formControlName="password" required>
+                <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+                    Моля въведете парола!
+                </div>
             </div>
-          </div>
+            
+            <button type="submit" class="submit-btn">Влез</button>
         </div>
-        <div class="d-grid">
-          <button type="submit" class="btn btn-primary">Влез</button>
-        </div>
-      </div>
     </form>
-    <a routerLink="/register-form">Направете крачка към бетона</a>
-  </div>
+    <a routerLink="/register-form" class="register-link">Направете крачка към бетона</a>
+</div>

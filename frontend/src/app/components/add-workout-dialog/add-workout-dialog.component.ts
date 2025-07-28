@@ -34,8 +34,9 @@ get workoutName(){return this.addWorkoutForm?.get('workout.workoutName');}
 get traningDate(){return this.addWorkoutForm?.get('workout.traningDate');}
 
   onSubmit() {
-    let workout :SaveWorkout =  new SaveWorkout(0, new Date(this.traningDate?.value), this.workoutName?.value);
+      let workout :SaveWorkout =  new SaveWorkout(0, new Date(this.traningDate?.value), this.workoutName?.value);
+      this.dialogRef.close(workout);
     
-    this.dialogRef.close(workout);
+    
   }
 }

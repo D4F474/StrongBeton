@@ -11,5 +11,7 @@ export interface UserDetails {
     totalTonnage_kg:number,
     totalTonnageKgThisMonth:number,
     trainingCounter:number,
-    trainingCounterThisMonth:number
+    trainingCounterThisMonth:number,
+    exerciseName: string,
+    mostUsedExerciseCount : number
 }

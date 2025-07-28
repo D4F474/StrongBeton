@@ -1,276 +1,144 @@
 <div class="register-form">
-  <h3>Регистрация</h3>
-  <form [formGroup]="registerGroup!" (ngSubmit)="onSubmit()">
-    <div class="container" formGroupName="registerdto">
-      <div class="row">
-        <div class="col">
-          <div class="mb-3">
-            <label for="username" class="form-label"
-              >Название</label
-            >
-            <input
-              type="text"
-              formControlName="username"
-              class="form-control"
-              id="username"
-              name="username"
-              required
-            />
-            <div
-              *ngIf="
-                username?.invalid && (username?.dirty || username?.touched)
-              "
-              class="alert alert-danger mt-1"
-            >
-              <div
-                *ngIf="username?.errors?.['required'] || username?.errors?.['notOnlyWhitespace']"
-              >
-                Въведете вашето название!
-              </div>
-              <div *ngIf="username?.errors?.['minlength']">
-                Вашето название трябва да е поне 2 символа дълго!
-              </div>
+    <h3>Регистрация</h3>
+    <form [formGroup]="registerGroup!" (ngSubmit)="onSubmit()">
+        <div formGroupName="registerdto">
+            <div class="form-columns">
+                <!-- Лява колона -->
+                <div class="form-column">
+                    <div class="form-field">
+                        <label for="username">Название</label>
+                        <input type="text" id="username" formControlName="username" required>
+                        <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="error-message">
+                            <div *ngIf="username?.errors?.['required'] || username?.errors?.['notOnlyWhitespace']">
+                                Въведете вашето название!
+                            </div>
+                            <div *ngIf="username?.errors?.['minlength']">
+                                Вашето название трябва да е поне 2 символа дълго!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="password">Парола</label>
+                        <input type="password" id="password" formControlName="password" required>
+                        <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+                            <div *ngIf="password?.errors?.['required'] || password?.errors?.['notOnlyWhitespace']">
+                                Паролата е задължителна!
+                            </div>
+                            <div *ngIf="password?.errors?.['minlength']">
+                                Въведи нещо по-сложно! Утре ще ти хакнат акаунта...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="confirmPassword">Потвърди паролата</label>
+                        <input type="password" id="confirmPassword" formControlName="confirmPassword" required>
+                        <div *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" class="error-message">
+                            <div *ngIf="confirmPassword?.errors?.['required'] || confirmPassword?.errors?.['notOnlyWhitespace']">
+                                Въведи и тука парола!
+                            </div>
+                            <div *ngIf="confirmPassword?.errors?.['minlength']">
+                                Забрави ли я вече?
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="firstName">Име</label>
+                        <input type="text" id="firstName" formControlName="firstName" required>
+                        <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="error-message">
+                            <div *ngIf="firstName?.errors?.['required'] || firstName?.errors?.['notOnlyWhitespace']">
+                                Въведи името си!
+                            </div>
+                            <div *ngIf="firstName?.errors?.['minlength']">
+                                Въведи два символа поне даже Ян Бибиян е с два!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="lastName">Фамилия</label>
+                        <input type="text" id="lastName" formControlName="lastName" required>
+                        <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="error-message">
+                            <div *ngIf="lastName?.errors?.['required'] || lastName?.errors?.['notOnlyWhitespace']">
+                                Въведи фамилия!
+                            </div>
+                            <div *ngIf="lastName?.errors?.['minlength']">
+                                Фамилията ти трябва да е поне два символа!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email">Имейл</label>
+                        <input type="email" id="email" formControlName="email" required>
+                        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
+                            <div *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace']">
+                                Имейлът е задължителен
+                            </div>
+                            <div *ngIf="email?.errors?.['minlength']">
+                                Тва не е имейл!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дясна колона -->
+                <div class="form-column">
+                    <div class="form-field">
+                        <label for="cityName">Вашето място на обитание</label>
+                        <input type="text" id="cityName" formControlName="cityName" required>
+                        <div *ngIf="cityName?.invalid && (cityName?.dirty || cityName?.touched)" class="error-message">
+                            <div *ngIf="cityName?.errors?.['required'] || cityName?.errors?.['notOnlyWhitespace']">
+                                Моля въведете вашият град или село не делим никой!
+                            </div>
+                            <div *ngIf="cityName?.errors?.['minlength']">
+                                Перник не е една буква! Има поне 2...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="streetName">Улица</label>
+                        <input type="text" id="streetName" formControlName="streetName" required>
+                        <div *ngIf="streetName?.invalid && (streetName?.dirty || streetName?.touched)" class="error-message">
+                            <div *ngIf="streetName?.errors?.['required'] || streetName?.errors?.['notOnlyWhitespace']">
+                                Моля въведете улица!
+                            </div>
+                            <div *ngIf="streetName?.errors?.['minlength']">
+                                Улицата има повече от една буква!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cm">Височина</label>
+                        <input type="number" id="cm" formControlName="cm" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="kg">Вашите килограми</label>
+                        <input type="number" id="kg" formControlName="kg" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="bornDate">Дата на раждане</label>
+                        <input type="date" id="bornDate" formControlName="bornDate">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gender">Пол (Само 1bit ползвам)</label>
+                        <select id="gender" formControlName="gender">
+                            <option value="true">Мъжко</option>
+                            <option value="false">Женско</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label"
-              >Парола</label
-            >
-            <input
-              type="password"
-              formControlName="password"
-              class="form-control"
-              id="password"
-              name="password"
-              required
-            />
-            <div
-            *ngIf="
-              password?.invalid && (password?.dirty || password?.touched)
-            "
-            class="alert alert-danger mt-1"
-          >
-            <div
-              *ngIf="password?.errors?.['required'] || password?.errors?.['notOnlyWhitespace']"
-            >
-              Паролата е задължителна!
-            </div>
-            <div *ngIf="password?.errors?.['minlength']">
-              Въведи нещо по-сложно! Утре ще ти хакнат акаунта...
-            </div>
-          </div>
-          </div>
-          <div class="mb-3">
-            <label for="confirmPassword" class="form-label"
-              >Потвърди паролата</label
-            >
-            <input
-              type="password"
-              formControlName="confirmPassword"
-              class="form-control"
-              id="confirmPassword"
-              name="confirmPassword"
-              required
-            />
-            <div
-              *ngIf="
-                confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)
-              "
-              class="alert alert-danger mt-1"
-            >
-              <div
-                *ngIf="confirmPassword?.errors?.['required'] || confirmPassword?.errors?.['notOnlyWhitespace']"
-              >
-                Въведи и тука парола!
-              </div>
-              <div *ngIf="confirmPassword?.errors?.['minlength']">
-                Забрави ли я вече?
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="firstName" class="form-label"
-              >Име</label
-            >
-            <input
-              type="text"
-              formControlName="firstName"
-              class="form-control"
-              id="firstName"
-              name="firstName"
-              required
-            />
-            <div
-              *ngIf="
-                firstName?.invalid && (firstName?.dirty || firstName?.touched)
-              "
-              class="alert alert-danger mt-1"
-            >
-              <div
-                *ngIf="firstName?.errors?.['required'] || firstName?.errors?.['notOnlyWhitespace']"
-              >
-                Въведи името си!
-              </div>
-              <div *ngIf="firstName?.errors?.['minlength']">
-                Въведи два символа поне даже Ян Бибиян е с два!
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="lastName" class="form-label"
-              >Фамилия</label
-            >
-            <input
-              type="text"
-              formControlName="lastName"
-              class="form-control"
-              id="lastName"
-              name="lastName"
-              required
-            />
-            <div
-            *ngIf="
-              lastName?.invalid && (lastName?.dirty || lastName?.touched)
-            "
-            class="alert alert-danger mt-1"
-          >
-            <div
-              *ngIf="lastName?.errors?.['required'] || lastName?.errors?.['notOnlyWhitespace']"
-            >
-            Въведи фамилия!
-            </div>
-            <div *ngIf="lastName?.errors?.['minlength']">
-              Фамилията ти трябва да е поне два символа!
-            </div>
-          </div>
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Имейл</label>
-            <input
-              type="email"
-              formControlName="email"
-              class="form-control"
-              id="email"
-              name="email"
-              required
-            />
-            <div
-            *ngIf="
-              email?.invalid && (email?.dirty || email?.touched)
-            "
-            class="alert alert-danger mt-1"
-          >
-            <div
-              *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace']"
-            >
-            Имейлът е задължителен
-            </div>
-            <div *ngIf="email?.errors?.['minlength']">
-              Тва не е имейл!
-            </div>
-          </div>
-          </div>
+
+            <a routerLink="/login-form" class="login-link">Вече си бетониран? Влизай в акаунта!</a>
+            <button type="submit" class="submit-btn">Регистрирай се</button>
         </div>
-        <div class="col">
-          <div class="mb-3">
-            <label for="city" class="form-label">Вашето място на обитание</label>
-            <input
-              type="text"
-              formControlName="cityName"
-              class="form-control"
-              id="cityName"
-              name="cityName"
-              required
-            />
-            <div
-            *ngIf="
-              cityName?.invalid && (cityName?.dirty || cityName?.touched)
-            "
-            class="alert alert-danger mt-1"
-          >
-            <div
-              *ngIf="cityName?.errors?.['required'] || cityName?.errors?.['notOnlyWhitespace']"
-            >
-            Моля въведете вашият град или село не делим никой!
-            </div>
-            <div *ngIf="cityName?.errors?.['minlength']">
-              Перник не е една буква! Има поне 2...
-            </div>
-          </div>
-          </div>
-          <div class="mb-3">
-            <label for="street" class="form-label">Улица</label>
-            <input
-              type="text"
-              formControlName="streetName"
-              class="form-control"
-              id="streetName"
-              name="streetName"
-              required
-            />
-            <div
-            *ngIf="
-              streetName?.invalid && (streetName?.dirty || streetName?.touched)
-            "
-            class="alert alert-danger mt-1"
-          >
-            <div
-              *ngIf="streetName?.errors?.['required'] || streetName?.errors?.['notOnlyWhitespace']"
-            >
-            Моля въведете улица!
-            </div>
-            <div *ngIf="streetName?.errors?.['minlength']">
-              Улицата има повече от една буква!
-            </div>
-          </div>
-          </div>
-          <div class="mb-3">
-            <label for="height" class="form-label">Височина</label>
-            <input
-              type="number"
-              formControlName="cm"
-              class="form-control"
-              id="cm"
-              name="height"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="kg" class="form-label">Вашите килограми</label>
-            <input
-              type="number"
-              formControlName="kg"
-              class="form-control"
-              id="kg"
-              name="kg"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="street" class="form-label">Дата на раждане</label>
-            <input
-              type="date"
-              formControlName="bornDate"
-              id="bornDate"
-              name="bornDate"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="street" class="form-label"
-              >Пол (Само 1bit ползвам)</label
-            >
-            <br />
-            <select formControlName="gender" name="gender" id="gender">
-              <option value="true">Мъжко</option>
-              <option value="false">Женско</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <a routerLink="/login-form">Вече си бетониран? Влизай в акаунта!</a>
-    <div class="d-grid">
-      <button type="submit" class="btn btn-primary">Регистрирай се</button>
-    </div>
-  </form>
+    </form>
 </div>

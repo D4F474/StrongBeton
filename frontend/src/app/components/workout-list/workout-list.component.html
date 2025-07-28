@@ -1,48 +1,41 @@
-<div>
-<div class=" d-flex justify-content-center align-items-center">
-    <div>
+<div class="workout-container">
+  <div class="header-row">
+    <h1 class="workout-title">Тренировки:</h1>
+    <app-search></app-search>
+  </div>
 
-        <h1>Тренировки:</h1>
-    </div>
-    <div>
-        <app-search></app-search>
-    </div>
-</div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Име на тренировка</th>
-                <th>Дата</th>
-                <th>Обща сума КГ</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let tempWorkout of workouts">
-                <th scope="row">{{tempWorkout.id}}</th>
-                <td>{{tempWorkout.workoutName}}</td>
-                <td>
-                    {{tempWorkout.date}}
-                </td>
-                <td>
-                    {{tempWorkout.total_tonnage_kg}}
-                </td>
-                <td>
-                    <div class="action-buttons">
-                        <a routerLink = "/workouts/{{tempWorkout.id}}">
-                            <i class="fa-solid fa-dumbbell"></i>
-                        </a>
-                        <button class="btn-icon" (click)="deleteWorkout(tempWorkout.id)"><i class="fa-solid fa-x"></i></button>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+  <div class="responsive-table-wrapper">
+    <table class="workout-table">
+      <thead>
+        <tr>
+          <th class="column-index">#</th>
+          <th>Име на тренировка</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let workout of workouts | keyvalue; let i = index">
+          <td class="column-index">{{ i + 1 }}</td>
+          <td class="workout-name">
+            <a (click)="openWorkoutDialog(workout.key)" class="clickable">{{ workout.key }}</a>
+          </td>
+          <td class="action-buttons">
+            <button class="icon-button start" title="Стартирай тренировка">
+                <i class="fa-regular fa-circle-play"></i>
+            </button>
+            <a class="icon-button view" (click)="openWorkoutDialog(workout.key)" title="Виж детайли">
+              <i class="fa-solid fa-circle-info"></i>
+            </a>
+            
+          </td>
+        </tr>
+      </tbody>
     </table>
-    <div>
-        <button class="btn-primary" (click)="openAddWorkoutDialog()">
-            <i class="fa-solid fa-plus"></i> Добави тренировка
-          </button>
-    </div>
+  </div>
 
+  <div class="btn-container">
+    <button class="btn-primary" (click)="openAddWorkoutDialog()">
+      <i class="fa-solid fa-plus"></i> Добави тренировка
+    </button>
+  </div>
 </div>
