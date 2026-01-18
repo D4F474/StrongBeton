@@ -1,5 +1,5 @@
 export interface UserDetails {
-    id:number;
+    id:string;
     username: string,
     firstName: string,
     lastName: string,
@@ -13,5 +13,6 @@ export interface UserDetails {
     trainingCounter:number,
     trainingCounterThisMonth:number,
     exerciseName: string,
-    mostUsedExerciseCount : number
+    mostUsedExerciseCount : number,
+    profilePhotoUrl : string
 }

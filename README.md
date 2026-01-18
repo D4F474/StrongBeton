@@ -6,14 +6,14 @@ StrongBeton is a "workout diary" web application where each user can:
 - ---
 ## ✨ Main functionalities
 ### 🔐 User Account Management
-- ✅ Register and log into the system
-- ✅ User data is protected and accessible only by the account owner
+-  Register and log into the system
+-  User data is protected and accessible only by the account owner
 ### 🏋️‍♀️ Workout Management
-- ✅ Add new workouts after logging in
-- ✅ View a list of previous workouts
+-  Add new workouts after logging in
+-  View a list of previous workouts
 ### 🏆 Exercise Management within a Workout
-- ✅ Add one or more exercises to each workout
-- ✅ For each exercise, users can record:
+-  Add one or more exercises to each workout
+-  For each exercise, users can record:
   - Exercise name
   - Targeted muscle group
   - Repetitions and weights used
@@ -29,13 +29,13 @@ StrongBeton is a "workout diary" web application where each user can:
 ![WorkoutDetails](https://github.com/user-attachments/assets/ce9142aa-b566-480c-a524-48c15387276b)
 ---
 ## 🛠️ Technologies Used
-- ☕ Java 17
-- 🌱 Spring Boot
-- 🛡️ Spring Security
-- 🔄 REST API
-- 🗄️ MySQL + JPA/Hibernate
-- 🎨 Angular
-- 📦 Maven
+-  Java 17
+-  Spring Boot
+-  Spring Security
+-  REST API
+-  MySQL + JPA/Hibernate
+-  Angular
+-  Maven
 ---
 ## 🗃️ Database Structure
 The following diagram shows the entity relationships in the database:

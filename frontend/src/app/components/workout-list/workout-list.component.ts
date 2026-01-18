@@ -38,7 +38,11 @@ export class WorkoutListComponent implements OnInit {
   ){ }
   
   ngOnInit(): void {
-  this.route.paramMap
+	this.loadData();  
+}
+
+loadData(): void{
+this.route.paramMap
     .pipe(
       switchMap(params => {
         const searchKeyword = params.get('keyword');
@@ -93,29 +97,32 @@ export class WorkoutListComponent implements OnInit {
   
   openAddWorkoutDialog(): void {
     const dialogRef = this.dialog.open(AddWorkoutDialogComponent, {
-      height: '250px',
+      height: '300px',
       width: '350px',
     });
     
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.saveWorkout(result);
-      }
+     	if(result){
+		this.saveWorkout(result);
+	} 
+	this.loadData();
     });
+
   }
  
   saveWorkout(workout: SaveWorkout){
     console.log("I want to save workout: " + workout);
     const JSONFile = JSON.parse(JSON.stringify(workout));
-    console.log(JSONFile);
-    this.ngOnInit();
   
-  this.workoutService.saveWorkout(JSONFile, this.user.id).subscribe();
+  this.workoutService.saveWorkout(JSONFile, this.user.id).subscribe(
+  	data =>{
+		this.loadData();
+	}
+  );
   }
 
-  deleteWorkout(theId : number){
+  deleteWorkout(theId : string){
     this.workoutService.deleteWorkout(theId).subscribe();
-    
   }
 
   openWorkoutDialog(key: String){
@@ -125,7 +132,11 @@ export class WorkoutListComponent implements OnInit {
       width:'1200px',
       data: this.workouts.get(key)
     });
+	dialogRef.afterClosed().subscribe(result => {
+		this.loadData();
+	});
   }
+
 }
 
 

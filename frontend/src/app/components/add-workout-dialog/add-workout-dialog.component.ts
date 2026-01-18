@@ -22,19 +22,16 @@ export class AddWorkoutDialogComponent {
 
   ngOnInit(): void {
     this.addWorkoutForm = this.formBuilder.group({
-      workout : this.formBuilder.group({
+      
         workoutName : new FormControl('',[Validators.required,
           Validators.minLength(2), BetonValidators.notOnlyWhitespace]),
-         traningDate: new FormControl('',[Validators.required])
-        })
       });
   }
 
-get workoutName(){return this.addWorkoutForm?.get('workout.workoutName');}
-get traningDate(){return this.addWorkoutForm?.get('workout.traningDate');}
+get workoutName(){return this.addWorkoutForm?.get('workoutName');}
 
   onSubmit() {
-      let workout :SaveWorkout =  new SaveWorkout(0, new Date(this.traningDate?.value), this.workoutName?.value);
+      let workout :SaveWorkout =  new SaveWorkout(" ", this.workoutName?.value);
       this.dialogRef.close(workout);
     
     

@@ -127,7 +127,7 @@ public class AdditionalInfo {
     }
 
     public String isGender() {
-        if(gender){
+        if(!gender){
             return "Female";
         }
         return "Male";

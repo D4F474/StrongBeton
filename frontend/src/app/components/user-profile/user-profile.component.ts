@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../service/user.service';
 import { UserDetails } from '../../common/user-details';
 import { AuthService } from '../../service/auth.service';
+import { AuthState } from '../../common/auth-state';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,17 +12,16 @@ import { AuthService } from '../../service/auth.service';
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent  implements OnInit {
-    userData!:UserDetails;
-    constructor(private userService: UserService, private authService: AuthService){
 
+    userData: any; 
+    constructor(private authState: AuthState, private authService: AuthService){
+        this.userData = this.authState.user;
     }
-  ngOnInit(): void {
-     this.userService.getUser(this.authService.getToken()).subscribe(
-      data =>{
-     this.userData = data;   
-      }
-    );
-  }
 
+  ngOnInit(): void {
+       }
+  logout() : void{
+    this.authService.logout();
+  }
     
 }

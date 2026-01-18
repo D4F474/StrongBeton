@@ -1,6 +1,6 @@
 package com.strongBeton.strongBeton.entity;
 
-import com.strongBeton.strongBeton.enums.status;
+import com.strongBeton.strongBeton.enums.FriendStatus;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,12 +16,12 @@ public class FriendView {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING )
-    private status status;
+    private FriendStatus status;
 
     public FriendView() {
     }
 
-    public FriendView(String friend, com.strongBeton.strongBeton.enums.status status) {
+    public FriendView(String friend, FriendStatus status) {
         this.friend = friend;
         this.status = status;
     }
@@ -42,11 +42,11 @@ public class FriendView {
         this.friend = friend;
     }
 
-    public com.strongBeton.strongBeton.enums.status getStatus() {
+    public FriendStatus getStatus() {
         return status;
     }
 
-    public void setStatus(com.strongBeton.strongBeton.enums.status status) {
+    public void setStatus(FriendStatus status) {
         this.status = status;
     }
 

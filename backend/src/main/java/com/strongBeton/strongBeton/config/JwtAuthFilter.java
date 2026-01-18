@@ -28,7 +28,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-
     @Autowired
     public JwtAuthFilter(HandlerExceptionResolver handlerExceptionResolver,
                          JwtService jwtService,
@@ -61,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (username != null && authentication == null) {
                 System.out.println("[DEBUG] User details loaded: " +this.userDetailsService.loadUserByUsername(username).getUsername());
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username); //Тук гърми!
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

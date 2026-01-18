@@ -1,17 +1,17 @@
 package com.strongBeton.strongBeton.enums;
 
-public enum status {
-    Pending (1, "Pending"),
-    Blocked(2, "Blocked"),
-    Accepted(3, "Accepted"),
-    Response(4, "Response");
+public enum PhotoType {
+    PROFILE(0,"profile"),
+    PROGRESS(1,"progress"),
+    POST(2, "post"),
+    OTHER(3, "other");
 
-    private int value =0;
-    private final String Text;
+    private int value = 0;
+    private String Text;
 
-    private status(int value, String Text){
+    PhotoType(int value, String text) {
         this.value = value;
-        this.Text = Text;
+        Text = text;
     }
 
     public int getValue() {

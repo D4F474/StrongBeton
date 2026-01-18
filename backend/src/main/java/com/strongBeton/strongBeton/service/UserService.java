@@ -9,4 +9,5 @@ import java.util.List;
 public interface UserService {
     public UserDTO loadUserDataByUsername(String username);
     public List<User> allUsers();
+    public UserDTO findUserByUsername(String username);
 }

@@ -1,18 +1,89 @@
-<div class="main">
-  <div class="title">
-    <h1>Приятели</h1>
-  </div>
-  <div class="friendField">
-    <div class="FriendBoxes" *ngIf="haveFriends()">
-      <div class="friendBox" *ngFor="let friend of listOfFriends">
-        <img alt="avatar" class="avatar"/>
-        <br>
-        <a class="friendName">{{friend.friend}}</a>
-        <div class="buttons">
-          <button class="profileBtn">Профил</button>
-          <button class="removeBtn" (click)="removeFriend()">-</button>
+<div class="p-6">
+  <!-- Приятели секция -->
+  <section class="mb-10">
+    <h1 class="text-2xl font-bold text-gray-800 mb-3">Приятели</h1>
+    <div *ngIf="haveFriends(); else noFriends" 
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+      <!-- Карта на приятел -->
+      <div *ngFor="let friend of listOfFriends"
+           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col items-center text-center">
+        <img src="assets/avatar-placeholder.png" alt="avatar" 
+             class="w-20 h-20 rounded-full object-cover mb-3 border border-gray-200" />
+        <p class="font-semibold text-gray-800">{{ friend.friend }}</p>
+        <p class="text-gray-500 text-sm italic mb-3">Статус: {{ friend.status }}</p>
+
+        <!-- Статус: нищо -->
+        <div *ngIf="friend.status !== 'RESPONSE' && friend.status !== 'PENDING'" 
+             class="flex gap-2">
+          <button (click)="removeFriend(friend.friend)"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3 py-1 rounded-lg">
+            -
+          </button>
+          <button (click)="showDialogUserData(friend.friend)"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 rounded-lg">
+            Профил
+          </button>
+        </div>
+
+        <!-- Статус: чака отговор -->
+        <div *ngIf="friend.status === 'RESPONSE'" class="flex gap-2">
+          <button (click)="acceptFriend(friend.friend)"
+                  class="bg-green-500 hover:bg-green-600 text-white font-semibold px-3 py-1 rounded-lg">
+            <i class="fa-solid fa-circle-plus"></i>
+          </button>
+          <button (click)="declineFriend(friend.friend)"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3 py-1 rounded-lg">
+            -
+          </button>
+          <a routerLink="user-info/:{{friend.friend}}" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 rounded-lg">
+            Профил
+          </a>
+        </div>
+
+        <!-- Статус: изпратена заявка -->
+        <div *ngIf="friend.status === 'PENDING'" class="flex gap-2">
+          <button (click)="removeFriend(friend.friend)"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-3 py-1 rounded-lg">
+            -
+          </button>
+          <button (click)="showDialogUserData(friend.friend)"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 rounded-lg">
+            Профил
+          </button>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Ако няма приятели -->
+    <ng-template #noFriends>
+      <p class="text-gray-500 italic">Все още нямате приятели.</p>
+    </ng-template>
+  </section>
+
+  <!-- Може би познавате -->
+  <section>
+    <h1 class="text-2xl font-bold text-gray-800 mb-3">Може би познавате?</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div *ngFor="let user of users"
+           class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col items-center text-center">
+        <img src="assets/avatar-placeholder.png" alt="avatar" 
+             class="w-20 h-20 rounded-full object-cover mb-3 border border-gray-200" />
+        <p class="font-semibold text-gray-800">{{ user.username }}</p>
+        <p class="text-gray-500 text-sm italic mb-3">{{ user.status }}</p>
+
+        <div class="flex gap-2">
+          <a routerLink="/user-info/{{ user.username }}"
+             class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 rounded-lg">
+            Профил
+          </a>
+          <button (click)="addFreind(user.username)"
+                  class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
+            <i class="fa-solid fa-circle-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

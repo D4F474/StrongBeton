@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class WorkoutDetailsServiceImpl implements WorkoutDetailsService {
@@ -35,14 +36,13 @@ public class WorkoutDetailsServiceImpl implements WorkoutDetailsService {
 
     @Override
     @Transactional
-    public List<WorkoutDetailsDTO> findWorkoutDetailsById(int workoutId){
+    public List<WorkoutDetailsDTO> findWorkoutDetailsById(UUID workoutId){
         return workoutDetailsRepository.findByWorkoutId(workoutId)
                 .stream()
                 .map(workout -> {
                     WorkoutDetailsDTO workoutDetailsDTO = modelMapper.map(workout, WorkoutDetailsDTO.class);
                     workoutDetailsDTO.setExercise(modelMapper.map(workout.getExercise(), ExerciseDTO.class));
                     workoutDetailsDTO.setMuscleGroup(workout.getMuscleGroup().getMuscleGroupName());
-                    System.out.println(workoutDetailsDTO.getExercise());
                     return workoutDetailsDTO;
                 })
                 .toList();
@@ -68,7 +68,7 @@ public class WorkoutDetailsServiceImpl implements WorkoutDetailsService {
                 muscleGroupRepository.save(workoutDetails.getMuscleGroup());
             }
         }
-
+        System.out.println(workoutDetails);
         return modelMapper.map(workoutDetailsRepository.save(workoutDetails), WorkoutDetailsDTO.class);
     }
 

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -41,6 +42,8 @@ public class AuthServiceImpl implements AuthService {
         AdditionalInfo additionalInfo = new AdditionalInfo();
         Role role = new Role();
         //user
+        user.setId(UUID.randomUUID());
+        System.out.println(user.getId());
         user.setUsername(input.getUsername());
         user.setPassword(passswordEncoder.encode(input.getPassword()));
         user.setEmail(input.getEmail());
@@ -54,11 +57,13 @@ public class AuthServiceImpl implements AuthService {
         additionalInfo.setKg(input.getKg());
         additionalInfo.setBornDate(input.getBornDate());
         additionalInfo.setGender(input.isGender());
-
         //role
         Optional<Role> optional = this.roleRepository.findByRoleName("Beton");
         if(optional.isPresent()){
             role = optional.get();
+        }else{
+            role = new Role(0, "Beton");
+            this.roleRepository.save(role);
         }
         //addToUser
         user.setAdditionalInfo(additionalInfo);

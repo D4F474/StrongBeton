@@ -14,19 +14,21 @@ export class WorkoutService {
  
 
   private baseUrl = 'http://localhost:8081/api';
+  //private baseUrl = 'http://192.168.0.104:8081/api';
+  
   constructor(private httpClient: HttpClient) { }
 
-  getWorkouts(userId : number): Observable<Map<String,Workout[]>>{
+  getWorkouts(userId : string): Observable<Map<String,Workout[]>>{
     const Url = `${this.baseUrl}/workout/user/${userId}`;
       return this.httpClient.get<Map<String,Workout[]>>(Url);
   }
 
-  saveWorkout(JSONFile : string, userId : number){
+  saveWorkout(JSONFile : string, userId : string){
     const Url = `${this.baseUrl}/workout/${userId}`;
     return this.httpClient.post<Workout>(Url, JSONFile);    
   }
 
-  getWorkoutDetails(workoutDetailsId: number): Observable<WorkoutDetails[]>{    
+  getWorkoutDetails(workoutDetailsId: string): Observable<WorkoutDetails[]>{    
     const Url = `${this.baseUrl}/workout/workoutDetails/${workoutDetailsId}`
     return this.httpClient.get<WorkoutDetails[]>(Url);
   }
@@ -41,17 +43,17 @@ export class WorkoutService {
     return this.httpClient.get<string[]>(Url);
   }
   
-  saveWorkoutDetail(workoutDetailJSON: WorkoutDetails, workoutId : number){
+  saveWorkoutDetail(workoutDetailJSON: WorkoutDetails, workoutId : string){
     const Url = `${this.baseUrl}/workout/${workoutId}/workoutDetails`;
     return this.httpClient.post<WorkoutDetails>(Url, workoutDetailJSON);
   }
 
-  getSearchBarData(word:String, userId: number): Observable<Map<String,Workout[]>>{
+  getSearchBarData(word:String, userId: string): Observable<Map<String,Workout[]>>{
     const Url = `${this.baseUrl}/search/${userId}/word/${word}`;
     return this.httpClient.get<Map<String,Workout[]>>(Url);
   }
   
-  updateWorkoutDetail(workoutDetailJSON: Exercise, workoutId: number){
+  updateWorkoutDetail(workoutDetailJSON: Exercise, workoutId: string){
     const Url = `${this.baseUrl}/workout/${workoutId}/workoutDetails`;
     return this.httpClient.put<Exercise>(Url, workoutDetailJSON);
   }
@@ -63,9 +65,6 @@ export class WorkoutService {
 
   saveSet(setJson : Sets){
     const Url = `${this.baseUrl}/workout/newSet`
-    console.log(`${this.baseUrl}/workout/newSet`);
-    
-    console.log(setJson+ " im working bro!");
     
     return this.httpClient.post<Sets>(Url, setJson);
   }
@@ -88,7 +87,7 @@ export class WorkoutService {
     return this.httpClient.delete(Url);
   }
 
-  deleteWorkout(theId :number){
+  deleteWorkout(theId :string){
     const Url = `${this.baseUrl}/deleteWorkout/${theId}`;
     return this.httpClient.delete(Url);
   }

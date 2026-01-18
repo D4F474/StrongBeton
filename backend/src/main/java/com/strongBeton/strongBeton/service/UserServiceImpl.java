@@ -14,31 +14,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.strongBeton.strongBeton.enums.PhotoType.PROFILE;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final AdditionalInfoRepository additionalInfoRepository;
-    private final RoleRepository roleRepository;
-    private final CityRepository cityRepository;
     private final UserTrainingDetailsRepository userTrainingDetails;
-    private final FriendViewRepository friendViewRepository;
-    private final ModelMapper modelMapper;
-
+    private final CloudPhotoRepository photoRepository;
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           AdditionalInfoRepository additionalInfoRepository,
-                           RoleRepository roleRepository,
-                           CityRepository cityRepository,
                            UserTrainingDetailsRepository userTrainingDetails,
-                           FriendViewRepository friendViewRepository,
-                           ModelMapper modelMapper) {
+                           CloudPhotoRepository photoRepository) {
         this.userRepository = userRepository;
-        this.additionalInfoRepository = additionalInfoRepository;
-        this.roleRepository = roleRepository;
-        this.cityRepository = cityRepository;
         this.userTrainingDetails = userTrainingDetails;
-        this.friendViewRepository =friendViewRepository;
-        this.modelMapper = modelMapper;
+        this.photoRepository = photoRepository;
     }
 
     public UserDTO loadUserDataByUsername(String username){
@@ -57,6 +46,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setCm(user.getAdditionalInfo().getCm());
             userDTO.setCity(user.getAdditionalInfo().getCity().getCityName());
             userDTO.setGender(user.getAdditionalInfo().isGender());
+            userDTO.setProfilePhotoUrl(photoRepository.findByUserUuidAndPhotoType(user.getId(), PROFILE.toString()).get().getPhotoUrl());
             if(userTraningDataExist.isPresent()){
                 UserTrainingDetails userTrainingDetail = userTraningDataExist.get();
                 userDTO.setTotalTonnage_kg(userTrainingDetail.getTotalTonnage_kg());
@@ -66,9 +56,6 @@ public class UserServiceImpl implements UserService {
                 userDTO.setExerciseName(userTrainingDetail.getExerciseName());
                 userDTO.setMostUsedExerciseCount(userTrainingDetail.getMostUsedExerciseCount());
             }
-
-                // List<FriendView> friends = friendViewRepository.findAllFriendsVisual(user.getUsername());
-                //userDTO.setFriends(friends);
                 return userDTO;
         }
         return null;
@@ -81,5 +68,23 @@ public class UserServiceImpl implements UserService {
         userRepository.findAll().forEach(users::add);
 
         return users;
+    }
+
+    @Override
+    public UserDTO findUserByUsername(String username){
+        Optional<User> resultUser = userRepository.findByUsername(username);
+        User user = null;
+        if(resultUser.isPresent()){
+            UserDTO userDTO = new UserDTO();
+            user = resultUser.get();
+            userDTO.setUsername(user.getUsername());
+            userDTO.setCity(user.getAdditionalInfo().getCity().getCityName());
+            userDTO.setBorn_date(user.getAdditionalInfo().getBornDate());
+            userDTO.setFirstName(user.getAdditionalInfo().getFirstName());
+            userDTO.setLastName(user.getAdditionalInfo().getLastName());
+            userDTO.setGender(user.getAdditionalInfo().isGender());
+            return userDTO;
+        }
+        return null;
     }
 }

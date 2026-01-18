@@ -1,0 +1,86 @@
+<div class="flex flex-col lg:flex-row gap-6 w-full max-w-7xl mx-auto mt-8 p-4">
+  <!-- Left: User Info -->
+  <div class="w-full lg:w-1/3 bg-white rounded-2xl shadow-md border border-gray-100 p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+        <i class="fa-solid fa-user text-blue-600"></i>
+        dafata 
+      </h2>
+      <button
+        title="Settings"
+        routerLink="/user-profile-settings" 
+        class="text-gray-500 hover:text-blue-600 transition-colors"
+      >
+        <i class="fa-solid fa-gear text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Basic Info -->
+    <div class="space-y-2 text-gray-700 text-sm mb-5">
+      <p><i class="fa-solid fa-venus-mars text-blue-500 mr-2"></i> Gender: <span class="font-medium"> {{userData.gender}}</span></p>
+      <p><i class="fa-solid fa-city text-blue-500 mr-2"></i> City: <span class="font-medium"> {{userData.city}} </span></p>
+      <p><i class="fa-solid fa-cake-candles text-blue-500 mr-2"></i> Born: <span class="font-medium"> {{userData.born_date}}</span></p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 gap-3 mb-5">
+      <div class="bg-gray-50 p-3 rounded-lg text-center">
+        <p class="text-xs text-gray-500">Total KG</p>
+        <p class="text-lg font-semibold text-blue-700"> {{userData.kg}} </p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg text-center">
+        <p class="text-xs text-gray-500">This Month</p>
+        <p class="text-lg font-semibold text-blue-700"> {{userData.totalTonnageKgThisMonth}} </p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg text-center">
+        <p class="text-xs text-gray-500">Trainings</p>
+        <p class="text-lg font-semibold text-blue-700"> {{userData.trainingCounter}} </p>
+      </div>
+      <div class="bg-gray-50 p-3 rounded-lg text-center">
+        <p class="text-xs text-gray-500">For Month</p>
+        <p class="text-lg font-semibold text-blue-700"> {{userData.trainingCounterThisMonth}} </p>
+      </div>
+    </div>
+
+    <!-- Favorite Exercise -->
+    <div class="bg-blue-50 border border-blue-100 p-3 rounded-lg text-center">
+      <p class="text-xs text-gray-600">Favorite Exercise</p>
+      <p class="text-lg font-semibold text-blue-700"> {{userData.exerciseName}} </p>
+      <p class="text-xs text-gray-500">Used {{userData.mostUsedExerciseCount}} times</p>
+    </div>
+  </div>
+
+  <!-- Right: Friends & Posts -->
+  <div class="flex-1 flex flex-col gap-4">
+    <!-- Friends Bar -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
+      <h3 class="text-gray-800 font-semibold mb-3 flex items-center">
+        <i class="fa-solid fa-user-group text-blue-600 mr-2"></i> Friends
+      </h3>
+      <div class="flex overflow-x-auto gap-4 pb-2">
+        <div
+          *ngFor="let friend of listOfFriends"
+          class="flex flex-col items-center min-w-[70px]"
+          
+        >
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <p class="text-xs text-gray-700 mt-1 truncate w-[70px] text-center"> {{friend.friend}} </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts Section -->
+    <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 min-h-[400px]">
+      <h3 class="text-gray-800 font-semibold mb-4 flex items-center">
+        <i class="fa-solid fa-pencil text-blue-600 mr-2"></i>Board of activity 
+      </h3>
+      <div class="text-gray-500 text-sm italic">
+        No posts yet — start your next workout 💪
+      </div>
+      <!-- Тук по-нататък ще вържеш постовете -->
+    </div>
+  </div>
+</div>

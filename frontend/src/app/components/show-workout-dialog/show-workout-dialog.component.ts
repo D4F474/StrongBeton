@@ -6,7 +6,7 @@ import { WorkoutService } from '../../service/workout.service';
 @Component({
   selector: 'app-show-workout-dialog',
   standalone: false,
-  
+
   templateUrl: './show-workout-dialog.component.html',
   styleUrl: './show-workout-dialog.component.css'
 })
@@ -15,10 +15,10 @@ export class ShowWorkoutDialogComponent {
   constructor(public dialogRef: MatDialogRef<ShowWorkoutDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: Workout[],
        private workoutService: WorkoutService){
-        
+
       }
 
-      deleteWorkout(theId: number){
+      deleteWorkout(theId: string){
         this.workoutService.deleteWorkout(theId).subscribe();
         this.onclick();
       }

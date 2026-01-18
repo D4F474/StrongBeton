@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SetsRepository extends JpaRepository<Sets, Integer> {
-    @Query(value = "SELECT * FROM Sets WHERE workout_details_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM sets WHERE workout_details_id = ?1", nativeQuery = true)
     List<Sets> findSetsByWorkoutDetailsId(int workoutId);
 }

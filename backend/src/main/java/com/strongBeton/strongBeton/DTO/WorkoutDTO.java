@@ -4,9 +4,10 @@ import com.strongBeton.strongBeton.entity.WorkoutDetails;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 
 public class WorkoutDTO {
-    private int id;
+    private UUID id;
 
     private LocalDate date;
 
@@ -52,11 +53,11 @@ public class WorkoutDTO {
         this.workoutName = workoutName;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

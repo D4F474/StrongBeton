@@ -1,20 +1,23 @@
 package com.strongBeton.strongBeton.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="user")
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_user")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid_user")
+    private UUID id;
 
     @Column(name="username")
     private String username;
@@ -75,11 +78,11 @@ public class User implements UserDetails {
         return List.of();
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

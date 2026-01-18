@@ -3,6 +3,8 @@ package com.strongBeton.strongBeton.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "user_workout_summary_view")
 @Immutable
@@ -10,7 +12,7 @@ public class UserTrainingDetails {
 
     @Id
     @Column(name="id_user")
-    private int id;
+    private UUID id;
     @Column(name="total_tonnage_kg")
     private float totalTonnage_kg;
     @Column(name="tonnage_this_month_kg")
@@ -68,11 +70,11 @@ public class UserTrainingDetails {
         this.trainingCounterThisMonth = trainingCounterThisMonth;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

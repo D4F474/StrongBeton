@@ -24,7 +24,7 @@ export class WorkoutDetailsComponent implements OnInit {
   sets: Sets[] = [];
   sumOfWeight :number = 0;
   muscleGroups: string[] = [];  
-  workoutId: number =0;
+  workoutId:string | null = ""; 
 
   constructor(private workoutService: WorkoutService,
     private route: ActivatedRoute 
@@ -38,33 +38,35 @@ export class WorkoutDetailsComponent implements OnInit {
     })
     
     this.route.paramMap.subscribe(params => {
-      this.workoutId = Number(params.get('id'))});
-      console.log('Workout ID:', this.workoutId);
+      this.workoutId = params.get('id')});
 
   }
 
-  loadData(){
-    const theWorkoutDetailsId: number = +this.route.snapshot.paramMap.get('id')!;
-    
-    forkJoin({
-      workoutDetails: this.workoutService.getWorkoutDetails(theWorkoutDetailsId)
-    }).subscribe(results =>{
-      this.workoutDetails = results.workoutDetails;
-      
-      for(let workout of this.workoutDetails){
-        this.workoutService.getSets(workout.id).subscribe(data=>{
-          this.sets.push(...data);
-          this.groupSetsByWorkoutDetails();
-        });
-      }
-         
-    })
-      this.workoutService.getMuscleGroups().subscribe(
-        data => {
-          this.muscleGroups = data;
-        }
-      );
+ loadData() {
+  const id = this.route.snapshot.paramMap.get('id');
+    console.log(id);
+  if (!id) {
+    console.error('Workout ID is missing from URL!');
+    return;
   }
+
+  forkJoin({
+    workoutDetails: this.workoutService.getWorkoutDetails(id)
+  }).subscribe(results => {
+    this.workoutDetails = results.workoutDetails;
+
+    for (let workout of this.workoutDetails) {
+      this.workoutService.getSets(workout.id).subscribe(data => {
+        this.sets.push(...data);
+        this.groupSetsByWorkoutDetails();
+      });
+    }
+  });
+
+  this.workoutService.getMuscleGroups().subscribe(data => {
+    this.muscleGroups = data;
+  });
+}
 
   handleWorkouts(){
     this.loadData();
@@ -91,13 +93,12 @@ export class WorkoutDetailsComponent implements OnInit {
 
   addNewExercise() {
     let newWorkout = new WorkoutDetails(0, new Exercise(0, ''), '');
-
-  this.workoutService.saveWorkoutDetail(newWorkout, this.workoutId).subscribe(workout => {
+  this.workoutService.saveWorkoutDetail(newWorkout, this.workoutId!).subscribe(workout => {
     newWorkout.id = workout.id; 
 
     this.workouts.set(newWorkout, []);
 
-    let newSet = new Sets(0, 0, 0, 1, newWorkout.id);
+    let newSet = new Sets(0, 0, 0, 1, 0);
 
     this.workoutService.saveSet(newSet).subscribe(set => {
       newSet.id = set.id;
@@ -170,7 +171,7 @@ export class WorkoutDetailsComponent implements OnInit {
     const JSONWorkoutDetail = JSON.parse(JSON.stringify(workoutDetail));
     console.log(JSONWorkoutDetail);
     
-    this.workoutService.updateWorkoutDetail(JSONWorkoutDetail, this.workoutId).subscribe();
+    this.workoutService.updateWorkoutDetail(JSONWorkoutDetail, this.workoutId!).subscribe();
   }
 
   /*updateExerciseName(exercise: Exercise){
@@ -197,7 +198,7 @@ export class WorkoutDetailsComponent implements OnInit {
     workoutDetail.muscleGroup = muscleName;
     //workoutDetail.exercise.name = ;
     const JSONWorkoutDetail = JSON.parse(JSON.stringify(workoutDetail))
-    this.workoutService.updateWorkoutDetail(JSONWorkoutDetail, this.workoutId).subscribe();
+    this.workoutService.updateWorkoutDetail(JSONWorkoutDetail, this.workoutId!).subscribe();
     
   }
 }

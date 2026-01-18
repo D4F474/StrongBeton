@@ -7,13 +7,14 @@ import com.strongBeton.strongBeton.entity.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface WorkoutService {
-    WorkoutDTO save(WorkoutDTO workoutDTO, int userId);
-    Map<String,List<WorkoutDTO>> findByUserId(int userId);
-    List<WorkoutDTO> findBySearchbar(int userId, String keyword);
+    WorkoutDTO save(WorkoutDTO workoutDTO, UUID userId);
+    Map<String,List<WorkoutDTO>> findByUserId(UUID userId);
+    List<WorkoutDTO> findBySearchbar(UUID userId, String keyword);
 
-    void deleteWorkoutById(int theId);
+    void deleteWorkoutById(UUID theId);
 
 
 

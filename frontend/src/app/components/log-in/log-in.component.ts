@@ -45,10 +45,10 @@ export class LogInComponent implements OnInit {
    let logInJSON = JSON.parse(JSON.stringify(user));
     this.authService.login(logInJSON).subscribe(
       data=>{
-        console.log(data);
-        this.authService.storeToken(data);  
         this.router.navigate(['/home']);
+        
       }
+        
     );
   }
 

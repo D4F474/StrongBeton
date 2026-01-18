@@ -10,16 +10,17 @@ import { AuthService } from '../../service/auth.service';
 })
 export class NavbarComponent {
 
-  constructor(private authService: AuthService){
+    menuOpen = false;
 
+  constructor(private authService: AuthService){
+        
   }
+
 
   isLogged():boolean{
     return this.authService.isAuthenticated();
   }
 
-  logout() : void{
-    this.authService.logout();
-  }
+
 
 }

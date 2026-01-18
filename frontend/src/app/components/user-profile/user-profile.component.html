@@ -1,52 +1,55 @@
-<div class="profile-card">
-            <div class="profile-header">
-                <div class="profile-icon">👤</div>
-                <div>
-                    <div class="profile-name">Здравей: {{userData.username}}</div>
-                </div>
-            </div>
-            <div class="profile-stats">
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">🏋️</span>
-                        Общо тренировки
-                    </span>
-                    <span class="stat-value stat-highlight">{{userData.trainingCounter}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">📅</span>
-                        Общо тренировки за месеца
-                    </span>
-                    <span class="stat-value">{{userData.trainingCounterThisMonth}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">⚖️</span>
-                        Общо килограми
-                    </span>
-                    <span class="stat-value">{{userData.totalTonnage_kg}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">📊</span>
-                        Общо килограми за месеца
-                    </span>
-                    <span class="stat-value">{{userData.totalTonnageKgThisMonth}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">❤️</span>
-                        Любимо упражнение
-                    </span>
-                    <span class="stat-value">{{userData.exerciseName}}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <span class="stat-icon">🔥</span>
-                        Правил си любимото си упражнение
-                    </span>
-                    <span class="stat-value">{{userData.mostUsedExerciseCount}} пъти</span>
-                </div>
-            </div>
-        </div>
+<div *ngIf="userData() as u">
+<div class="profile-card bg-white rounded-2xl shadow-md p-5 sm:p-6 w-full max-w-md mx-auto mt-6 border border-gray-100">
+  <div class="profile-header flex items-center gap-3 mb-4">
+   <div class="w-24 h-24 rounded-full overflow-hidden border border-gray-300 shadow-sm bg-gray-100">
+        <img 
+          [src]="u.profilePhotoUrl "
+          alt="Avatar preview"
+          class="w-full h-full object-cover">
+      </div>
+    <div class="text-lg font-semibold text-gray-800">
+      Hello, <span class="text-[#3B5998]">{{ u.username }}</span>
+    </div>
+  </div>
+
+  <div class="profile-stats grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-700">
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">🏋️</span>Traning count</span>
+      <span class="text-lg font-bold text-[#3B5998]">{{ u.trainingCounter }}</span>
+    </div>
+
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">📅</span>For month</span>
+      <span class="text-lg font-bold">{{ u.trainingCounterThisMonth }}</span>
+    </div>
+
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">⚖️</span>Total KG</span>
+      <span class="text-lg font-bold text-[#3B5998]">{{ u.totalTonnage_kg }}</span>
+    </div>
+
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">📊</span>KG For Month</span>
+      <span class="text-lg font-bold">{{ u.totalTonnageKgThisMonth }}</span>
+    </div>
+
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">❤️</span>Fav Exercise</span>
+      <span class="text-lg font-bold">{{ u.exerciseName }}</span>
+    </div>
+
+    <div class="stat-item bg-gray-50 rounded-xl p-3 flex flex-col justify-between hover:bg-gray-100 transition">
+      <span class="font-medium"><span class="mr-1">🔥</span>Fav workout done</span>
+      <span class="text-lg font-bold">{{ u.mostUsedExerciseCount }} пъти</span>
+    </div>
+  </div>
+  <div class="flex space-x-7">
+    <a [routerLink]="['/user-info',u.username]" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+  Profile 
+</a>
+<button (click)= "logout()" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+  Exit 
+</button>
+  </div>
+</div>
+</div>

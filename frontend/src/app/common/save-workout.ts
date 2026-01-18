@@ -1,6 +1,5 @@
 export class SaveWorkout {
-     constructor(public id: number,
-                public date: Date,
+     constructor(public id: string,
                 public workoutName: String,
     ){
 

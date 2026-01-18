@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WorkoutListComponent } from './components/workout-list/workout-list.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { WorkoutService } from './service/workout.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule, Routes } from '@angular/router';
@@ -24,6 +24,9 @@ import { ShowWorkoutDialogComponent } from './components/show-workout-dialog/sho
 import { HelpSiteComponent } from './components/help-site/help-site.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { MyFriendListComponent } from './components/my-friend-list/my-friend-list.component';
+import { AuthInterceptor } from './auth-interceptor';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 
 const routes: Routes =[
@@ -35,6 +38,8 @@ const routes: Routes =[
   {path: 'app-about-us', component: AboutUsComponent},
   {path: 'login-form', component: LogInComponent },
   {path: 'register-form', component: RegisterComponent},
+  {path: 'user-info/:username', component: UserInfoComponent, canActivate:[AuthGuard]}, 
+  {path: 'user-profile-settings', component: SettingsComponent, canActivate:[AuthGuard]},
   {path: 'search/:keyword', component: WorkoutListComponent},
   {path:'', redirectTo: 'home', pathMatch:'full'},
   {path: '**', redirectTo: 'home', pathMatch:'full'}
@@ -56,6 +61,7 @@ const routes: Routes =[
     MyFriendListComponent,
     HelpSiteComponent,
     AboutUsComponent,
+    UserInfoComponent,
   ],
   imports: [
     FormsModule,
@@ -66,9 +72,9 @@ const routes: Routes =[
     NgbModule,
     MatDialogModule,
     MatButtonModule,
-    
+    SettingsComponent,
   ],
-  providers: [WorkoutService],
+  providers: [WorkoutService,{provide: HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

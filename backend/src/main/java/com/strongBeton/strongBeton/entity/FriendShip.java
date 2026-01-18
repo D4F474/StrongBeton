@@ -1,9 +1,11 @@
 package com.strongBeton.strongBeton.entity;
 
-import com.strongBeton.strongBeton.enums.status;
+import com.strongBeton.strongBeton.enums.FriendStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "friendship")
@@ -14,20 +16,20 @@ public class FriendShip {
     @Column(name = "id_friendship")
     private int id;
 
-    @Column(name = "user_id")
-    private int user_id;
+    @Column(name = "uuid_user", columnDefinition = "BINARY(16)")
+    private UUID user_id;
 
-    @Column(name = "friend_id")
-    private int friend_id;
+    @Column(name = "friend_uuid", columnDefinition = "BINARY(16)")
+    private UUID friend_id;
 
     @Column(name="status")
     @Enumerated(EnumType.STRING )
-    private status status;
+    private FriendStatus status;
 
     public FriendShip() {
     }
 
-    public FriendShip(int user_id, int friend_id, com.strongBeton.strongBeton.enums.status status) {
+    public FriendShip(UUID user_id, UUID friend_id, FriendStatus status) {
         this.user_id = user_id;
         this.friend_id = friend_id;
         this.status = status;
@@ -41,35 +43,35 @@ public class FriendShip {
         this.id = id;
     }
 
-    public int getUsername() {
+    public UUID getUsername() {
         return user_id;
     }
 
-    public int getUser_id() {
+    public UUID getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(UUID user_id) {
         this.user_id = user_id;
     }
 
-    public int getFriend_id() {
+    public UUID getFriend_id() {
         return friend_id;
     }
 
-    public void setFriend_id(int friend_id) {
+    public void setFriend_id(UUID friend_id) {
         this.friend_id = friend_id;
     }
 
-    public void setUsername(int user_id) {
+    public void setUsername(UUID user_id) {
         this.user_id = user_id;
     }
 
-    public com.strongBeton.strongBeton.enums.status getStatus() {
+    public FriendStatus getStatus() {
         return status;
     }
 
-    public void setStatus(com.strongBeton.strongBeton.enums.status status) {
+    public void setStatus(FriendStatus status) {
         this.status = status;
     }
 

@@ -1,17 +1,41 @@
-<nav class="navbar">
-    <div class="nav-container">
-      <div class="logo">
-        <strong>STRONG BETON</strong>
+<nav class="bg-[#3B5998] text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Лого -->
+      <div class="flex items-center space-x-2">
+        <span class="text-xl font-extrabold tracking-tight">STRONG BETON</span>
       </div>
 
-      <div class="nav-links">
-        <a routerLink="/home" href="#home">Начало</a>
-        <a href="#about" routerLink="/app-about-us">За нас</a>
-        <a href="#contact" routerLink="/app-help-site">Подкрепете ни</a>
-        <a *ngIf="isLogged()" href="#workouts" routerLink="/workouts">Тренировки</a>
-        <a *ngIf="!isLogged()" href="#login" routerLink="/register-form">Стани бетон</a>
-        <a *ngIf="isLogged()" href="#friends" routerLink="/app-my-friend-list">Приятели</a>
-        <a *ngIf="isLogged()" href="#login" routerLink="/home" (click)="logout()">Почивай</a>
+      <!-- Навигация за десктоп -->
+      <div class="hidden md:flex space-x-6">
+        <a routerLink="/home" class="hover:text-gray-200">Home</a>
+        <a routerLink="/app-help-site" class="hover:text-gray-200">Support Us</a>
+        <a *ngIf="isLogged()" routerLink="/workouts" class="hover:text-gray-200">Tranings</a>
+        <a *ngIf="!isLogged()" routerLink="/register-form" class="hover:text-gray-200">Register</a>
+        <a *ngIf="isLogged()" routerLink="/app-my-friend-list" class="hover:text-gray-200">Friends</a>
+      </div>
+
+      <div class="md:hidden">
+        <button (click)="menuOpen = !menuOpen" class="focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </div>
     </div>
-  </nav>
+  </div>
+
+  <div *ngIf="menuOpen" class="md:hidden bg-[#3B5998] border-t border-gray-600">
+    <div class="px-4 py-2 space-y-2 flex flex-col">
+      <a routerLink="/home" class="block hover:bg-[#324b81] px-3 py-2 rounded">Home</a>
+      <a routerLink="/app-help-site" class="block hover:bg-[#324b81] px-3 py-2 rounded">Support Us</a>
+      <a *ngIf="isLogged()" routerLink="/workouts" class="block hover:bg-[#324b81] px-3 py-2 rounded">Tranings</a>
+      <a *ngIf="!isLogged()" routerLink="/register-form" class="block hover:bg-[#324b81] px-3 py-2 rounded">Register</a>
+      <a *ngIf="isLogged()" routerLink="/app-my-friend-list" class="block hover:bg-[#324b81] px-3 py-2 rounded">Friends</a>
+    </div>
+  </div>
+</nav>
+

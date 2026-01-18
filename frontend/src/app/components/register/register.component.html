@@ -1,19 +1,18 @@
 <div class="register-form">
-    <h3>Регистрация</h3>
+    <h3>Sign Up</h3>
     <form [formGroup]="registerGroup!" (ngSubmit)="onSubmit()">
         <div formGroupName="registerdto">
             <div class="form-columns">
-                <!-- Лява колона -->
                 <div class="form-column">
                     <div class="form-field">
-                        <label for="username">Название</label>
+                        <label for="username">Username</label>
                         <input type="text" id="username" formControlName="username" required>
                         <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="error-message">
                             <div *ngIf="username?.errors?.['required'] || username?.errors?.['notOnlyWhitespace']">
-                                Въведете вашето название!
+                                Enter your username!
                             </div>
                             <div *ngIf="username?.errors?.['minlength']">
-                                Вашето название трябва да е поне 2 символа дълго!
+                                Your username have to be 4 symbols length!
                             </div>
                         </div>
                     </div>
@@ -23,23 +22,23 @@
                         <input type="password" id="password" formControlName="password" required>
                         <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
                             <div *ngIf="password?.errors?.['required'] || password?.errors?.['notOnlyWhitespace']">
-                                Паролата е задължителна!
+                                Password is required!
                             </div>
                             <div *ngIf="password?.errors?.['minlength']">
-                                Въведи нещо по-сложно! Утре ще ти хакнат акаунта...
+                               Enter something hard! 
                             </div>
                         </div>
                     </div>
 
                     <div class="form-field">
-                        <label for="confirmPassword">Потвърди паролата</label>
+                        <label for="confirmPassword">Confirm password</label>
                         <input type="password" id="confirmPassword" formControlName="confirmPassword" required>
                         <div *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" class="error-message">
                             <div *ngIf="confirmPassword?.errors?.['required'] || confirmPassword?.errors?.['notOnlyWhitespace']">
-                                Въведи и тука парола!
+                                Password is required!
                             </div>
                             <div *ngIf="confirmPassword?.errors?.['minlength']">
-                                Забрави ли я вече?
+                               Not Match!
                             </div>
                         </div>
                     </div>
@@ -49,36 +48,36 @@
                         <input type="text" id="firstName" formControlName="firstName" required>
                         <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="error-message">
                             <div *ngIf="firstName?.errors?.['required'] || firstName?.errors?.['notOnlyWhitespace']">
-                                Въведи името си!
+                                Enter username!
                             </div>
                             <div *ngIf="firstName?.errors?.['minlength']">
-                                Въведи два символа поне даже Ян Бибиян е с два!
+                                Enter 2 symbols minimum!
                             </div>
                         </div>
                     </div>
 
                     <div class="form-field">
-                        <label for="lastName">Фамилия</label>
+                        <label for="lastName">Lastname</label>
                         <input type="text" id="lastName" formControlName="lastName" required>
                         <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="error-message">
                             <div *ngIf="lastName?.errors?.['required'] || lastName?.errors?.['notOnlyWhitespace']">
-                                Въведи фамилия!
+                                Enter your lastname!
                             </div>
                             <div *ngIf="lastName?.errors?.['minlength']">
-                                Фамилията ти трябва да е поне два символа!
+                                Enter 2 symbols minimum!
                             </div>
                         </div>
                     </div>
 
                     <div class="form-field">
-                        <label for="email">Имейл</label>
+                        <label for="email">Email</label>
                         <input type="email" id="email" formControlName="email" required>
                         <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
                             <div *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace']">
-                                Имейлът е задължителен
+                               Email is required! 
                             </div>
                             <div *ngIf="email?.errors?.['minlength']">
-                                Тва не е имейл!
+                               Thats not a valid email! 
                             </div>
                         </div>
                     </div>
@@ -87,20 +86,20 @@
                 <!-- Дясна колона -->
                 <div class="form-column">
                     <div class="form-field">
-                        <label for="cityName">Вашето място на обитание</label>
+                        <label for="cityName">City/Village name</label>
                         <input type="text" id="cityName" formControlName="cityName" required>
                         <div *ngIf="cityName?.invalid && (cityName?.dirty || cityName?.touched)" class="error-message">
                             <div *ngIf="cityName?.errors?.['required'] || cityName?.errors?.['notOnlyWhitespace']">
-                                Моля въведете вашият град или село не делим никой!
+                                  Where do you live? 
                             </div>
                             <div *ngIf="cityName?.errors?.['minlength']">
-                                Перник не е една буква! Има поне 2...
+                               Need more than 2 symbols! 
                             </div>
                         </div>
                     </div>
 
                     <div class="form-field">
-                        <label for="streetName">Улица</label>
+                        <label for="streetName">Street</label>
                         <input type="text" id="streetName" formControlName="streetName" required>
                         <div *ngIf="streetName?.invalid && (streetName?.dirty || streetName?.touched)" class="error-message">
                             <div *ngIf="streetName?.errors?.['required'] || streetName?.errors?.['notOnlyWhitespace']">
@@ -113,32 +112,32 @@
                     </div>
 
                     <div class="form-field">
-                        <label for="cm">Височина</label>
+                        <label for="cm">Height</label>
                         <input type="number" id="cm" formControlName="cm" required>
                     </div>
 
                     <div class="form-field">
-                        <label for="kg">Вашите килограми</label>
+                        <label for="kg">Kg</label>
                         <input type="number" id="kg" formControlName="kg" required>
                     </div>
 
                     <div class="form-field">
-                        <label for="bornDate">Дата на раждане</label>
+                        <label for="bornDate">Date of birth</label>
                         <input type="date" id="bornDate" formControlName="bornDate">
                     </div>
 
                     <div class="form-field">
-                        <label for="gender">Пол (Само 1bit ползвам)</label>
+                        <label for="gender">Gender (Only 1bit)</label>
                         <select id="gender" formControlName="gender">
-                            <option value="true">Мъжко</option>
-                            <option value="false">Женско</option>
+                            <option value="true">Man</option>
+                            <option value="false">Woman</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <a routerLink="/login-form" class="login-link">Вече си бетониран? Влизай в акаунта!</a>
-            <button type="submit" class="submit-btn">Регистрирай се</button>
+            <a routerLink="/login-form" class="login-link">You have an account? Sign In!</a>
+            <button type="submit" class="submit-btn">Sign Up</button>
         </div>
     </form>
 </div>

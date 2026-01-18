@@ -144,4 +144,22 @@ public class RegisterUserDTO {
     public void setRole(String role) {
         this.role = role;
     }
+
+    @Override
+    public String toString() {
+        return "RegisterUserDTO{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", streetName='" + streetName + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", cm=" + cm +
+                ", kg=" + kg +
+                ", bornDate=" + bornDate +
+                ", gender=" + gender +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

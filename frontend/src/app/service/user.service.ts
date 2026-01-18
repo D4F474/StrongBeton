@@ -12,6 +12,7 @@ export class UserService  {
   constructor(private httpClient: HttpClient) { }
 
   private baseUrl = "http://localhost:8081/users";
+  //private baseUrl = 'http://192.168.0.104:8081/users';
 
   getUser(token: string | null) : Observable<UserDetails> {
     const Url = `${this.baseUrl}/me`;
@@ -22,6 +23,13 @@ export class UserService  {
       
     return this.httpClient.get<UserDetails>(Url, { headers });
   }
+  
+  getUserInfo(username: string) :Observable<UserDetails> {
+    const Url = `${this.baseUrl}/GetUser/${username}`;
+
+    return this.httpClient.get<UserDetails>(Url);
+  }
+
   
 
 }

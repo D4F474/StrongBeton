@@ -1,0 +1,40 @@
+*{
+ box-sizing:border-box;
+}
+
+.main-profile{
+    border:2px solid black;
+    display:flex;
+    width:100%;
+}
+
+.profile-view{
+    width:30%;
+    border:2px solid red;
+    height:100%;
+}
+
+.picture-view {
+  border: 1px solid black;
+  border-radius:50%;  
+  text-align:center;
+  height:40%;
+}
+
+.username{
+    height:20%;
+}
+
+.names{
+    display:flex;
+    height:20%;
+}
+
+.additional-info{
+    height:20%;
+}
+
+.traning-data-box{
+    width:70%;
+    border:2px solid blue; 
+}

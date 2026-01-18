@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,17 +38,17 @@ public class WorkoutServiceImpl implements WorkoutService {
 
     @Override
     @Transactional
-    public WorkoutDTO save(WorkoutDTO workoutDTO, int userId) {
+    public WorkoutDTO save(WorkoutDTO workoutDTO, UUID userId) {
         Workout workout = new Workout();
         workout.setUser(userRepository.findById(userId).get());
-        workout.setDate(workoutDTO.getDate());
+        workout.setDate(LocalDate.now());
         workout.setWorkoutTemplate(new WorkoutTemplate(workoutDTO.getWorkoutName()));
              return modelMapper.map(workoutRepository.save(workout), WorkoutDTO.class);
         }
 
     @Override
     @Transactional
-        public List<WorkoutDTO> findBySearchbar(int userId, String keyword){
+        public List<WorkoutDTO> findBySearchbar(UUID userId, String keyword){
             return workoutRepository.searchWorkoutByUser(userId, keyword)
                     .stream()
                     .map(workout ->{
@@ -60,7 +61,7 @@ public class WorkoutServiceImpl implements WorkoutService {
                     .collect(Collectors.toList());
         }
     @Override
-    public Map<String,List<WorkoutDTO>> findByUserId(int userId) {
+    public Map<String,List<WorkoutDTO>> findByUserId(UUID userId) {
         List<WorkoutDTO> dtos = workoutRepository.findByUserId(userId)
                 .stream()
                 .map(workout ->{
@@ -75,33 +76,35 @@ public class WorkoutServiceImpl implements WorkoutService {
         for(WorkoutDTO workoutDTO : dtos){
             if(!result.containsKey(workoutDTO.getWorkoutName())){
                 result.put(workoutDTO.getWorkoutName(), new ArrayList<>());
-            }else{
+            }
                 List<WorkoutDTO> updateList = result.get(workoutDTO.getWorkoutName());
                 updateList.add(workoutDTO);
                 result.put(workoutDTO.getWorkoutName(), updateList);
-            }
+
         }
         return result;
     }
-
+//TODO REDAKTIRAI TOZI METOD DA TRIE PO-DOBRE WORKOUT-A
     @Override
     @Transactional
-    public void deleteWorkoutById(int theId) {
+    public void deleteWorkoutById(UUID theId) {
+        /*
         Optional<WorkoutDetails> workoutDetails = workoutDetailsRepository.findById(theId);
         if (!workoutDetails.isPresent()){
-            List<WorkoutDetailsDTO> workoutDetailsDTO = Collections.singletonList(modelMapper.map(workoutDetails, WorkoutDetailsDTO.class));
-            for (WorkoutDetailsDTO detailsDTO :workoutDetailsDTO ) {
-                Optional<Sets> sets = this.setsRepository.findById(detailsDTO.getId());
+            List<WorkoutDetails> workoutDetailsList = workoutDetails.stream().toList();
+            for (WorkoutDetails details :workoutDetailsList) {
+                Optional<Sets> sets = this.setsRepository.findById(details.getId());
                 if(sets.isPresent()){
-                    List<SetsDTO> setsDTO = Collections.singletonList(modelMapper.map(sets.get(), SetsDTO.class));
-                for (SetsDTO set : setsDTO) {
+                    List<Sets> setsList = sets.stream().toList();
+                for (Sets set : setsList) {
                     this.setsRepository.deleteById(set.getId());
                 }
-                this.workoutDetailsRepository.deleteById(detailsDTO.getId());
+                this.workoutDetailsRepository.deleteById(details.getId());
                 }
             }
         }
 
         workoutRepository.deleteById(theId);
+         */
     }
 }

@@ -4,9 +4,10 @@ import com.strongBeton.strongBeton.entity.FriendView;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class UserDTO {
-    private int id;
+    private UUID id;
     private String username;
     private String firstName;
     private String lastName;
@@ -22,6 +23,7 @@ public class UserDTO {
     private String exerciseName;
     private int mostUsedExerciseCount;
     private List<FriendView> friends;
+    private String profilePhotoUrl;
 
     public UserDTO() {
     }
@@ -110,11 +112,11 @@ public class UserDTO {
         this.gender = gender;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -172,6 +174,14 @@ public class UserDTO {
 
     public void setFriends(List<FriendView> friends) {
         this.friends = friends;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     @Override

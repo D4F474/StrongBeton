@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -22,20 +23,20 @@ public class WorkoutDetailsRestController {
     }
 
     @GetMapping("/workout/workoutDetails/{workoutId}")
-    public ResponseEntity<List<WorkoutDetailsDTO>> findWorkoutDetailsByWorkoutId(@PathVariable int workoutId){
+    public ResponseEntity<List<WorkoutDetailsDTO>> findWorkoutDetailsByWorkoutId(@PathVariable UUID workoutId){
         return ResponseEntity.ok(workoutDetailsService.findWorkoutDetailsById(workoutId));
     }
 
     @PostMapping("/workout/{workoutId}/workoutDetails")
     public ResponseEntity<WorkoutDetailsDTO> newWorkoutDetails(@RequestBody WorkoutDetails workoutDetails,
-                                                               @PathVariable int workoutId){
+                                                               @PathVariable UUID workoutId){
         workoutDetails.setWorkoutId(workoutId);
         return ResponseEntity.ok(workoutDetailsService.saveWorkoutDetails(workoutDetails));
     }
 
     @PutMapping("/workout/{workoutId}/workoutDetails")
     public ResponseEntity<WorkoutDetailsDTO> updateWorkoutDetails(@RequestBody WorkoutDetails workoutDetails,
-                                                                  @PathVariable int workoutId){
+                                                                  @PathVariable UUID workoutId){
         workoutDetails.setWorkoutId(workoutId);
         WorkoutDetailsDTO workoutDetail = workoutDetailsService.saveWorkoutDetails(workoutDetails);
         return ResponseEntity.ok(workoutDetail);

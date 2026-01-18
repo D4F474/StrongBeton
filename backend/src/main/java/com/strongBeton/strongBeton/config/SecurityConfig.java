@@ -40,9 +40,13 @@ public class SecurityConfig {
                     .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/leaderBoard").permitAll()
+
+
+                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/users/**").authenticated()
+                        .requestMatchers("/upload").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -58,8 +62,12 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:8081", "http://localhost:4200" ));
+        configuration.setAllowedOrigins(List.of("http://localhost:8081",
+                "http://localhost:4200",
+                "http://192.168.0.104:4200",
+                "http://0.0.0.0:4200"));
         configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
         configuration.setAllowCredentials(true);
 

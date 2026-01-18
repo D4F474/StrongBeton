@@ -5,28 +5,29 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name="workout")
 public class Workout {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_workout")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name="uuid_workout")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH
     })
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_uuid")
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH
             })
-    @JoinColumn(name="workout_id")
+    @JoinColumn(name="workout_uuid")
     private Set<WorkoutDetails> workoutDetails;
 
     @Column(name = "date")
@@ -52,11 +53,11 @@ public class Workout {
         this.workoutTemplate = workoutTemplate;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -29,15 +29,12 @@ public class ApplicationConfig {
     @Bean
     UserDetailsService userDetailsService() {
         return username -> {
-            // Първо опитваме да намерим по имейл
             Optional<User> user = userRepository.findByEmail(username);
 
-            // Ако не намерим по имейл, опитваме по потребителско име
             if (user.isEmpty()) {
                 user = userRepository.findByUsername(username);
             }
 
-            // Ако все още не сме намерили, хвърляме изключение
             return user.orElseThrow(() ->
                     new UsernameNotFoundException("User not found with email or username: " + username));
         };

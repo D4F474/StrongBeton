@@ -1,19 +1,19 @@
 package com.strongBeton.strongBeton.rest;
 
 import com.strongBeton.strongBeton.DTO.UserDTO;
+import com.strongBeton.strongBeton.DTO.UserStatusDTO;
 import com.strongBeton.strongBeton.entity.FriendView;
 import com.strongBeton.strongBeton.entity.User;
 import com.strongBeton.strongBeton.service.FriendService;
 import com.strongBeton.strongBeton.service.UserService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/users")
 @CrossOrigin
@@ -30,16 +30,15 @@ public class UserController {
         this.friendService = friendService;
     }
 
-    public User getCurrentUser(){
+    public  User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         return currentUser;
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> authenticatedUser() {
-        UserDTO userDTO = userService.loadUserDataByUsername(getCurrentUser().getUsername());
-        return ResponseEntity.ok(userDTO);
+    public UserDTO getUser(){
+        return this.userService.loadUserDataByUsername(getCurrentUser().getUsername());
     }
 
 
@@ -50,30 +49,38 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/seeAllUsers")
-    public ResponseEntity<List<UserDTO>>
+    @GetMapping("/GetUser/{username}")
+    ResponseEntity<UserDTO> findDataForUser(@PathVariable("username") String username){
+        return ResponseEntity.ok(this.userService.loadUserDataByUsername(username));
+    }
+
+    @GetMapping("/ListAllUsernames")
+    public ResponseEntity<Set<UserStatusDTO>> findAllUsernames(){
+        return ResponseEntity.ok(this.friendService.getUsernames(this.getCurrentUser().getUsername()));
+    }
+
     @GetMapping("/seeAllFriends/{username}")
     public ResponseEntity<List<FriendView>> findAllFriends(@PathVariable("username") String username){
        return ResponseEntity.ok(this.friendService.getFriendsByUsername(username));
     }
 
-    @PostMapping("acceptFriendRequest/{friendId}")
-    public void acceptFriendRequest(@PathVariable("friendId") int friendId){
-        this.friendService.acceptFriend(getCurrentUser(), friendId);
+    @PostMapping("/acceptFriendRequest/{username}")
+    public void acceptFriendRequest(@PathVariable("username") String username){
+        this.friendService.acceptFriend(getCurrentUser().getId(), username);
     }
 
-    @PostMapping("inviteFriendRequest/{friendId}")
-    public void inviteFriendRequest(@PathVariable("friendId") int friendId){
-        this.friendService.sendInviteRequest(getCurrentUser(), friendId);
+    @PostMapping("/inviteFriendRequest/{username}")
+    public void inviteFriendRequest(@PathVariable("username") String username){
+        this.friendService.sendInviteRequest(getCurrentUser().getId(), username);
     }
 
-    @DeleteMapping("declineFriendRequest/{friendId}")
-    public void declineFriendRequest(@PathVariable("friendId") int friendId){
-        this.friendService.declineFriend(getCurrentUser(), friendId);
+    @DeleteMapping("/declineFriendRequest/{username}")
+    public void declineFriendRequest(@PathVariable("username") String username){
+        this.friendService.declineFriend(getCurrentUser().getId(), username);
     }
 
-    @DeleteMapping("removeFriend/{friendId}")
-    public void removeFriendRequest(@PathVariable("friendId") int friendId){
-        this.friendService.removeFriend(getCurrentUser(), friendId);
+    @DeleteMapping("/removeFriend/{username}")
+    public void removeFriendRequest(@PathVariable("username") String username){
+        this.friendService.removeFriend(getCurrentUser().getId(), username);
     }
 }

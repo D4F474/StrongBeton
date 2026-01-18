@@ -3,6 +3,7 @@ package com.strongBeton.strongBeton.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="workout_details")
@@ -26,8 +27,8 @@ public class WorkoutDetails {
     @JoinColumn(name="muscle_group_id")
     private MuscleGroup muscleGroup;
 
-    @Column(name="workout_id")
-    private int workoutId;
+    @Column(name="workout_uuid")
+    private UUID workoutId;
 
 
 
@@ -56,7 +57,7 @@ public class WorkoutDetails {
     }
 
 
-    public int getWorkoutId() {
+    public UUID getWorkoutId() {
         return workoutId;
     }
 
@@ -68,7 +69,7 @@ public class WorkoutDetails {
         this.muscleGroup = muscleGroup;
     }
 
-    public void setWorkoutId(int workoutId) {
+    public void setWorkoutId(UUID workoutId) {
         this.workoutId = workoutId;
     }
 

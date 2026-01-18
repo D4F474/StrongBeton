@@ -9,6 +9,7 @@ import { Leaderboard } from '../common/leaderboard';
 export class LeaderboardService {
 
   private baseUrl = 'http://localhost:8081/api';
+  //private baseUrl = 'http://192.168.0.104:8081/api';
     constructor(private httpClient: HttpClient) { }
 
     getLeaderBoard() : Observable<Leaderboard[]>{
