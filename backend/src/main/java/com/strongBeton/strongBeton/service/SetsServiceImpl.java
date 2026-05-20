@@ -5,6 +5,7 @@ import com.strongBeton.strongBeton.dao.SetsRepository;
 import com.strongBeton.strongBeton.entity.Sets;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.ByteBuffer;
@@ -18,6 +19,7 @@ public class SetsServiceImpl implements SetsService {
     private final ModelMapper modelMapper;
     private final SetsRepository setsRepository;
 
+    @Autowired
     public SetsServiceImpl(ModelMapper modelMapper, SetsRepository setsRepository) {
         this.modelMapper = modelMapper;
         this.setsRepository = setsRepository;

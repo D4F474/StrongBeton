@@ -40,15 +40,13 @@ public class AuthServiceImpl implements AuthService {
     public User signup(RegisterUserDTO input){
         User user = new User();
         AdditionalInfo additionalInfo = new AdditionalInfo();
-        Role role = new Role();
-        //user
-        user.setId(UUID.randomUUID());
+        Role role;
+        user.setUuid(UUID.randomUUID());
         System.out.println(user.getId());
         user.setUsername(input.getUsername());
         user.setPassword(passswordEncoder.encode(input.getPassword()));
         user.setEmail(input.getEmail());
 
-        //additional
         additionalInfo.setFirstName(input.getFirstName());
         additionalInfo.setLastName(input.getLastName());
         additionalInfo.setStreetInfo(input.getStreetName());
@@ -57,15 +55,15 @@ public class AuthServiceImpl implements AuthService {
         additionalInfo.setKg(input.getKg());
         additionalInfo.setBornDate(input.getBornDate());
         additionalInfo.setGender(input.isGender());
-        //role
+
         Optional<Role> optional = this.roleRepository.findByRoleName("Beton");
         if(optional.isPresent()){
             role = optional.get();
         }else{
-            role = new Role(0, "Beton");
+            role = new Role("Beton");
             this.roleRepository.save(role);
         }
-        //addToUser
+
         user.setAdditionalInfo(additionalInfo);
         user.setRole(role);
         return userRepository.save(user);

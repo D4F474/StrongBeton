@@ -11,16 +11,18 @@ import java.util.UUID;
 @Table(name = "friendship")
 public class FriendShip {
 
+    //TODO TUKA IMA NESHTO S GETUSERNAME PROUCHI GO
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_friendship")
     private int id;
 
-    @Column(name = "uuid_user", columnDefinition = "BINARY(16)")
-    private UUID user_id;
+    @Column(name = "user_id")
+    private int user_id;
 
-    @Column(name = "friend_uuid", columnDefinition = "BINARY(16)")
-    private UUID friend_id;
+    @Column(name = "friend_id")
+    private int friend_id;
 
     @Column(name="status")
     @Enumerated(EnumType.STRING )
@@ -29,7 +31,7 @@ public class FriendShip {
     public FriendShip() {
     }
 
-    public FriendShip(UUID user_id, UUID friend_id, FriendStatus status) {
+    public FriendShip(int user_id, int friend_id, FriendStatus status) {
         this.user_id = user_id;
         this.friend_id = friend_id;
         this.status = status;
@@ -43,27 +45,27 @@ public class FriendShip {
         this.id = id;
     }
 
-    public UUID getUsername() {
+    public int getUsername() {
         return user_id;
     }
 
-    public UUID getUser_id() {
+    public int getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(UUID user_id) {
+    public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
 
-    public UUID getFriend_id() {
+    public int getFriend_id() {
         return friend_id;
     }
 
-    public void setFriend_id(UUID friend_id) {
+    public void setFriend_id(int friend_id) {
         this.friend_id = friend_id;
     }
 
-    public void setUsername(UUID user_id) {
+    public void setUsername(int user_id) {
         this.user_id = user_id;
     }
 

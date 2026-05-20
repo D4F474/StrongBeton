@@ -20,7 +20,7 @@ public class Workout {
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH
     })
-    @JoinColumn(name="user_uuid")
+    @JoinColumn(name="user_id")
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY,
@@ -40,17 +40,22 @@ public class Workout {
     @JoinColumn(name = "workout_template_id")
     private WorkoutTemplate workoutTemplate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coach_id")
+    private Coach coach;
+
     public Workout() {
     }
 
     public Workout(User user,
                    Set<WorkoutDetails> workoutDetails,
                    LocalDate date,
-                   WorkoutTemplate workoutTemplate) {
+                   WorkoutTemplate workoutTemplate,Coach coach) {
         this.user = user;
         this.workoutDetails = workoutDetails;
         this.date = date;
         this.workoutTemplate = workoutTemplate;
+        this.coach = coach;
     }
 
     public UUID getId() {
@@ -91,6 +96,14 @@ public class Workout {
 
     public void setWorkoutTemplate(WorkoutTemplate workoutTemplate) {
         this.workoutTemplate = workoutTemplate;
+    }
+
+    public Coach getCoach() {
+        return coach;
+    }
+
+    public void setCoach(Coach coach) {
+        this.coach = coach;
     }
 
     @Override

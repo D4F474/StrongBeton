@@ -26,7 +26,6 @@ public class ExercisesServiceImpl implements ExercisesService {
         this.exerciseRepository = exerciseRepository;
         this.muscleGroupRepository = muscleGroupRepository;
         this.modelMapper = modelMapper;
-
     }
 
     @Override

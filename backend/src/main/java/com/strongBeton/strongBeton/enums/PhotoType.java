@@ -2,9 +2,8 @@ package com.strongBeton.strongBeton.enums;
 
 public enum PhotoType {
     PROFILE(0,"profile"),
-    PROGRESS(1,"progress"),
-    POST(2, "post"),
-    OTHER(3, "other");
+    CERTIFICATE(1,"certificate"),
+    OTHER(2, "other");
 
     private int value = 0;
     private String Text;

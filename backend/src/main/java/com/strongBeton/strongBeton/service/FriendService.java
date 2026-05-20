@@ -12,11 +12,11 @@ import java.util.UUID;
 @Service
 public interface FriendService {
 
-    public void sendInviteRequest(UUID userId, String username);
+    void sendInviteRequest(int userId, String username);
     List<FriendView> getFriendsByUsername(String username);
-    void acceptFriend(UUID userId, String username);
-    void declineFriend(UUID userId, String username);
-    void removeFriend(UUID userId, String username);
+    void acceptFriend(int userId, String username);
+    void declineFriend(int userId, String username);
+    void removeFriend(int userId, String username);
 
     Set<UserStatusDTO> getUsernames(String userUsername);
 }

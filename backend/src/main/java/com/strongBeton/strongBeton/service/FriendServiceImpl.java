@@ -39,12 +39,12 @@ public class FriendServiceImpl implements FriendService {
             return result.get();
         }
 
-        return null;
+        return result.orElse(Collections.emptyList());
     }
 
     @Override
-    public void sendInviteRequest(UUID userId, String username) {
-        UUID friendId;
+    public void sendInviteRequest(int userId, String username) {
+        int friendId;
         Optional<User> result = userRepository.findByUsername(username);
         if(result.isPresent()){
             friendId = result.get().getId();
@@ -56,19 +56,19 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional
-    public void acceptFriend(UUID userId, String username) {
+    public void acceptFriend(int userId, String username) {
       List<FriendShip> friends = findFriends(userId);
-      if(friends == null) {
+      if(friends.isEmpty()) {
           return;
       }
 
         Optional<User> result = userRepository.findByUsername(username);
         if(result.isPresent()) {
-            UUID friendId = result.get().getId();
+            int friendId = result.get().getId();
             for (FriendShip friend : friends) {
-                if (friend.getStatus() == RESPONSE && friend.getFriend_id().equals(friendId)) {
-                    this.friendShipRepository.acceptFriendRequest(uuidToBytes(userId), uuidToBytes(friend.getFriend_id()), ACCEPTED);
-                    this.friendShipRepository.acceptFriendRequest(uuidToBytes(friend.getFriend_id()), uuidToBytes(userId), ACCEPTED);
+                if (friend.getStatus() == RESPONSE && friend.getFriend_id() == friendId) {
+                    this.friendShipRepository.acceptFriendRequest(userId, friend.getFriend_id(), ACCEPTED);
+                    this.friendShipRepository.acceptFriendRequest(friend.getFriend_id(), userId, ACCEPTED);
                     break;
                 }
             }
@@ -76,17 +76,17 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void declineFriend(UUID userId, String username) {
+    public void declineFriend(int userId, String username) {
         List<FriendShip> friends = findFriends(userId);
-        if(friends == null) {
+        if(friends.isEmpty()) {
             return;
         }
         Optional<User> result = userRepository.findByUsername(username);
         if(result.isPresent()){
-            UUID friendId = result.get().getId();
+            int friendId = result.get().getId();
             for(FriendShip friend : friends){
                 if(friend.getStatus().getText().equals("Response")
-                        && friend.getFriend_id().equals(friendId)){
+                        && friend.getFriend_id() == friendId){
                     this.friendShipRepository.deleteById(friend.getId());
                     this.friendShipRepository.deleteFriendRequest(friend.getFriend_id(), userId);
                     break;
@@ -95,30 +95,29 @@ public class FriendServiceImpl implements FriendService {
         }
     }
 
-    private List<FriendShip> findFriends(UUID userId){
+    private List<FriendShip> findFriends(int userId){
             Optional<List<FriendShip>> friendsOptional = this.friendShipRepository.findByUserId(userId);
             if(friendsOptional.isPresent()){
                 List<FriendShip> friends = friendsOptional.get();
             return friends;
             }
-            return null;
-
+            return friendsOptional.orElse(Collections.emptyList());
     }
 
     @Override
-    public void removeFriend(UUID userId, String username) {
+    public void removeFriend(int userId, String username) {
         List<FriendShip> friends = this.findFriends(userId);
         Optional<User> result = userRepository.findByUsername(username);
         if(result.isPresent()) {
-            UUID friendId = result.get().getId();
+            int friendId = result.get().getId();
             for (FriendShip friend : friends) {
-                if (friend.getFriend_id().equals(friendId)) {
+                if (friend.getFriend_id() == friendId) {
                     this.friendShipRepository.deleteById(friend.getId());
                 }
             }
             friends = this.findFriends(friendId);
             for (FriendShip friend : friends) {
-                if (friend.getFriend_id().equals(userId)) {
+                if (friend.getFriend_id() == userId) {
                     this.friendShipRepository.deleteById(friend.getId());
                 }
             }
@@ -159,7 +158,7 @@ public class FriendServiceImpl implements FriendService {
 
             return resultOfNames;
         }
-        return null;
+        return Collections.emptySet();
     }
 
     private boolean checkIfFriendIsIncludedInFriendList(String username, List<FriendView> friendNames){
@@ -172,11 +171,4 @@ public class FriendServiceImpl implements FriendService {
         }
             return isFriend;
     }
-    public byte[] uuidToBytes(UUID uuid){
-        ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putLong(uuid.getMostSignificantBits());
-        buffer.putLong(uuid.getLeastSignificantBits());
-        return buffer.array();
-    }
-
 }

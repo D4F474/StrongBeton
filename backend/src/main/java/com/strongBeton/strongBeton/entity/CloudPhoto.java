@@ -28,7 +28,7 @@ public class CloudPhoto {
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
                      CascadeType.REFRESH})
-    @JoinColumn(name="user_uuid")
+    @JoinColumn(name="user_id")
     private User user;
 
     public UUID getId() {

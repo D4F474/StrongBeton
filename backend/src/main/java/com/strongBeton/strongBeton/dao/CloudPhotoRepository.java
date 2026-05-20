@@ -12,9 +12,9 @@ import java.util.UUID;
 public interface CloudPhotoRepository extends JpaRepository<CloudPhoto, Integer> {
 
     @Query(
-            value = "SELECT * FROM photos WHERE user_uuid = :userId AND photo_type = :photoType",
+            value = "SELECT * FROM photos WHERE user_id = :userId AND photo_type = :photoType",
             nativeQuery = true
     )
-    Optional<CloudPhoto> findByUserUuidAndPhotoType(@Param("userId") UUID userId,
+    Optional<CloudPhoto> findByUserIdAndPhotoType(@Param("userId") int userId,
                                                     @Param("photoType") String photoType);
 }

@@ -9,8 +9,10 @@ import com.strongBeton.strongBeton.service.AuthService;
 import com.strongBeton.strongBeton.service.ImageService;
 import com.strongBeton.strongBeton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,41 +30,34 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    public User getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return currentUser;
-    }
-
     @GetMapping("/getPhoto")
-    public ResponseEntity<ImageDataDTO> getPhoto() {
+    public ResponseEntity<?> getPhoto(@AuthenticationPrincipal User currentUser) {
         try {
-            System.out.println(imageService.getProfileImage(getCurrentUser().getId()));
-            return ResponseEntity.ok(imageService.getProfileImage(getCurrentUser().getId()));
+            System.out.println(imageService.getProfileImage(currentUser.getId()));
+            return ResponseEntity.ok(imageService.getProfileImage(currentUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cant find this photo!");
         }
     }
 
     @PutMapping("/updatePhoto")
-    public ResponseEntity<Map> updatePhoto(ImageModel imageModel){
+    public ResponseEntity<?> updatePhoto(ImageModel imageModel,@AuthenticationPrincipal User currentUser){
         try {
-            return imageService.uploadImage(imageModel, getCurrentUser());
+            return imageService.uploadImage(imageModel, currentUser);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cant upload this photo!");
         }
     }
 
-
     @PostMapping("/uploadPhoto")
-    public ResponseEntity<Map> upload(ImageModel imageModel) {
+    public ResponseEntity<?> upload(ImageModel imageModel, @AuthenticationPrincipal User currentUser) {
         try {
-            return imageService.uploadImage(imageModel, getCurrentUser());
+            return imageService.uploadImage(imageModel, currentUser);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cant update this photo!");
         }
     }
 }

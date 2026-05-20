@@ -36,47 +36,55 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public ResponseEntity<Map> uploadImage(ImageModel imageModel, User user) {
         try {
-            if (imageModel.getName().isEmpty()) {
-                return ResponseEntity.badRequest().build();
+            if (imageModel == null || imageModel.getName() == null || imageModel.getName().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Името на снимката липсва!"));
             }
-            if (imageModel.getFile().isEmpty()) {
-                return ResponseEntity.badRequest().build();
-            }
-            Optional<CloudPhoto> profileImage = cloudPhotoRepository.findByUserUuidAndPhotoType(user.getId(), PROFILE.getText());
-
-            if (profileImage.isPresent()) {
-                profileImage.get().setPhotoUrl(cloudinaryService.uploadFile(imageModel.getFile(), "folder_1"));
-            }else{
-                profileImage.get().setId(UUID.randomUUID());
-                profileImage.get().setPhotoUrl(cloudinaryService.uploadFile(imageModel.getFile(), "folder_1"));
-                profileImage.get().setUploadedAt(LocalDateTime.now());
-                profileImage.get().setActive(true);
-                profileImage.get().setPhoto(PROFILE);
-                profileImage.get().setUser(user);
-                profileImage.get().setDescription("Fix me in code service uploadImage!!!");
-                if (profileImage.get().getPhotoUrl() == null) {
-                    return ResponseEntity.badRequest().build();
-                }
-                cloudPhotoRepository.save(profileImage.get());
+            if (imageModel.getFile() == null || imageModel.getFile().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Файлът липсва!"));
             }
 
-            return ResponseEntity.ok().body(Map.of("url", profileImage.get().getPhotoUrl()));
+            Optional<CloudPhoto> profileImageOpt = cloudPhotoRepository.findByUserIdAndPhotoType(user.getId(), PROFILE.getText());
+
+            CloudPhoto cloudPhoto;
+
+            if (profileImageOpt.isPresent()) {
+                cloudPhoto = profileImageOpt.get();
+            } else {
+                cloudPhoto = new CloudPhoto();
+                cloudPhoto.setId(UUID.randomUUID());
+                cloudPhoto.setUploadedAt(LocalDateTime.now());
+                cloudPhoto.setActive(true);
+                cloudPhoto.setPhoto(PROFILE);
+                cloudPhoto.setUser(user);
+                cloudPhoto.setDescription("Profile image uploaded via API");
+            }
+
+            String uploadedUrl = cloudinaryService.uploadFile(imageModel.getFile(), "folder_1");
+
+            if (uploadedUrl == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Грешка при качване в Cloudinary"));
+            }
+
+            cloudPhoto.setPhotoUrl(uploadedUrl);
+            cloudPhotoRepository.save(cloudPhoto);
+
+            return ResponseEntity.ok().body(Map.of("url", cloudPhoto.getPhotoUrl()));
+
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ResponseEntity.internalServerError().body(Map.of("error", "Възникна грешка: " + e.getMessage()));
         }
     }
 
     @Override
-    public ImageDataDTO getProfileImage(UUID userId) {
-        Optional<CloudPhoto> cloudPhoto = cloudPhotoRepository.findByUserUuidAndPhotoType(userId, PROFILE.getText());
-        ImageDataDTO imageDataDTO = new ImageDataDTO();
-        if(cloudPhoto.isPresent()){
-            imageDataDTO.setPhotoUrl(cloudPhoto.get().getPhotoUrl());
-            imageDataDTO.setPhoto(cloudPhoto.get().getPhoto().getText());
-            imageDataDTO.setDescription(cloudPhoto.get().getDescription());
-            System.out.println("FROM DTO: " + imageDataDTO);
-        }
-        return imageDataDTO;
+    public Optional<ImageDataDTO> getProfileImage(int userId) {
+        return cloudPhotoRepository.findByUserIdAndPhotoType(userId, PROFILE.getText())
+                .map(photo -> {
+                    ImageDataDTO dto = new ImageDataDTO();
+                    dto.setPhotoUrl(photo.getPhotoUrl());
+                    dto.setPhoto(photo.getPhoto().getText());
+                    dto.setDescription(photo.getDescription());
+                    return dto;
+                });
     }
 }

@@ -15,9 +15,12 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
     @Column(name = "uuid_user")
-    private UUID id;
+    private UUID uuid;
 
     @Column(name="username")
     private String username;
@@ -42,15 +45,24 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH
+            })
+    @JoinColumn(name="coach_id")
+    private Coach coach;
+
     public User() {
     }
 
-    public User(String username, String password, AdditionalInfo additionalInfo, Role role, String email) {
+    public User(String username, String password, AdditionalInfo additionalInfo,
+                Role role, String email, Coach coach) {
         this.username = username;
         this.password = password;
         this.additionalInfo = additionalInfo;
         this.role = role;
         this.email = email;
+        this.coach = coach;
     }
 
     @Override
@@ -78,11 +90,11 @@ public class User implements UserDetails {
         return List.of();
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -124,6 +136,22 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public Coach getCoach() {
+        return coach;
+    }
+
+    public void setCoach(Coach coach) {
+        this.coach = coach;
     }
 
     @Override

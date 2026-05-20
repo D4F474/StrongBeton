@@ -14,7 +14,6 @@ public class WorkoutDetails {
     @Column(name = "id")
     private int id;
 
-    //TODO Have to change it to LAZY
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH})

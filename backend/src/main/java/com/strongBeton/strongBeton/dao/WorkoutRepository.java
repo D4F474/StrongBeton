@@ -14,12 +14,7 @@ import java.util.UUID;
 public interface WorkoutRepository extends JpaRepository<Workout, UUID> {
     Optional<Workout> findByDate(LocalDate date);
 
-    List<Workout> findByUserId(UUID userId);
+    List<Workout> findByUserId(int userId);
     @Query(value = "SELECT total_tonnage_kg FROM workout_with_tonnage WHERE id_workout = :workoutId", nativeQuery = true)
     Double getTonnageForWorkout(@Param("workoutId") UUID workoutId);
-
-    @Procedure("search_workouts_by_user")
-    List<Workout> searchWorkoutByUser( UUID userId,String keyword);
-
-
 }

@@ -12,7 +12,7 @@ public class UserTrainingDetails {
 
     @Id
     @Column(name="id_user")
-    private UUID id;
+    private int id;
     @Column(name="total_tonnage_kg")
     private float totalTonnage_kg;
     @Column(name="tonnage_this_month_kg")
@@ -70,11 +70,11 @@ public class UserTrainingDetails {
         this.trainingCounterThisMonth = trainingCounterThisMonth;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 

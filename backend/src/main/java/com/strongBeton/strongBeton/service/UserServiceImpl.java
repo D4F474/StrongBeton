@@ -5,6 +5,7 @@ import com.strongBeton.strongBeton.dao.*;
 import com.strongBeton.strongBeton.entity.FriendView;
 import com.strongBeton.strongBeton.entity.User;
 import com.strongBeton.strongBeton.entity.UserTrainingDetails;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,14 +31,11 @@ public class UserServiceImpl implements UserService {
         this.photoRepository = photoRepository;
     }
 
-    public UserDTO loadUserDataByUsername(String username){
-        Optional<User> userExist = userRepository.findByUsername(username);
-        User user = null;
-        if(userExist.isPresent()){
-            user = userExist.get();
+    public UserDTO loadUserDataByEmail(String email){
+            User user = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("No such user"));
             Optional<UserTrainingDetails> userTraningDataExist = userTrainingDetails.findById(user.getId());
             UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
+            userDTO.setId(user.getUuid());
             userDTO.setUsername(user.getUsername());
             userDTO.setFirstName(user.getAdditionalInfo().getFirstName());
             userDTO.setLastName(user.getAdditionalInfo().getLastName());
@@ -46,19 +44,19 @@ public class UserServiceImpl implements UserService {
             userDTO.setCm(user.getAdditionalInfo().getCm());
             userDTO.setCity(user.getAdditionalInfo().getCity().getCityName());
             userDTO.setGender(user.getAdditionalInfo().isGender());
-            userDTO.setProfilePhotoUrl(photoRepository.findByUserUuidAndPhotoType(user.getId(), PROFILE.toString()).get().getPhotoUrl());
-            if(userTraningDataExist.isPresent()){
-                UserTrainingDetails userTrainingDetail = userTraningDataExist.get();
-                userDTO.setTotalTonnage_kg(userTrainingDetail.getTotalTonnage_kg());
-                userDTO.setTotalTonnageKgThisMonth(userTrainingDetail.getTotalTonnageKgThisMonth());
-                userDTO.setTrainingCounter(userTrainingDetail.getTrainingCounter());
-                userDTO.setTrainingCounterThisMonth(userTrainingDetail.getTrainingCounterThisMonth());
-                userDTO.setExerciseName(userTrainingDetail.getExerciseName());
-                userDTO.setMostUsedExerciseCount(userTrainingDetail.getMostUsedExerciseCount());
-            }
-                return userDTO;
-        }
-        return null;
+            photoRepository.findByUserIdAndPhotoType(user.getId(), PROFILE.toString())
+                    .ifPresent(photo -> userDTO.setProfilePhotoUrl(photo.getPhotoUrl()));
+
+        userTraningDataExist.ifPresent(userTrainingDetail -> {
+            userDTO.setTotalTonnage_kg(userTrainingDetail.getTotalTonnage_kg());
+            userDTO.setTotalTonnageKgThisMonth(userTrainingDetail.getTotalTonnageKgThisMonth());
+            userDTO.setTrainingCounter(userTrainingDetail.getTrainingCounter());
+            userDTO.setTrainingCounterThisMonth(userTrainingDetail.getTrainingCounterThisMonth());
+            userDTO.setExerciseName(userTrainingDetail.getExerciseName());
+            userDTO.setMostUsedExerciseCount(userTrainingDetail.getMostUsedExerciseCount());
+        });
+
+        return userDTO;
     }
 
     @Override
@@ -73,18 +71,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserByUsername(String username){
         Optional<User> resultUser = userRepository.findByUsername(username);
-        User user = null;
-        if(resultUser.isPresent()){
-            UserDTO userDTO = new UserDTO();
-            user = resultUser.get();
+        UserDTO userDTO = new UserDTO();
+        resultUser.ifPresent(user ->{
             userDTO.setUsername(user.getUsername());
             userDTO.setCity(user.getAdditionalInfo().getCity().getCityName());
             userDTO.setBorn_date(user.getAdditionalInfo().getBornDate());
             userDTO.setFirstName(user.getAdditionalInfo().getFirstName());
             userDTO.setLastName(user.getAdditionalInfo().getLastName());
             userDTO.setGender(user.getAdditionalInfo().isGender());
+        });
             return userDTO;
-        }
-        return null;
     }
 }
