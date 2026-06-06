@@ -1,6 +1,6 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.Exercise;
+import com.strongBeton.strongBeton.entity.workout.Exercise;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

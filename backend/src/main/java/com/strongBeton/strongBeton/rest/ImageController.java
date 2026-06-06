@@ -1,22 +1,13 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.ImageDataDTO;
-import com.strongBeton.strongBeton.DTO.ImageModel;
-import com.strongBeton.strongBeton.dao.CloudPhotoRepository;
-import com.strongBeton.strongBeton.entity.CloudPhoto;
-import com.strongBeton.strongBeton.entity.User;
-import com.strongBeton.strongBeton.service.AuthService;
+import com.strongBeton.strongBeton.dto.user.ImageModel;
+import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.service.ImageService;
-import com.strongBeton.strongBeton.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @CrossOrigin
 @RestController

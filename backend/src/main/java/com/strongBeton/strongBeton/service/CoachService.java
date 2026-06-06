@@ -1,7 +1,6 @@
 package com.strongBeton.strongBeton.service;
 
-import com.strongBeton.strongBeton.entity.User;
-import org.springframework.stereotype.Service;
+import com.strongBeton.strongBeton.entity.user.User;
 
 import java.util.UUID;
 

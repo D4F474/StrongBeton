@@ -1,10 +1,13 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.*;
-import com.strongBeton.strongBeton.entity.*;
-import com.strongBeton.strongBeton.service.WorkoutService;
+import com.strongBeton.strongBeton.dto.workout.WorkoutDTO;
+import com.strongBeton.strongBeton.dto.workout.WorkoutDetailsDTO;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.entity.workout.WorkoutDetails;
+import com.strongBeton.strongBeton.service.workout.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +50,15 @@ public class WorkoutRestController {
                                                                @PathVariable UUID workoutId){
         workoutDetails.setWorkoutId(workoutId);
         return ResponseEntity.ok(workoutService.saveWorkoutDetails(workoutDetails));
+    }
+
+    @PostMapping("/{workoutId}/finish")
+    public ResponseEntity<WorkoutDTO> finishWorkout(
+            @PathVariable UUID workoutId,
+            @AuthenticationPrincipal User user
+    ) {
+
+        return ResponseEntity.ok(workoutService.finishWorkout(workoutId, user));
     }
 
     @PutMapping("/workout/{userId}")

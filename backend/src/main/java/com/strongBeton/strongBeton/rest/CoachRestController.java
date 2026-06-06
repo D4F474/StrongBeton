@@ -1,8 +1,8 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.entity.User;
+import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.service.CoachService;
-import com.strongBeton.strongBeton.service.WorkoutService;
+import com.strongBeton.strongBeton.service.workout.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

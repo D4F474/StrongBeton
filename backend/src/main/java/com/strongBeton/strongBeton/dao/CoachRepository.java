@@ -1,7 +1,7 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.Coach;
-import com.strongBeton.strongBeton.entity.User;
+import com.strongBeton.strongBeton.entity.coach.Coach;
+import com.strongBeton.strongBeton.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,14 +1,14 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.LoginDTO;
-import com.strongBeton.strongBeton.DTO.LoginResponse;
-import com.strongBeton.strongBeton.DTO.RegisterUserDTO;
-import com.strongBeton.strongBeton.DTO.UserDTO;
-import com.strongBeton.strongBeton.entity.User;
-import com.strongBeton.strongBeton.service.AuthService;
+import com.strongBeton.strongBeton.dto.user.LoginDTO;
+import com.strongBeton.strongBeton.dto.user.LoginResponse;
+import com.strongBeton.strongBeton.dto.user.RegisterUserDTO;
+import com.strongBeton.strongBeton.dto.user.UserDTO;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.security.AuthService;
 import com.strongBeton.strongBeton.service.ImageService;
-import com.strongBeton.strongBeton.service.JwtService;
-import com.strongBeton.strongBeton.service.UserService;
+import com.strongBeton.strongBeton.service.security.JwtService;
+import com.strongBeton.strongBeton.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

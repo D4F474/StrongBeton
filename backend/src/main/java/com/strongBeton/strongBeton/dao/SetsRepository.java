@@ -1,7 +1,6 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.DTO.SetsDTO;
-import com.strongBeton.strongBeton.entity.Sets;
+import com.strongBeton.strongBeton.entity.workout.Sets;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

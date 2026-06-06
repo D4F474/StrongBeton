@@ -1,8 +1,8 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.FeedPost;
-import com.strongBeton.strongBeton.entity.FeedPostLike;
-import com.strongBeton.strongBeton.entity.User;
+import com.strongBeton.strongBeton.entity.social.FeedPost;
+import com.strongBeton.strongBeton.entity.social.FeedPostLike;
+import com.strongBeton.strongBeton.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

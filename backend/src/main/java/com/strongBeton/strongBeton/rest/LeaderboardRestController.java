@@ -1,7 +1,7 @@
 package com.strongBeton.strongBeton.rest;
 
 import com.strongBeton.strongBeton.entity.LeaderBoard;
-import com.strongBeton.strongBeton.service.LeaderboardService;
+import com.strongBeton.strongBeton.service.social.LeaderboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

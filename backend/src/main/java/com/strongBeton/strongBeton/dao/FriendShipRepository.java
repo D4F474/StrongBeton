@@ -1,17 +1,15 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.FriendShip;
+import com.strongBeton.strongBeton.entity.social.FriendShip;
 import com.strongBeton.strongBeton.enums.FriendStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface FriendShipRepository extends JpaRepository<FriendShip, Integer> {
 

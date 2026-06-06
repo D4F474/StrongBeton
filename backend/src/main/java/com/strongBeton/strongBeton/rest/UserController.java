@@ -1,19 +1,17 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.InjuriesDTO;
-import com.strongBeton.strongBeton.DTO.UserDTO;
-import com.strongBeton.strongBeton.DTO.UserStatusDTO;
-import com.strongBeton.strongBeton.entity.FriendView;
-import com.strongBeton.strongBeton.entity.User;
-import com.strongBeton.strongBeton.service.FriendService;
-import com.strongBeton.strongBeton.service.InjuriesService;
-import com.strongBeton.strongBeton.service.UserService;
+import com.strongBeton.strongBeton.dto.workout.InjuriesDTO;
+import com.strongBeton.strongBeton.dto.user.UserDTO;
+import com.strongBeton.strongBeton.dto.user.UserStatusDTO;
+import com.strongBeton.strongBeton.entity.social.FriendView;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.social.FriendService;
+import com.strongBeton.strongBeton.service.workout.InjuriesService;
+import com.strongBeton.strongBeton.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

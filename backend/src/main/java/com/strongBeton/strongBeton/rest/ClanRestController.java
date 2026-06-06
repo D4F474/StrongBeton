@@ -1,20 +1,19 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.ClanDTO;
-import com.strongBeton.strongBeton.DTO.ClanMemberContributionDTO;
-import com.strongBeton.strongBeton.DTO.ClanMemberDTO;
-import com.strongBeton.strongBeton.DTO.ExerciseDTO;
-import com.strongBeton.strongBeton.entity.User;
-import com.strongBeton.strongBeton.service.ClanService;
+import com.strongBeton.strongBeton.dto.clan.ClanDTO;
+import com.strongBeton.strongBeton.dto.clan.ClanLeaderboardDTO;
+import com.strongBeton.strongBeton.dto.clan.ClanMemberContributionDTO;
+import com.strongBeton.strongBeton.dto.clan.ClanMemberDTO;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.clan.ClanLeaderboardService;
+import com.strongBeton.strongBeton.service.clan.ClanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @CrossOrigin
@@ -23,20 +22,27 @@ import java.util.UUID;
 public class ClanRestController {
 
     private final ClanService clanService;
+    private final ClanLeaderboardService clanLeaderboardService;
 
     @Autowired
-    public ClanRestController(ClanService clanService) {
+    public ClanRestController(ClanService clanService, ClanLeaderboardService clanLeaderboardService) {
         this.clanService = clanService;
-    }
-
-    @PostMapping
-    public ResponseEntity<ClanDTO> createClan(@RequestBody ClanDTO clanDTO, @AuthenticationPrincipal User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(clanService.createClan(clanDTO, user));
+        this.clanLeaderboardService = clanLeaderboardService;
     }
 
     @GetMapping("/{clanId}")
     public ResponseEntity<ClanDTO> getClanById(@PathVariable int clanId) {
         return ResponseEntity.ok(clanService.getClanById(clanId));
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<ClanLeaderboardDTO>> getTopClans() {
+        return ResponseEntity.ok(clanLeaderboardService.getTopClans());
+    }
+
+    @PostMapping
+    public ResponseEntity<ClanDTO> createClan(@RequestBody ClanDTO clanDTO, @AuthenticationPrincipal User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clanService.createClan(clanDTO, user));
     }
 
     @PutMapping("/{clanId}")
@@ -51,26 +57,6 @@ public class ClanRestController {
                                            @RequestParam UUID userId) {
         clanService.deleteClan(clanId, userId);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<ClanDTO>> searchClans(@RequestParam String name) {
-        return ResponseEntity.ok(clanService.searchClans(name));
-    }
-
-    @GetMapping("/top")
-    public ResponseEntity<List<ClanDTO>> getTopClans() {
-        return ResponseEntity.ok(clanService.getTopClans());
-    }
-
-    @GetMapping("/{clanId}/members")
-    public ResponseEntity<List<ClanMemberDTO>> getClanMembers(@PathVariable int clanId) {
-        return ResponseEntity.ok(clanService.getClanMembers(clanId));
-    }
-
-    @GetMapping("/{clanId}/contributions")
-    public ResponseEntity<List<ClanMemberContributionDTO>> getMemberContributions(@PathVariable int clanId) {
-        return ResponseEntity.ok(clanService.getMemberContributions(clanId));
     }
 
     // ── Membership ──────────────────────────────────────────────────────────────

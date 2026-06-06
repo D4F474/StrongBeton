@@ -1,6 +1,6 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.Clan;
+import com.strongBeton.strongBeton.entity.clan.Clan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

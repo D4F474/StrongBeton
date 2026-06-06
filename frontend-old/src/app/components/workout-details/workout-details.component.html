@@ -1,0 +1,92 @@
+<div class="p-6">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Detail Of Workout</h1>
+
+  <div class="space-y-6">
+    <!-- Упражнение -->
+    <div 
+      *ngFor="let tempWorkout of workouts | keyvalue; let i = index"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+      
+      <!-- Заглавна част -->
+      <div class="flex justify-between items-center mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-gray-500 font-medium">{{ i + 1 }}.</span>
+          <input 
+            type="text"
+            class="border rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none font-medium w-40 sm:w-56"
+            [(ngModel)]="tempWorkout.key.exercise.name"
+            (blur)="updateWorkoutDetail(tempWorkout.key)"
+            placeholder="Name of Exercise" />
+        </div>
+        <p class="text-gray-800 font-semibold text-sm sm:text-base">
+          {{ sumOfWeights(tempWorkout.value) }} Kg 
+        </p>
+      </div>
+
+      <!-- Серии -->
+      <div class="space-y-2 mb-4">
+        <div class="hidden sm:grid grid-cols-3 gap-2 text-xs font-semibold text-gray-600">
+          <span>Kg</span><span>Reps</span><span>Series</span>
+        </div>
+
+        <div *ngFor="let tempSet of tempWorkout.value" 
+             class="flex flex-col sm:grid sm:grid-cols-3 gap-2 items-center border-b border-gray-100 pb-2">
+          <div class="flex sm:hidden justify-between w-full text-gray-500 text-sm">
+            <span>Series {{ tempSet.setNumber }}</span>
+          </div>
+          <input 
+            type="number"
+            class="border rounded-md px-2 py-1 w-full text-center focus:ring-2 focus:ring-blue-500 outline-none"
+            [(ngModel)]="tempSet.kg"
+            (keyup)="addKgOrReps(tempWorkout.key, tempSet)"
+            placeholder="Kg" />
+          <input 
+            type="number"
+            class="border rounded-md px-2 py-1 w-full text-center focus:ring-2 focus:ring-blue-500 outline-none"
+            [(ngModel)]="tempSet.reps"
+            (keyup)="addKgOrReps(tempWorkout.key, tempSet)"
+            placeholder="Reps" />
+          <p class="hidden sm:block text-center font-medium">{{ tempSet.setNumber }}</p>
+        </div>
+      </div>
+
+      <!-- Мускулна група + бутони -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <select 
+          class="border rounded-lg px-2 py-1 w-full sm:w-auto bg-white focus:ring-2 focus:ring-blue-500 outline-none"
+          (change)="changeMuscleGroup($event, tempWorkout.key)">
+          <option *ngIf="tempWorkout?.key?.muscleGroup !== ''" [value]="tempWorkout.key.muscleGroup">
+            {{ tempWorkout.key.muscleGroup }}
+          </option>
+          <option *ngFor="let muscle of muscleGroups" [value]="muscle">{{ muscle }}</option>
+        </select>
+
+        <div class="flex items-center gap-3">
+          <button 
+            class="text-gray-600 hover:text-blue-600 transition text-lg"
+            (click)="addNewSet(tempWorkout.key.id)"
+            title="Add series">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <button 
+            class="text-gray-600 hover:text-red-600 transition text-lg"
+            (click)="removeExercise(tempWorkout.key)"
+            title="Delete exercise">
+            <i class="fa-solid fa-ban"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Добави упражнение -->
+    <div class="text-center">
+      <button 
+        (click)="addNewExercise()" 
+        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-lg shadow transition w-full sm:w-auto justify-center">
+        <i class="fa-solid fa-plus"></i>
+       Add Exercise 
+      </button>
+    </div>
+  </div>
+</div>
+

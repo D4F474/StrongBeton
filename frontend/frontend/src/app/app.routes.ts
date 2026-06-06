@@ -1,0 +1,46 @@
+import { Routes } from '@angular/router';
+
+import { PublicLayout } from './components/layouts/public-layout/public-layout';
+import { AppLayout } from './components/layouts/app-layout/app-layout';
+
+import { LandingPage } from './components/pages/landing-page/landing-page';
+import { Login } from './components/pages/login/login';
+import { Register } from './components/pages/register/register';
+
+import { HomeDashboard } from './components/pages/home-dashboard/home-dashboard';
+import { ActiveWorkout } from './components/pages/active-workout/active-workout';
+import { Progress } from './components/pages/progress/progress';
+import { Clans } from './components/pages/clans/clans';
+import { Coach } from './components/pages/coach/coach';
+import { Profile } from './components/pages/profile/profile';
+import { WorkoutSummary } from './components/pages/workout-summary/workout-summary';
+import { Settings } from './components/pages/settings/settings';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: PublicLayout,
+    children: [
+      { path: '', component: LandingPage },
+      { path: 'login', component: Login },
+      { path: 'register', component: Register },
+    ],
+  },
+  {
+    path: 'app',
+    component: AppLayout,
+    children: [
+        { path: '', component: LandingPage },
+        { path: 'login', component: Login },
+        { path: 'register', component: Register },
+        { path: 'home', component: HomeDashboard },
+        { path: 'workout', component: ActiveWorkout },
+        { path: 'workout/summary', component: WorkoutSummary },
+        { path: 'progress', component: Progress },
+        { path: 'clans', component: Clans },
+        { path: 'coach', component: Coach },
+        { path: 'profile', component: Profile },
+        { path: 'settings', component: Settings },
+    ],
+  },
+];

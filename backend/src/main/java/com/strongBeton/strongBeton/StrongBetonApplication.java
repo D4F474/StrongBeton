@@ -1,8 +1,7 @@
 package com.strongBeton.strongBeton;
 
-import com.strongBeton.strongBeton.entity.Exercise;
-import com.strongBeton.strongBeton.service.ExercisesService;
-import com.strongBeton.strongBeton.service.WorkoutService;
+import com.strongBeton.strongBeton.service.workout.ExercisesService;
+import com.strongBeton.strongBeton.service.workout.WorkoutService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

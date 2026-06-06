@@ -1,9 +1,9 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.FeedPostCommentDTO;
-import com.strongBeton.strongBeton.DTO.FeedPostDTO;
-import com.strongBeton.strongBeton.entity.User;
-import com.strongBeton.strongBeton.service.FeedService;
+import com.strongBeton.strongBeton.dto.social.FeedPostCommentDTO;
+import com.strongBeton.strongBeton.dto.social.FeedPostDTO;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.social.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

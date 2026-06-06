@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.entity;
 
+import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.enums.PhotoType;
 import jakarta.persistence.*;
 

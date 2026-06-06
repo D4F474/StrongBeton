@@ -1,7 +1,11 @@
 package com.strongBeton.strongBeton.service;
 
 import com.strongBeton.strongBeton.dao.*;
-import com.strongBeton.strongBeton.entity.*;
+import com.strongBeton.strongBeton.entity.coach.ClientCoach;
+import com.strongBeton.strongBeton.entity.coach.Coach;
+import com.strongBeton.strongBeton.entity.user.Role;
+import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.entity.workout.Workout;
 import com.strongBeton.strongBeton.enums.CoachStatus;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

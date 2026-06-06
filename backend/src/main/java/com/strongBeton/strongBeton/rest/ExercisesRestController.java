@@ -1,10 +1,9 @@
 package com.strongBeton.strongBeton.rest;
 
-import com.strongBeton.strongBeton.DTO.ExerciseDTO;
-import com.strongBeton.strongBeton.entity.Exercise;
-import com.strongBeton.strongBeton.service.ExercisesService;
+import com.strongBeton.strongBeton.dto.workout.ExerciseDTO;
+import com.strongBeton.strongBeton.entity.workout.Exercise;
+import com.strongBeton.strongBeton.service.workout.ExercisesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;

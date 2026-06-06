@@ -1,6 +1,6 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.City;
+import com.strongBeton.strongBeton.entity.user.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

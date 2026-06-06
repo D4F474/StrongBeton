@@ -1,6 +1,6 @@
 package com.strongBeton.strongBeton.dao;
 
-import com.strongBeton.strongBeton.entity.FeedPost;
+import com.strongBeton.strongBeton.entity.social.FeedPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

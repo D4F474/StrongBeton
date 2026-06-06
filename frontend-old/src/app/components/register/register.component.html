@@ -1,0 +1,143 @@
+<div class="register-form">
+    <h3>Sign Up</h3>
+    <form [formGroup]="registerGroup!" (ngSubmit)="onSubmit()">
+        <div formGroupName="registerdto">
+            <div class="form-columns">
+                <div class="form-column">
+                    <div class="form-field">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" formControlName="username" required>
+                        <div *ngIf="username?.invalid && (username?.dirty || username?.touched)" class="error-message">
+                            <div *ngIf="username?.errors?.['required'] || username?.errors?.['notOnlyWhitespace']">
+                                Enter your username!
+                            </div>
+                            <div *ngIf="username?.errors?.['minlength']">
+                                Your username have to be 4 symbols length!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="password">Парола</label>
+                        <input type="password" id="password" formControlName="password" required>
+                        <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error-message">
+                            <div *ngIf="password?.errors?.['required'] || password?.errors?.['notOnlyWhitespace']">
+                                Password is required!
+                            </div>
+                            <div *ngIf="password?.errors?.['minlength']">
+                               Enter something hard! 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input type="password" id="confirmPassword" formControlName="confirmPassword" required>
+                        <div *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" class="error-message">
+                            <div *ngIf="confirmPassword?.errors?.['required'] || confirmPassword?.errors?.['notOnlyWhitespace']">
+                                Password is required!
+                            </div>
+                            <div *ngIf="confirmPassword?.errors?.['minlength']">
+                               Not Match!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="firstName">Име</label>
+                        <input type="text" id="firstName" formControlName="firstName" required>
+                        <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="error-message">
+                            <div *ngIf="firstName?.errors?.['required'] || firstName?.errors?.['notOnlyWhitespace']">
+                                Enter username!
+                            </div>
+                            <div *ngIf="firstName?.errors?.['minlength']">
+                                Enter 2 symbols minimum!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="lastName">Lastname</label>
+                        <input type="text" id="lastName" formControlName="lastName" required>
+                        <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="error-message">
+                            <div *ngIf="lastName?.errors?.['required'] || lastName?.errors?.['notOnlyWhitespace']">
+                                Enter your lastname!
+                            </div>
+                            <div *ngIf="lastName?.errors?.['minlength']">
+                                Enter 2 symbols minimum!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" formControlName="email" required>
+                        <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="error-message">
+                            <div *ngIf="email?.errors?.['required'] || email?.errors?.['notOnlyWhitespace']">
+                               Email is required! 
+                            </div>
+                            <div *ngIf="email?.errors?.['minlength']">
+                               Thats not a valid email! 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дясна колона -->
+                <div class="form-column">
+                    <div class="form-field">
+                        <label for="cityName">City/Village name</label>
+                        <input type="text" id="cityName" formControlName="cityName" required>
+                        <div *ngIf="cityName?.invalid && (cityName?.dirty || cityName?.touched)" class="error-message">
+                            <div *ngIf="cityName?.errors?.['required'] || cityName?.errors?.['notOnlyWhitespace']">
+                                  Where do you live? 
+                            </div>
+                            <div *ngIf="cityName?.errors?.['minlength']">
+                               Need more than 2 symbols! 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="streetName">Street</label>
+                        <input type="text" id="streetName" formControlName="streetName" required>
+                        <div *ngIf="streetName?.invalid && (streetName?.dirty || streetName?.touched)" class="error-message">
+                            <div *ngIf="streetName?.errors?.['required'] || streetName?.errors?.['notOnlyWhitespace']">
+                                Моля въведете улица!
+                            </div>
+                            <div *ngIf="streetName?.errors?.['minlength']">
+                                Улицата има повече от една буква!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cm">Height</label>
+                        <input type="number" id="cm" formControlName="cm" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="kg">Kg</label>
+                        <input type="number" id="kg" formControlName="kg" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="bornDate">Date of birth</label>
+                        <input type="date" id="bornDate" formControlName="bornDate">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="gender">Gender (Only 1bit)</label>
+                        <select id="gender" formControlName="gender">
+                            <option value="true">Man</option>
+                            <option value="false">Woman</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <a routerLink="/login-form" class="login-link">You have an account? Sign In!</a>
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </div>
+    </form>
+</div>
