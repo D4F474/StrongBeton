@@ -15,6 +15,7 @@ import { Coach } from './components/pages/coach/coach';
 import { Profile } from './components/pages/profile/profile';
 import { WorkoutSummary } from './components/pages/workout-summary/workout-summary';
 import { Settings } from './components/pages/settings/settings';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -29,18 +30,18 @@ export const routes: Routes = [
   {
     path: 'app',
     component: AppLayout,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
-        { path: '', component: LandingPage },
-        { path: 'login', component: Login },
-        { path: 'register', component: Register },
-        { path: 'home', component: HomeDashboard },
-        { path: 'workout', component: ActiveWorkout },
-        { path: 'workout/summary', component: WorkoutSummary },
-        { path: 'progress', component: Progress },
-        { path: 'clans', component: Clans },
-        { path: 'coach', component: Coach },
-        { path: 'profile', component: Profile },
-        { path: 'settings', component: Settings },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: HomeDashboard },
+      { path: 'workout', component: ActiveWorkout },
+      { path: 'workout/summary', component: WorkoutSummary },
+      { path: 'progress', component: Progress },
+      { path: 'clans', component: Clans },
+      { path: 'coach', component: Coach },
+      { path: 'profile', component: Profile },
+      { path: 'settings', component: Settings },
     ],
   },
 ];

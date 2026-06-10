@@ -1,271 +1,397 @@
-<section class="min-h-[calc(100vh-4rem)] text-[#172033]">
+<section class="min-h-screen text-[#172033]">
   <div class="mx-auto max-w-7xl pb-24 md:pb-8">
-    <header class="border-b border-[#172033] pb-4">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
-            Workout Mode
-          </p>
-          <h1 class="mt-1 text-xl font-black uppercase text-[#172033] md:text-3xl">
-            {{ workoutTitle }}
-          </h1>
-        </div>
 
-        <div class="flex items-center gap-4">
-          <div class="text-right">
-            <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">Time</div>
-            <div class="text-sm font-black text-[#172033]">{{ duration }}</div>
-          </div>
+    <!-- СТЪПКА 1: Избор / създаване на workout -->
+    <div *ngIf="!selectedWorkout">
+      <header class="border-b border-[#172033] pb-4 mb-6">
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
+          Workout Mode
+        </p>
 
-          <a routerLink="/app/workout/summary" class="sb-secondary-btn h-11 px-5 text-xs">
-            Finish
-          </a>
-        </div>
-      </div>
+        <h1 class="mt-1 text-xl font-black uppercase md:text-3xl">
+          Избери тренировка
+        </h1>
+      </header>
 
-      <div class="mt-4">
-        <div class="flex justify-between text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-          <span>Total workout progress</span>
-          <span>{{ completedSets }}/{{ totalSets }} sets</span>
-        </div>
-        <div class="sb-progress-track mt-2">
-          <div class="sb-progress-bar" [style.width.%]="setProgressPercentage"></div>
-        </div>
-      </div>
-    </header>
+      <div class="mb-6">
+        <label class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
+          Име на тренировката
+        </label>
 
-    <main *ngIf="activeExercise && activeSet" class="mt-6">
-      <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <section>
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
-            Do this now
-          </p>
-
-          <h2 class="mt-2 w-full text-[3rem] font-black uppercase leading-[0.84] text-[#172033] sm:text-[4.5rem] md:text-[5.8rem] lg:text-[6.4rem]">
-            {{ activeExercise.name | uppercase }}
-          </h2>
-
-          <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-[#172033] py-3 text-xs font-black uppercase tracking-[0.1em]">
-            <span class="text-[#172033]">Set {{ activeSet.setNumber }} / {{ activeExerciseTotalSets }}</span>
-            <span class="hidden h-4 w-px bg-[#172033] sm:block"></span>
-            <span class="text-[#2563EB]">Auto repeat is on</span>
-            <span class="hidden h-4 w-px bg-[#172033] sm:block"></span>
-            <span class="text-[#6B7280]">
-              Last <span class="text-[#F59E0B]">{{ activeSet.previous }}</span>
-            </span>
-          </div>
-
-          <div class="mt-6">
-            <div class="mb-2 flex justify-between text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-              <span>{{ activeExercise.name | uppercase }} progress</span>
-              <span>{{ activeExerciseCompletedSets }}/{{ activeExerciseTotalSets }}</span>
-            </div>
-            <div class="sb-progress-track h-4">
-              <div class="sb-progress-bar" [style.width.%]="activeExerciseProgressPercentage"></div>
-            </div>
-          </div>
-
-          <div class="mt-7 grid gap-6 lg:grid-cols-2">
-            <div>
-              <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">Weight</div>
-              <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033] sm:grid-cols-[76px_minmax(0,1fr)_76px] xl:grid-cols-[86px_minmax(0,1fr)_86px]">
-                <button
-                  type="button"
-                  (click)="decreaseKg(activeSet)"
-                  class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl"
-                >
-                  -
-                </button>
-
-                <div class="sb-number-display h-[74px] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl">
-                  {{ activeSet.kg ?? 0 }} KG
-                </div>
-
-                <button
-                  type="button"
-                  (click)="increaseKg(activeSet)"
-                  class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">Reps</div>
-              <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033] sm:grid-cols-[76px_minmax(0,1fr)_76px] xl:grid-cols-[86px_minmax(0,1fr)_86px]">
-                <button
-                  type="button"
-                  (click)="decreaseReps(activeSet)"
-                  class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl"
-                >
-                  -
-                </button>
-
-                <div class="sb-number-display h-[74px] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl">
-                  {{ activeSet.reps ?? 0 }} REPS
-                </div>
-
-                <button
-                  type="button"
-                  (click)="increaseReps(activeSet)"
-                  class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl sm:h-20 sm:text-4xl xl:h-[88px] xl:text-5xl"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
+        <div class="mt-2 flex gap-3">
+          <input
+            type="text"
+            [(ngModel)]="newWorkoutName"
+            placeholder="напр. Pull, Push, Legs..."
+            class="flex-1 border border-[#172033] px-4 py-3 font-black uppercase text-sm focus:outline-none focus:border-[#F59E0B]"
+          />
 
           <button
             type="button"
-            (click)="logSet(activeExercise, activeSet)"
-            class="sb-workout-btn mx-auto mt-7 flex h-16 w-full max-w-lg text-2xl sm:h-[72px] md:h-[76px] md:text-3xl"
+            (click)="createNewWorkout()"
+            class="sb-primary-btn h-12 px-6 text-sm"
           >
-            Log Set
+            + Нова
           </button>
+        </div>
 
-          <div class="mt-4 grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              (click)="repeatLastSet(activeExercise, activeSet)"
-              class="sb-secondary-btn h-14 text-sm text-[#F59E0B]"
-            >
-              Repeat Last
-            </button>
-
-            <button
-              type="button"
-              (click)="addSet(activeExercise)"
-              class="sb-secondary-btn h-14 text-sm"
-            >
-              Add Set
-            </button>
-          </div>
-
-          <p class="mt-5 text-center text-xs font-black uppercase tracking-[0.12em] text-[#6B7280]">
-            No fluff. Hit the number or adjust it.
-          </p>
-        </section>
-
-        <aside class="border-t border-[#172033] pt-5 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
-          <div class="border-b border-[#172033] pb-4">
-            <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">Last</div>
-            <div class="mt-1 text-3xl font-black uppercase text-[#F59E0B]">
-              {{ activeSet.previous }}
+        <div *ngIf="suggestedWorkoutNames.length > 0" class="border border-t-0 border-[#172033]">
+          <div
+            *ngFor="let name of suggestedWorkoutNames"
+            class="border-b border-[#E5E7EB] last:border-0"
+          >
+            <div class="px-4 py-2 text-xs font-black uppercase text-[#6B7280] bg-[#F9FAFB]">
+              {{ name }}
             </div>
-          </div>
-
-          <div class="mt-4">
-            <div class="mb-2 text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">Exercise queue</div>
 
             <div
-              *ngFor="let exercise of exercises"
-              class="border-b border-[#E5E7EB] py-3 pl-3"
-              [ngClass]="exercise.active ? 'border-l-[3px] border-l-[#F59E0B]' : 'border-l-[3px] border-l-transparent'"
+              *ngFor="let workout of workoutGroups[name]"
+              (click)="selectWorkout(workout)"
+              class="cursor-pointer px-4 py-3 hover:bg-[#FEF3C7] flex justify-between items-center"
             >
-              <div class="flex items-start justify-between gap-3">
-                <div>
-                  <div class="font-black uppercase" [ngClass]="exercise.active ? 'text-[#172033]' : 'text-[#6B7280]'">
-                    {{ exercise.name }}
-                  </div>
-                  <div class="mt-1 text-[10px] font-black uppercase text-[#6B7280]">
-                    {{ exerciseCompletedSets(exercise) }}/{{ exercise.sets.length }} sets
-                  </div>
-                </div>
+              <span class="font-black uppercase text-sm">
+                {{ workout.workoutName }}
+              </span>
 
-                <div
-                  class="text-[10px] font-black uppercase"
-                  [ngClass]="exercise.completed ? 'text-[#15803D]' : exercise.active ? 'text-[#F59E0B]' : 'text-[#6B7280]'"
-                >
-                  {{ exercise.completed ? 'Done' : exercise.active ? 'Now' : 'Next' }}
-                </div>
-              </div>
-
-              <div class="sb-progress-track mt-3 h-2">
-                <div
-                  class="sb-progress-bar"
-                  [style.width.%]="exerciseProgressPercentage(exercise)"
-                ></div>
-              </div>
+              <span class="text-xs text-[#6B7280]">
+                {{ workout.date }} — {{ workout.status }}
+              </span>
             </div>
           </div>
-        </aside>
+        </div>
       </div>
-    </main>
 
-    <article
-      *ngIf="!activeExercise || !activeSet"
-      class="mt-8 border-y border-[#172033] py-8 text-center"
-    >
-      <h2 class="text-4xl font-black uppercase text-[#F59E0B]">Workout done</h2>
-      <p class="mt-3 text-sm font-black uppercase text-[#6B7280]">
-        Review it. Then get out.
-      </p>
-      <a routerLink="/app/workout/summary" class="sb-primary-btn mt-6 h-14 px-8 text-sm">
-        Summary
-      </a>
-    </article>
+      <div *ngFor="let name of workoutNames" class="mb-4">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280] mb-2">
+          {{ name }}
+        </h3>
 
-    <button
-      type="button"
-      (click)="openAddExercise()"
-      class="sb-secondary-btn mt-6 h-14 w-full text-sm"
-    >
-      Add Exercise
-    </button>
+        <div
+          *ngFor="let workout of workoutGroups[name]"
+          (click)="selectWorkout(workout)"
+          class="cursor-pointer border-b border-[#172033] p-4 hover:bg-[#FEF3C7] flex justify-between items-center"
+        >
+          <span class="font-black uppercase">
+            {{ workout.workoutName }}
+          </span>
+
+          <span class="text-xs text-[#6B7280]">
+            {{ workout.date }} — {{ workout.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- СТЪПКА 2: Упражнения на избрания workout -->
+    <div *ngIf="selectedWorkout && !selectedDetail">
+      <header class="border-b border-[#172033] pb-4 mb-6 flex items-center justify-between">
+        <div>
+          <button
+            type="button"
+            (click)="selectedWorkout = null"
+            class="text-xs font-black uppercase text-[#6B7280] mb-1 block"
+          >
+            ← Назад
+          </button>
+
+          <h1 class="text-xl font-black uppercase md:text-3xl">
+            {{ selectedWorkout.workoutName }}
+          </h1>
+
+          <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
+            {{ selectedWorkout.date }} — {{ selectedWorkout.status }}
+          </p>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            *ngIf="canEditWorkout"
+            type="button"
+            (click)="openAddExercise()"
+            class="sb-primary-btn h-11 px-5 text-xs"
+          >
+            + Упражнение
+          </button>
+
+          <button
+            *ngIf="canEditWorkout"
+            type="button"
+            (click)="finishWorkout()"
+            [disabled]="isFinishingWorkout || workoutDetails.length === 0"
+            class="h-11 border border-[#22C55E] bg-[#22C55E] px-5 text-xs font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {{ isFinishingWorkout ? 'Приключване...' : 'Finish' }}
+          </button>
+
+          <div
+            *ngIf="isWorkoutFinished"
+            class="flex h-11 items-center border border-[#22C55E] bg-green-50 px-5 text-xs font-black uppercase tracking-wide text-[#15803D]"
+          >
+            Finished
+          </div>
+        </div>
+      </header>
+
+      <div
+        *ngIf="isWorkoutFinished"
+        class="mb-4 border border-[#22C55E] bg-green-50 p-3 text-xs font-black uppercase text-[#15803D]"
+      >
+        Тази тренировка е приключена. Можеш само да я преглеждаш.
+      </div>
+
+      <div
+        *ngIf="finishWorkoutError"
+        class="mb-4 border border-red-200 bg-red-50 p-3 text-xs font-bold uppercase text-red-700"
+      >
+        {{ finishWorkoutError }}
+      </div>
+
+      <div *ngIf="workoutDetails.length === 0" class="py-8 text-center border-y border-[#172033]">
+        <p class="text-sm font-black uppercase text-[#6B7280]">
+          {{ canEditWorkout ? 'Няма упражнения. Добави първото.' : 'Няма записани упражнения.' }}
+        </p>
+      </div>
+
+      <div
+        *ngFor="let detail of workoutDetails"
+        (click)="selectDetail(detail)"
+        class="cursor-pointer border-b border-[#172033] p-4 hover:bg-[#FEF3C7] flex justify-between items-center"
+      >
+        <div>
+          <div class="font-black uppercase">
+            {{ detail.exercise.name }}
+          </div>
+
+          <div class="text-xs text-[#6B7280]">
+            {{ detail.exercise.muscleGroup }}
+          </div>
+        </div>
+
+        <span class="text-xs font-black uppercase text-[#F59E0B]">
+          →
+        </span>
+      </div>
+    </div>
+
+    <!-- СТЪПКА 3: Серии -->
+    <div *ngIf="selectedWorkout && selectedDetail">
+      <header class="border-b border-[#172033] pb-4 mb-6">
+        <button
+          type="button"
+          (click)="selectedDetail = null"
+          class="text-xs font-black uppercase text-[#6B7280] mb-1 block"
+        >
+          ← Назад
+        </button>
+
+        <h1 class="text-xl font-black uppercase md:text-3xl">
+          {{ selectedDetail.exercise.name }}
+        </h1>
+
+        <p class="text-xs text-[#6B7280] font-black uppercase mt-1">
+          {{ selectedDetail.exercise.muscleGroup }}
+        </p>
+      </header>
+
+      <div
+        *ngIf="isWorkoutFinished"
+        class="mb-4 border border-[#22C55E] bg-green-50 p-3 text-xs font-black uppercase text-[#15803D]"
+      >
+        Read-only режим. Тренировката вече е приключена.
+      </div>
+
+      <div *ngIf="sets.length > 0; else noSets" class="mb-6">
+        <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280] mb-2">
+          Записани серии
+        </div>
+
+        <div
+          *ngFor="let set of sets"
+          class="border-b border-[#E5E7EB] py-3 flex justify-between items-center"
+        >
+          <span class="font-black uppercase text-sm">
+            Серия {{ set.setNumber }}
+          </span>
+
+          <span class="font-black text-[#F59E0B]">
+            {{ set.kg }} KG × {{ set.reps }} REPS
+          </span>
+        </div>
+      </div>
+
+      <ng-template #noSets>
+        <div class="mb-6 border-y border-[#172033] py-6 text-center">
+          <p class="text-sm font-black uppercase text-[#6B7280]">
+            {{ canEditWorkout ? 'Няма записани серии.' : 'Няма записани серии за това упражнение.' }}
+          </p>
+        </div>
+      </ng-template>
+
+      <ng-container *ngIf="canEditWorkout; else finishedExerciseView">
+        <div class="mb-6">
+          <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+            Weight
+          </div>
+
+          <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+            <button
+              type="button"
+              (click)="decreaseKg()"
+              class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+            >
+              -
+            </button>
+
+            <div class="sb-number-display h-[74px] text-3xl">
+              {{ currentKg }} KG
+            </div>
+
+            <button
+              type="button"
+              (click)="increaseKg()"
+              class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+            Reps
+          </div>
+
+          <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+            <button
+              type="button"
+              (click)="decreaseReps()"
+              class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+            >
+              -
+            </button>
+
+            <div class="sb-number-display h-[74px] text-3xl">
+              {{ currentReps }} REPS
+            </div>
+
+            <button
+              type="button"
+              (click)="increaseReps()"
+              class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="logSet()"
+          class="sb-workout-btn mx-auto mt-4 flex h-16 w-full text-2xl"
+        >
+          Log Set
+        </button>
+      </ng-container>
+
+      <ng-template #finishedExerciseView>
+        <div class="mt-6 border border-[#22C55E] bg-green-50 p-4">
+          <p class="text-xs font-black uppercase text-[#15803D]">
+            Упражнението е заключено, защото тренировката е приключена.
+          </p>
+        </div>
+      </ng-template>
+    </div>
   </div>
 
+  <!-- Модал за упражнения с pagination -->
   <div
-    *ngIf="showAddExerciseModal"
+    *ngIf="showAddExerciseModal && canEditWorkout"
     class="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/35 p-4 md:items-center"
   >
-    <div class="w-full max-w-2xl border border-[#172033] bg-[#FFFFFF] shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
-      <div class="flex items-start justify-between gap-4 border-b border-[#172033] p-5">
+    <div class="w-full max-w-2xl border border-[#172033] bg-white">
+      <div class="flex items-start justify-between border-b border-[#172033] p-5">
         <div>
-          <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">Add Exercise</p>
-          <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">Pick one</h2>
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
+            Add Exercise
+          </p>
+
+          <h2 class="mt-1 text-2xl font-black uppercase">
+            Избери упражнение
+          </h2>
         </div>
 
         <button
           type="button"
           (click)="closeAddExercise()"
           class="sb-secondary-btn h-12 w-12"
-          title="Close"
         >
           X
         </button>
       </div>
 
-      <div class="grid gap-0 p-5">
-        <label
-          *ngFor="let option of exerciseLibrary"
-          class="block cursor-pointer border-b border-[#E5E7EB] p-4 hover:border-[#2563EB]"
-          [ngClass]="selectedExerciseName === option.name ? 'border-l-[3px] border-l-[#F59E0B]' : 'border-l-[3px] border-l-transparent'"
-        >
-          <input
-            type="radio"
-            name="exercise"
-            [(ngModel)]="selectedExerciseName"
-            [value]="option.name"
-            class="sr-only"
-          />
+      <div class="px-5 pt-4">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch()"
+          placeholder="Търси по име или мускул..."
+          class="w-full border border-[#172033] px-4 py-3 text-sm font-black uppercase focus:outline-none focus:border-[#F59E0B]"
+        />
+      </div>
 
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <div class="text-lg font-black uppercase text-[#172033]">{{ option.name }}</div>
-              <div class="mt-1 text-xs font-black uppercase text-[#6B7280]">{{ option.type }} / {{ option.muscle }}</div>
-            </div>
-            <div class="text-right text-sm font-black uppercase text-[#F59E0B]">{{ option.last }}</div>
+      <div class="px-5 pt-3">
+        <label
+          *ngFor="let ex of pagedExercises"
+          (click)="selectedExerciseId = ex.id"
+          class="block cursor-pointer border-b border-[#E5E7EB] p-4 border-l-[3px]"
+          [class.border-l-[#F59E0B]]="selectedExerciseId === ex.id"
+          [class.border-l-transparent]="selectedExerciseId !== ex.id"
+        >
+          <div
+            class="font-black uppercase"
+            [class.text-[#F59E0B]]="selectedExerciseId === ex.id"
+          >
+            {{ ex.name }}
+          </div>
+
+          <div class="text-xs text-[#6B7280]">
+            {{ ex.muscleGroup }}
           </div>
         </label>
+      </div>
+
+      <div class="flex items-center justify-between border-t border-[#E5E7EB] px-5 py-3">
+        <button
+          type="button"
+          (click)="prevPage()"
+          [disabled]="currentPage === 0"
+          class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
+        >
+          ← Назад
+        </button>
+
+        <span class="text-xs font-black uppercase text-[#6B7280]">
+          {{ currentPage + 1 }} / {{ totalPages }}
+        </span>
 
         <button
           type="button"
-          (click)="addSelectedExercise()"
-          class="sb-workout-btn mt-5 h-16 w-full text-sm"
+          (click)="nextPage()"
+          [disabled]="currentPage >= totalPages - 1"
+          class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
         >
-          Add Selected
+          Напред →
+        </button>
+      </div>
+
+      <div class="p-5 border-t border-[#172033]">
+        <button
+          type="button"
+          (click)="addSelectedExercise()"
+          [disabled]="!selectedExerciseId || !canEditWorkout"
+          class="sb-workout-btn h-16 w-full text-sm disabled:opacity-30"
+        >
+          Избери
         </button>
       </div>
     </div>

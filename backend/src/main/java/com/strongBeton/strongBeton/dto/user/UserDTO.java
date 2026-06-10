@@ -11,35 +11,36 @@ public class UserDTO {
     private String username;
     private String firstName;
     private String lastName;
-    private String city;
     private int cm;
     private float kg;
-    private LocalDate born_date;
+    private LocalDate bornDate;
     private String gender;
-    private List<FriendView> friends;
+    private List<FriendViewDTO> friends;
     private String profilePhotoUrl;
+    private String email;
 
     public UserDTO() {
     }
 
-    public UserDTO(String username,
+    public UserDTO(UUID id,String username,
                    String firstName,
                    String lastName,
-                   String city,
                    int cm,
                    float kg,
                    LocalDate born_date,
                    String gender,
-                   List<FriendView> friends) {
+                   List<FriendViewDTO> friends,
+                   String email) {
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.city = city;
         this.cm = cm;
         this.kg = kg;
-        this.born_date = born_date;
+        this.bornDate = born_date;
         this.gender = gender;
         this.friends = friends;
+        this.email = email;
     }
 
     public String getUsername() {
@@ -54,10 +55,6 @@ public class UserDTO {
         return lastName;
     }
 
-    public String getCity() {
-        return city;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -68,10 +65,6 @@ public class UserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public int getCm() {
@@ -90,12 +83,12 @@ public class UserDTO {
         this.kg = kg;
     }
 
-    public LocalDate getBorn_date() {
-        return born_date;
+    public LocalDate getBornDate() {
+        return bornDate;
     }
 
-    public void setBorn_date(LocalDate born_date) {
-        this.born_date = born_date;
+    public void setBornDate(LocalDate bornDate) {
+        this.bornDate = bornDate;
     }
 
     public String getGender() {
@@ -114,11 +107,11 @@ public class UserDTO {
         this.id = id;
     }
 
-    public List<FriendView> getFriends() {
+    public List<FriendViewDTO> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<FriendView> friends) {
+    public void setFriends(List<FriendViewDTO> friends) {
         this.friends = friends;
     }
 
@@ -130,16 +123,23 @@ public class UserDTO {
         this.profilePhotoUrl = profilePhotoUrl;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
                 "username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", city='" + city + '\'' +
                 ", cm=" + cm +
                 ", kg=" + kg +
-                ", born_date=" + born_date +
+                ", born_date=" + bornDate +
                 ", gender='" + gender + '\'' +
                 '}';
     }

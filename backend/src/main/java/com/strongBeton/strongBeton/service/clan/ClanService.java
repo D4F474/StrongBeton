@@ -11,12 +11,13 @@ import java.util.UUID;
 public interface ClanService {
 
     ClanDTO createClan(ClanDTO clanDTO, User user);
+    ClanDTO getMyClan(User user);
     ClanDTO getClanById(int clanId);
     ClanDTO updateClan(int clanId, UUID userId, ClanDTO clanDTO);
     void deleteClan(int clanId, UUID userId);
 
-    void joinClan(int clanId, UUID userId);
-    void leaveClan(int clanId, int userId);
+    void joinClan(int clanId, User user);
+    void leaveClan(int clanId, User user);
     void kickMember(int clanId, UUID targetUserId, User requester);
     void inviteMember(int clanId, UUID targetUserId, UUID requesterId);
     void acceptInvite(int clanId, UUID requesterId, int targetId);

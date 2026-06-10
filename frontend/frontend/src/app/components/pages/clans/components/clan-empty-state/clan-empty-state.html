@@ -1,0 +1,80 @@
+<div class="grid gap-4 xl:grid-cols-2">
+  <article class="sb-panel p-5 md:p-6">
+    <p class="text-xs font-black uppercase tracking-[0.16em] text-[#6B7280]">
+      Create clan
+    </p>
+
+    <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
+      Start your own crew.
+    </h2>
+
+    <p class="mt-2 text-sm font-bold text-[#6B7280]">
+      Create a strength team and become the leader.
+    </p>
+
+    <div class="mt-5 grid gap-3">
+      <input
+        [(ngModel)]="createName"
+        type="text"
+        placeholder="Clan name"
+        class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
+      />
+
+      <textarea
+        [(ngModel)]="createDescription"
+        rows="3"
+        placeholder="Description"
+        class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
+      ></textarea>
+
+      <label class="flex items-center gap-3 text-sm font-black uppercase text-[#6B7280]">
+        <input
+          [(ngModel)]="createInviteOnly"
+          type="checkbox"
+        />
+        Invite only
+      </label>
+
+      <button
+        type="button"
+        class="sb-workout-btn h-14 px-6 text-lg"
+        [disabled]="actionLoading || !createName.trim()"
+        (click)="createClan()"
+      >
+        {{ actionLoading ? 'Creating...' : 'Create Clan' }}
+      </button>
+    </div>
+  </article>
+
+  <article class="sb-panel p-5 md:p-6">
+    <p class="text-xs font-black uppercase tracking-[0.16em] text-[#6B7280]">
+      Join clan
+    </p>
+
+    <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
+      Enter an existing clan.
+    </h2>
+
+    <p class="mt-2 text-sm font-bold text-[#6B7280]">
+      Use a clan ID or join from the leaderboard below.
+    </p>
+
+    <div class="mt-5 grid gap-3">
+      <input
+        [(ngModel)]="joinClanId"
+        type="number"
+        placeholder="Clan ID"
+        class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
+      />
+
+      <button
+        type="button"
+        class="sb-secondary-btn h-14 px-6 text-sm"
+        [disabled]="actionLoading || !joinClanId"
+        (click)="joinClan()"
+      >
+        {{ actionLoading ? 'Joining...' : 'Join Clan' }}
+      </button>
+    </div>
+  </article>
+</div>

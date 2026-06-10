@@ -3,6 +3,8 @@ package com.strongBeton.strongBeton.entity.social;
 import com.strongBeton.strongBeton.enums.FriendStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "friendship")
 public class FriendShip {
@@ -24,13 +26,21 @@ public class FriendShip {
     @Enumerated(EnumType.STRING )
     private FriendStatus status;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public FriendShip() {
     }
 
-    public FriendShip(int user_id, int friend_id, FriendStatus status) {
+    public FriendShip(int user_id, int friend_id, FriendStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user_id = user_id;
         this.friend_id = friend_id;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -71,6 +81,22 @@ public class FriendShip {
 
     public void setStatus(FriendStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

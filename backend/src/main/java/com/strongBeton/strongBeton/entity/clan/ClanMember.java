@@ -26,16 +26,20 @@ public class ClanMember {
     private int points;
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
 
     public ClanMember() {
     }
 
-    public ClanMember(Clan clan, User user, ClanRoleType clanRoleType, int points, LocalDateTime joinderAt) {
+    public ClanMember(Clan clan, User user, ClanRoleType clanRoleType, int points, LocalDateTime joinderAt, LocalDateTime updatedAt) {
         this.clan = clan;
         this.user = user;
         this.clanRoleType = clanRoleType;
         this.points = points;
         this.joinedAt = joinderAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -84,5 +88,21 @@ public class ClanMember {
 
     public void setJoinderAt(LocalDateTime joinderAt) {
         this.joinedAt = joinderAt;
+    }
+
+    public LocalDateTime getJoinedAt() {
+        return joinedAt;
+    }
+
+    public void setJoinedAt(LocalDateTime joinedAt) {
+        this.joinedAt = joinedAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -3,6 +3,8 @@ package com.strongBeton.strongBeton.entity.coach;
 import com.strongBeton.strongBeton.entity.user.User;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "coach_rating")
 public class CoachRating {
@@ -28,13 +30,20 @@ public class CoachRating {
     private String comment;
     @Column(name = "rating")
     private float rating;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
 
-    public CoachRating(User user, Coach coach, String comment, float rating) {
+    public CoachRating(User user, Coach coach, String comment, float rating, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
         this.coach = coach;
         this.comment = comment;
         this.rating = rating;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public CoachRating() {
@@ -78,5 +87,21 @@ public class CoachRating {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

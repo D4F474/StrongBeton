@@ -1,105 +1,201 @@
-<section class="space-y-8 text-[#172033]">
-  <header class="border-b border-[#172033] pb-6">
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-      <div>
-        <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-          Progress Dashboard
-        </p>
-        <h1 class="mt-3 text-4xl font-black uppercase leading-none md:text-6xl">
-          Numbers that
-          <span class="text-[#F59E0B]">do not lie</span>
-        </h1>
-        <p class="mt-4 max-w-2xl text-sm font-black uppercase tracking-wide text-[#6B7280]">
-          Strength score, weekly volume, records, and lift trends in one command view.
-        </p>
-      </div>
+<section class="mx-auto max-w-6xl pb-24 text-[#172033] md:pb-10">
 
-      <div class="grid grid-cols-2 gap-8 text-right">
+  <!-- LOADING -->
+  <ng-container *ngIf="state.status === 'loading'">
+    <div class="grid gap-4">
+      <div class="h-24 animate-pulse border border-[#E5E7EB] bg-[#F9FAFB]"></div>
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div *ngFor="let _ of [1,2,3,4]"
+             class="h-36 animate-pulse border border-[#E5E7EB] bg-[#F9FAFB]">
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ERROR -->
+  <ng-container *ngIf="state.status === 'error'">
+    <div class="border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700">
+      {{ state.message }}
+    </div>
+  </ng-container>
+
+  <!-- SUCCESS -->
+  <ng-container *ngIf="state.status === 'success'">
+
+    <!-- HEADER -->
+    <header class="mb-6 border-b border-[#172033] pb-5">
+      <p class="text-[10px] font-black uppercase tracking-[0.20em] text-[#6B7280]">
+        Performance Analytics
+      </p>
+
+      <div class="mt-1 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
-          <div class="text-5xl font-black text-[#F59E0B] md:text-6xl">91%</div>
-          <div class="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-            Consistency
+          <h1 class="text-2xl font-black uppercase tracking-tight md:text-4xl">
+            Numbers that do not lie
+          </h1>
+          <p class="mt-1 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+            Strength score, volume, records and lift quality
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="border border-[#E5E7EB] bg-white px-4 py-3 shadow-sm">
+            <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+              Consistency
+            </p>
+            <p class="text-xl font-black text-[#22C55E]">
+              {{ state.data.consistencyPercent }}%
+            </p>
+          </div>
+
+          <div class="border border-[#E5E7EB] bg-white px-4 py-3 shadow-sm">
+            <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+              Load Quality
+            </p>
+            <p class="text-xl font-black text-[#F59E0B]">
+              {{ state.data.loadQuality }}
+            </p>
           </div>
         </div>
-        <div>
-          <div class="text-5xl font-black text-[#F59E0B] md:text-6xl">A-</div>
-          <div class="mt-1 text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-            Load Quality
-          </div>
+      </div>
+    </header>
+
+    <!-- KPI CARDS -->
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <article class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
+          Strength Score
+        </p>
+        <div class="mt-3 flex items-end justify-between">
+          <p class="text-4xl font-black leading-none text-[#172033]">
+            {{ state.data.strengthScore }}
+          </p>
+          <span class="border border-[#22C55E] bg-[#ECFDF5] px-2 py-1 text-[10px] font-black uppercase text-[#16A34A]">
+            +{{ state.data.strengthScoreDelta }}
+          </span>
         </div>
-      </div>
-    </div>
-  </header>
+        <p class="mt-3 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+          Wilson-based training output
+        </p>
+      </article>
 
-  <section class="grid grid-cols-2 gap-x-6 gap-y-7 md:grid-cols-4">
-    <div *ngFor="let metric of metrics">
-      <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-        {{ metric.label }}
-      </div>
-      <div class="mt-1 text-[2.6rem] font-black uppercase leading-none text-[#F59E0B] md:text-[4rem]">
-        {{ metric.value }}
-      </div>
-      <div
-        class="mt-2 text-[10px] font-black uppercase tracking-[0.08em]"
-        [ngClass]="metric.tone === 'green' ? 'text-[#22C55E]' : 'text-[#6B7280]'"
-      >
-        {{ metric.sublabel }}
-      </div>
-    </div>
-  </section>
-
-  <div class="grid grid-cols-1 gap-8 xl:grid-cols-3">
-    <section class="xl:col-span-2">
-      <div class="flex items-end justify-between gap-4 border-b border-[#172033] pb-3">
-        <h2 class="text-sm font-black uppercase tracking-wide">Weekly Volume</h2>
-        <span class="text-xs font-black uppercase text-[#6B7280]">Target 50,000 kg</span>
-      </div>
-
-      <div class="mt-6 flex h-64 items-end gap-3">
-        <div *ngFor="let day of volumeBars" class="flex flex-1 flex-col items-center gap-3">
-          <div class="flex h-52 w-full items-end border-b border-[#172033]">
-            <div class="w-full bg-[#F59E0B]" [style.height.%]="day.value"></div>
-          </div>
-          <div class="text-xs font-black uppercase text-[#6B7280]">{{ day.label }}</div>
+      <article class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
+          Weekly Volume
+        </p>
+        <p class="mt-3 text-4xl font-black leading-none text-[#172033]">
+          {{ state.data.weeklyVolume | number:'1.0-0' }}
+          <span class="text-sm text-[#6B7280]">KG</span>
+        </p>
+        <div class="mt-4 h-2 border border-[#172033] bg-[#F3F4F6]">
+          <div
+            class="h-full bg-[#F59E0B]"
+            [style.width.%]="state.data.weeklyVolumePercent"
+          ></div>
         </div>
-      </div>
-    </section>
+        <p class="mt-3 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+          {{ state.data.weeklyVolumePercent }}% of weekly target
+        </p>
+      </article>
 
-    <section>
-      <h2 class="border-b border-[#172033] pb-3 text-sm font-black uppercase tracking-wide">
-        Recent Records
-      </h2>
+      <article class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
+          Training Streak
+        </p>
+        <p class="mt-3 text-4xl font-black leading-none text-[#172033]">
+          {{ state.data.trainingStreak }}
+          <span class="text-sm text-[#6B7280]">DAYS</span>
+        </p>
+        <p class="mt-3 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+          Best streak: {{ state.data.bestStreak }} days
+        </p>
+      </article>
 
-      <div>
-        <div *ngFor="let record of records" class="border-b border-[#E5E7EB] py-4">
-          <div class="font-black uppercase text-[#172033]">{{ record.lift }}</div>
-          <div class="mt-1 text-2xl font-black text-[#F59E0B]">{{ record.result }}</div>
-          <div class="mt-1 text-xs font-black uppercase text-[#6B7280]">{{ record.date }}</div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <section>
-    <div class="flex flex-wrap items-end justify-between gap-3 border-b border-[#172033] pb-3">
-      <h2 class="text-sm font-black uppercase tracking-wide">Main Lift Trend</h2>
-      <span class="text-xs font-black uppercase text-[#6B7280]">Estimated 1RM progress</span>
+      <article class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
+          Personal Records
+        </p>
+        <p class="mt-3 text-4xl font-black leading-none text-[#172033]">
+          {{ state.data.personalRecords }}
+        </p>
+        <p class="mt-3 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+          {{ state.data.recordsThisMonth }} new this month
+        </p>
+      </article>
     </div>
 
-    <div class="mt-5 grid grid-cols-1 gap-x-8 gap-y-5 lg:grid-cols-2">
-      <div *ngFor="let lift of lifts" class="border-b border-[#E5E7EB] pb-4">
-        <div class="flex items-start justify-between gap-4">
+    <!-- CHARTS ROW -->
+    <div class="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+
+      <!-- Weekly Volume Bars -->
+      <section class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <div class="mb-5 flex items-center justify-between border-b border-[#E5E7EB] pb-4">
           <div>
-            <div class="font-black uppercase text-[#172033]">{{ lift.name }}</div>
-            <div class="mt-1 text-xs font-black uppercase text-[#6B7280]">Previous {{ lift.previous }}</div>
+            <h2 class="text-lg font-black uppercase">Weekly Volume</h2>
+            <p class="mt-1 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+              Daily load distribution
+            </p>
           </div>
-          <div class="text-right font-black uppercase text-[#F59E0B]">{{ lift.current }}</div>
         </div>
 
-        <div class="sb-progress-track mt-4 h-3">
-          <div class="sb-progress-bar" [style.width.%]="lift.progress"></div>
+        <div class="grid gap-4">
+          <div
+            *ngFor="let item of state.data.weeklyVolumeBars"
+            class="grid grid-cols-[44px_1fr_90px] items-center gap-3"
+          >
+            <p class="text-xs font-black uppercase text-[#6B7280]">
+              {{ item.day }}
+            </p>
+            <div class="h-4 border border-[#172033] bg-[#F3F4F6]">
+              <div
+                class="h-full bg-[#2563EB]"
+                [style.width.%]="getVolumePercent(item.volume)"
+              ></div>
+            </div>
+            <p class="text-right text-xs font-black text-[#172033]">
+              {{ item.volume | number:'1.0-0' }} KG
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Recent Records -->
+      <section class="border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <div class="mb-5 border-b border-[#E5E7EB] pb-4">
+          <h2 class="text-lg font-black uppercase">Recent Records</h2>
+          <p class="mt-1 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
+            Latest high-value lifts
+          </p>
+        </div>
+
+        <div class="grid gap-3">
+          <article
+            *ngFor="let record of state.data.recentRecords"
+            class="border border-[#E5E7EB] bg-[#F9FAFB] p-4"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 class="text-sm font-black uppercase text-[#172033]">
+                  {{ record.exerciseName }}
+                </h3>
+                <p class="mt-1 text-xs font-bold uppercase text-[#6B7280]">
+                  {{ record.kg }} KG × {{ record.reps }} REPS
+                </p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-black text-[#F59E0B]">
+                  {{ record.estimatedOneRepMax | number:'1.0-0' }}
+                </p>
+                <p class="text-[10px] font-black uppercase text-[#6B7280]">
+                  E1RM
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
     </div>
-  </section>
+  </ng-container>
+
 </section>

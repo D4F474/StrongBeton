@@ -1,309 +1,406 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
-type WorkoutSet = {
-  setNumber: number;
-  previous: string;
-  kg: number | null;
-  reps: number | null;
-  done: boolean;
-  active?: boolean;
-};
-
-type Exercise = {
-  name: string;
-  type: string;
-  completed: boolean;
-  active: boolean;
-  sets: WorkoutSet[];
-};
-
-type ExerciseTemplate = {
-  name: string;
-  type: string;
-  muscle: string;
-  last: string;
-};
+import {
+  ExerciseDto,
+  SetDto,
+  WorkoutDetailsDto,
+  WorkoutDto,
+  WorkoutGroups,
+} from '../../../common/workout';
+import { AuthService } from '../../../services/auth-service';
+import { WorkoutService } from '../../../services/workout-service';
 
 @Component({
   selector: 'app-active-workout',
-  imports: [CommonModule, RouterLink, FormsModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './active-workout.html',
-  styleUrl: './active-workout.scss',
 })
-export class ActiveWorkout {
-  workoutTitle = 'Monday Push A';
-  duration = '57:21';
+export class ActiveWorkout implements OnInit {
+  // Data
+  workoutGroups: WorkoutGroups = {};
+  workoutNames: string[] = [];
+  filteredWorkoutNames: string[] = [];
+  workoutDetails: WorkoutDetailsDto[] = [];
+  sets: SetDto[] = [];
+  exercises: ExerciseDto[] = [];
+  isFinishingWorkout = false;
+  finishWorkoutError: string | null = null;
+
+  // Pagination
+  currentPage = 0;
+  pageSize = 5;
+  searchQuery = '';
+
+  // State
+  selectedWorkout: WorkoutDto | null = null;
+  selectedDetail: WorkoutDetailsDto | null = null;
+  userUUID = '';
+  newWorkoutName = '';
+
+  // Modal
   showAddExerciseModal = false;
-  selectedExerciseName = 'Incline Dumbbell Press';
+  selectedExerciseId: number | null = null;
 
-  exerciseLibrary: ExerciseTemplate[] = [
-    {
-      name: 'Incline Dumbbell Press',
-      type: 'Dumbbell',
-      muscle: 'Chest',
-      last: '30kg x 10',
-    },
-    {
-      name: 'Cable Fly',
-      type: 'Cable',
-      muscle: 'Chest',
-      last: '32.5kg x 14',
-    },
-    {
-      name: 'Lateral Raise',
-      type: 'Dumbbell',
-      muscle: 'Shoulders',
-      last: '12.5kg x 15',
-    },
-    {
-      name: 'Triceps Pushdown',
-      type: 'Cable',
-      muscle: 'Triceps',
-      last: '45kg x 12',
-    },
-  ];
+  // Active set controls
+  currentKg = 0;
+  currentReps = 0;
 
-  exercises: Exercise[] = [
-    {
-      name: 'Bench Press',
-      type: 'Barbell',
-      completed: true,
-      active: false,
-      sets: [
-        {
-          setNumber: 1,
-          previous: '80kg x 10',
-          kg: 85,
-          reps: 10,
-          done: true,
-        },
-        {
-          setNumber: 2,
-          previous: '90kg x 8',
-          kg: 90,
-          reps: 8,
-          done: true,
-        },
-      ],
-    },
-    {
-      name: 'Overhead Press',
-      type: 'Dumbbell',
-      completed: false,
-      active: true,
-      sets: [
-        {
-          setNumber: 1,
-          previous: '20kg x 12',
-          kg: 22.5,
-          reps: 12,
-          done: true,
-        },
-        {
-          setNumber: 2,
-          previous: '25kg x 10',
-          kg: 25,
-          reps: 10,
-          done: false,
-          active: true,
-        },
-        {
-          setNumber: 3,
-          previous: '25kg x 8',
-          kg: null,
-          reps: null,
-          done: false,
-        },
-      ],
-    },
-  ];
+  constructor(
+    private workoutService: WorkoutService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private destroyRef: DestroyRef,
+    private route: ActivatedRoute
+  ) {}
 
-  get completedExercises(): number {
-    return this.exercises.filter((exercise) => exercise.completed).length;
+  ngOnInit(): void {
+    const workoutIdFromUrl = this.route.snapshot.queryParamMap.get('workoutId');
+
+    this.authService
+      .getMe()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        this.userUUID = user.id;
+        this.syncView();
+
+        this.workoutService
+          .getUserWorkouts(this.userUUID)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((groups) => {
+            this.workoutGroups = groups;
+            this.workoutNames = Object.keys(groups);
+            this.filteredWorkoutNames = this.workoutNames;
+
+            if (workoutIdFromUrl) {
+              this.openWorkoutById(workoutIdFromUrl);
+              return;
+            }
+
+            this.syncView();
+          });
+
+        this.workoutService
+          .getExercises()
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((exercises) => {
+            this.exercises = exercises;
+            this.syncView();
+          });
+      });
   }
 
-  get totalExercises(): number {
-    return this.exercises.length;
+  get isWorkoutFinished(): boolean {
+    return String(this.selectedWorkout?.status ?? '').toUpperCase() === 'FINISHED';
   }
 
-  get progressPercentage(): number {
-    return this.totalExercises ? (this.completedExercises / this.totalExercises) * 100 : 0;
+  get canEditWorkout(): boolean {
+    return !!this.selectedWorkout && !this.isWorkoutFinished;
   }
 
-  get completedSets(): number {
-    return this.exercises.flatMap((exercise) => exercise.sets).filter((set) => set.done).length;
-  }
+  private openWorkoutById(workoutId: string): void {
+    const workout = this.findWorkoutById(workoutId);
 
-  get totalSets(): number {
-    return this.exercises.flatMap((exercise) => exercise.sets).length;
-  }
-
-  get setProgressPercentage(): number {
-    return this.totalSets ? (this.completedSets / this.totalSets) * 100 : 0;
-  }
-
-  get activeExercise(): Exercise | undefined {
-    return this.exercises.find((exercise) => exercise.active);
-  }
-
-  get activeSet(): WorkoutSet | undefined {
-    return this.activeExercise?.sets.find((set) => set.active);
-  }
-
-  get activeExerciseCompletedSets(): number {
-    return this.activeExercise?.sets.filter((set) => set.done).length ?? 0;
-  }
-
-  get activeExerciseTotalSets(): number {
-    return this.activeExercise?.sets.length ?? 0;
-  }
-
-  get activeExerciseProgressPercentage(): number {
-    return this.activeExerciseTotalSets
-      ? (this.activeExerciseCompletedSets / this.activeExerciseTotalSets) * 100
-      : 0;
-  }
-
-  exerciseCompletedSets(exercise: Exercise): number {
-    return exercise.sets.filter((set) => set.done).length;
-  }
-
-  exerciseProgressPercentage(exercise: Exercise): number {
-    return exercise.sets.length ? (this.exerciseCompletedSets(exercise) / exercise.sets.length) * 100 : 0;
-  }
-
-  increaseKg(set: WorkoutSet): void {
-    set.kg = (set.kg ?? 0) + 2.5;
-  }
-
-  decreaseKg(set: WorkoutSet): void {
-    const current = set.kg ?? 0;
-    set.kg = Math.max(0, current - 2.5);
-  }
-
-  increaseReps(set: WorkoutSet): void {
-    set.reps = (set.reps ?? 0) + 1;
-  }
-
-  decreaseReps(set: WorkoutSet): void {
-    const current = set.reps ?? 0;
-    set.reps = Math.max(0, current - 1);
-  }
-
-  repeatLastSet(exercise: Exercise, set: WorkoutSet): void {
-    const lastDoneSet = [...exercise.sets].reverse().find((item) => item.done);
-
-    if (!lastDoneSet) {
+    if (workout) {
+      this.selectWorkout(workout);
       return;
     }
 
-    set.kg = lastDoneSet.kg;
-    set.reps = lastDoneSet.reps;
-    set.previous = `${lastDoneSet.kg ?? '-'}kg x ${lastDoneSet.reps ?? '-'}`;
+    console.warn('Workout from URL was not found in workout groups:', workoutId);
+
+    this.selectedWorkout = {
+      id: workoutId,
+      workoutName: 'Active workout',
+    } as WorkoutDto;
+
+    this.selectedDetail = null;
+    this.sets = [];
+    this.syncView();
+
+    this.workoutService
+      .getWorkoutDetails(workoutId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((details) => {
+        this.workoutDetails = details;
+        this.syncView();
+      });
   }
 
-  logSet(exercise: Exercise, set: WorkoutSet): void {
-    set.done = true;
-    set.active = false;
+  private findWorkoutById(workoutId: string): WorkoutDto | null {
+    const allWorkouts = Object.values(this.workoutGroups).reduce(
+      (result, group) => [...result, ...group],
+      [] as WorkoutDto[]
+    );
 
-    const nextSet = exercise.sets.find((item) => !item.done);
+    return allWorkouts.find((workout) => workout.id === workoutId) ?? null;
+  }
 
-    if (nextSet) {
-      nextSet.active = true;
+  // Step 1: Workout
 
-      if (nextSet.kg === null) {
-        nextSet.kg = set.kg;
-      }
+  get suggestedWorkoutNames(): string[] {
+    if (!this.newWorkoutName.trim()) return [];
 
-      if (nextSet.reps === null) {
-        nextSet.reps = set.reps;
-      }
+    return this.workoutNames.filter((name) =>
+      name.toLowerCase().includes(this.newWorkoutName.toLowerCase())
+    );
+  }
 
+  createNewWorkout(): void {
+    if (!this.newWorkoutName.trim()) return;
+
+    this.workoutService
+      .createWorkout(this.userUUID, this.newWorkoutName)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (workout) => {
+          const name = workout.workoutName;
+
+          if (!this.workoutGroups[name]) {
+            this.workoutGroups[name] = [];
+            this.workoutNames = Object.keys(this.workoutGroups);
+            this.filteredWorkoutNames = this.workoutNames;
+          }
+
+          this.workoutGroups[name].push(workout);
+          this.selectWorkout(workout);
+          this.syncView();
+        },
+        error: (error) => console.error(error),
+      });
+  }
+
+  selectWorkout(workout: WorkoutDto): void {
+    this.selectedWorkout = workout;
+    this.selectedDetail = null;
+    this.sets = [];
+    this.finishWorkoutError = null;
+    this.closeAddExercise();
+    this.syncView();
+
+    this.workoutService
+      .getWorkoutDetails(workout.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((details) => {
+        this.workoutDetails = details;
+        this.syncView();
+      });
+  }
+
+  // Step 2: Exercises
+
+  get filteredExercises(): ExerciseDto[] {
+    if (!this.searchQuery.trim()) return this.exercises;
+
+    return this.exercises.filter(
+      (exercise) =>
+        exercise.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        exercise.muscleGroup.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  get pagedExercises(): ExerciseDto[] {
+    const start = this.currentPage * this.pageSize;
+    return this.filteredExercises.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredExercises.length / this.pageSize);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
+  onSearch(): void {
+    this.currentPage = 0;
+  }
+
+  selectDetail(detail: WorkoutDetailsDto): void {
+    this.selectedDetail = detail;
+    this.currentKg = 0;
+    this.currentReps = 0;
+    this.syncView();
+
+    this.workoutService
+      .getSets(detail.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((sets) => {
+        this.sets = sets;
+        this.syncView();
+      });
+  }
+
+  addSelectedExercise(): void {
+    if (!this.canEditWorkout || !this.selectedWorkout || !this.selectedExerciseId) {
       return;
     }
 
-    exercise.completed = true;
-    exercise.active = false;
-
-    const nextExercise = this.exercises.find((item) => !item.completed);
-
-    if (nextExercise) {
-      nextExercise.active = true;
-
-      const nextExerciseSet = nextExercise.sets.find((item) => !item.done);
-
-      if (nextExerciseSet) {
-        nextExerciseSet.active = true;
-      }
-    }
-  }
-
-  addSet(exercise: Exercise): void {
-    const lastSet = exercise.sets[exercise.sets.length - 1];
-
-    exercise.sets.push({
-      setNumber: exercise.sets.length + 1,
-      previous: lastSet ? `${lastSet.kg ?? '-'}kg x ${lastSet.reps ?? '-'}` : '-',
-      kg: lastSet?.kg ?? null,
-      reps: lastSet?.reps ?? null,
-      done: false,
-      active: !exercise.sets.some((set) => set.active),
-    });
+    this.workoutService
+      .addWorkoutDetail(this.selectedWorkout.id, this.selectedExerciseId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (detail) => {
+          this.workoutDetails = [...this.workoutDetails, detail];
+          this.selectDetail(detail);
+          this.closeAddExercise();
+          this.syncView();
+        },
+        error: (error) => console.error(error),
+      });
   }
 
   openAddExercise(): void {
+    if (!this.canEditWorkout) {
+      return;
+    }
+
     this.showAddExerciseModal = true;
+    this.currentPage = 0;
+    this.searchQuery = '';
+    this.selectedExerciseId = null;
   }
 
   closeAddExercise(): void {
     this.showAddExerciseModal = false;
+    this.selectedExerciseId = null;
+    this.searchQuery = '';
+    this.currentPage = 0;
   }
 
-  get selectedExercise(): ExerciseTemplate {
-    return (
-      this.exerciseLibrary.find((exercise) => exercise.name === this.selectedExerciseName) ??
-      this.exerciseLibrary[0]
-    );
+  // Step 3: Sets
+
+  increaseKg(): void {
+    if (!this.canEditWorkout) return;
+
+    this.currentKg = Math.round((this.currentKg + 2.5) * 10) / 10;
   }
 
-  addSelectedExercise(): void {
-    const template = this.selectedExercise;
-    const hasActiveExercise = this.exercises.some((exercise) => exercise.active && !exercise.completed);
+  decreaseKg(): void {
+    if (!this.canEditWorkout) return;
 
-    this.exercises.push({
-      name: template.name,
-      type: template.type,
-      completed: false,
-      active: !hasActiveExercise,
-      sets: [
-        {
-          setNumber: 1,
-          previous: template.last,
-          kg: null,
-          reps: null,
-          done: false,
-          active: !hasActiveExercise,
-        },
-        {
-          setNumber: 2,
-          previous: template.last,
-          kg: null,
-          reps: null,
-          done: false,
-        },
-        {
-          setNumber: 3,
-          previous: template.last,
-          kg: null,
-          reps: null,
-          done: false,
-        },
-      ],
-    });
+    this.currentKg = Math.max(0, Math.round((this.currentKg - 2.5) * 10) / 10);
+  }
 
-    this.closeAddExercise();
+  increaseReps(): void {
+    if (!this.canEditWorkout) return;
+
+    this.currentReps++;
+  }
+
+  decreaseReps(): void {
+    if (!this.canEditWorkout) return;
+
+    this.currentReps = Math.max(0, this.currentReps - 1);
+  }
+
+  logSet(): void {
+    if (!this.canEditWorkout || !this.selectedDetail) {
+      return;
+    }
+
+    const set: SetDto = {
+      id: 0,
+      reps: this.currentReps,
+      kg: this.currentKg,
+      setNumber: this.sets.length + 1,
+      workoutDetailsId: this.selectedDetail.id,
+    };
+
+    this.workoutService
+      .saveSet(set)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (saved) => {
+          this.sets = [...this.sets, saved];
+          this.syncView();
+        },
+        error: (error) => console.error(error),
+      });
+  }
+
+  finishWorkout(): void {
+    if (!this.selectedWorkout || this.isWorkoutFinished) {
+      return;
+    }
+
+    if (this.workoutDetails.length === 0) {
+      this.finishWorkoutError = 'Не можеш да приключиш тренировка без упражнения.';
+      this.syncView();
+      return;
+    }
+
+    this.isFinishingWorkout = true;
+    this.finishWorkoutError = null;
+    this.syncView();
+
+    this.workoutService
+      .finishWorkout(this.selectedWorkout.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (finishedWorkout) => {
+          this.selectedWorkout = {
+            ...this.selectedWorkout!,
+            status: finishedWorkout.status,
+          };
+
+          this.isFinishingWorkout = false;
+
+          this.selectedWorkout = null;
+          this.selectedDetail = null;
+          this.workoutDetails = [];
+          this.sets = [];
+
+          this.reloadWorkouts();
+          this.syncView();
+        },
+        error: (error) => {
+          console.error('Could not finish workout:', error);
+
+          if (typeof error.error === 'string') {
+            this.finishWorkoutError = error.error;
+          } else {
+            this.finishWorkoutError =
+              error?.error?.error ||
+              error?.error?.message ||
+              error?.message ||
+              'Не успяхме да приключим тренировката.';
+          }
+
+          this.isFinishingWorkout = false;
+          this.syncView();
+        },
+      });
+  }
+
+  private reloadWorkouts(): void {
+    if (!this.userUUID) {
+      return;
+    }
+
+    this.workoutService
+      .getUserWorkouts(this.userUUID)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((groups) => {
+        this.workoutGroups = groups;
+        this.workoutNames = Object.keys(groups);
+        this.filteredWorkoutNames = this.workoutNames;
+        this.syncView();
+      });
+  }
+
+  private syncView(): void {
+    this.cdr.markForCheck();
   }
 }

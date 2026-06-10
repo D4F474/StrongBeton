@@ -5,6 +5,7 @@ import com.strongBeton.strongBeton.dto.clan.ClanLeaderboardDTO;
 import com.strongBeton.strongBeton.dto.clan.ClanMemberContributionDTO;
 import com.strongBeton.strongBeton.dto.clan.ClanMemberDTO;
 import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.clan.ClanContributionServiceImpl;
 import com.strongBeton.strongBeton.service.clan.ClanLeaderboardService;
 import com.strongBeton.strongBeton.service.clan.ClanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,18 @@ public class ClanRestController {
 
     private final ClanService clanService;
     private final ClanLeaderboardService clanLeaderboardService;
-
+    private final ClanContributionServiceImpl clanContributionService;
     @Autowired
-    public ClanRestController(ClanService clanService, ClanLeaderboardService clanLeaderboardService) {
+    public ClanRestController(ClanService clanService, ClanLeaderboardService clanLeaderboardService,
+                              ClanContributionServiceImpl clanContributionService) {
         this.clanService = clanService;
         this.clanLeaderboardService = clanLeaderboardService;
+        this.clanContributionService = clanContributionService;
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ClanDTO> getMyClan(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(clanService.getMyClan(user));
     }
 
     @GetMapping("/{clanId}")
@@ -63,15 +71,14 @@ public class ClanRestController {
 
     @PostMapping("/{clanId}/join")
     public ResponseEntity<Void> joinClan(@PathVariable int clanId,
-                                         @RequestParam UUID userId) {
-        clanService.joinClan(clanId, userId);
+                                         @AuthenticationPrincipal User user) {
+        clanService.joinClan(clanId, user);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{clanId}/leave")
-    public ResponseEntity<Void> leaveClan(@PathVariable int clanId,
-                                          @RequestParam int userId) {
-        clanService.leaveClan(clanId, userId);
+    public ResponseEntity<Void> leaveClan(@PathVariable int clanId, @AuthenticationPrincipal User user) {
+        clanService.leaveClan(clanId, user);
         return ResponseEntity.ok().build();
     }
 
@@ -133,5 +140,12 @@ public class ClanRestController {
                                                    @RequestParam int currentLeaderId) {
         clanService.transferLeadership(clanId, newLeaderUserId, currentLeaderId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{clanId}/contributions")
+    public ResponseEntity<List<ClanMemberContributionDTO>> getClanContributions(
+            @PathVariable int clanId
+    ) {
+        return ResponseEntity.ok(clanContributionService.getRecentContributions(clanId));
     }
 }

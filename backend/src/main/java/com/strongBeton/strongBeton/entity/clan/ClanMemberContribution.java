@@ -2,6 +2,7 @@ package com.strongBeton.strongBeton.entity.clan;
 
 import com.strongBeton.strongBeton.entity.user.User;
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -23,15 +24,22 @@ public class ClanMemberContribution {
     private int points;
     @Column(name = "date")
     private LocalDateTime date;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public ClanMemberContribution() {
     }
 
-    public ClanMemberContribution(Clan clan, User user, int points, LocalDateTime date) {
+    public ClanMemberContribution(Clan clan, User user, int points,
+                                  LocalDateTime date, LocalDateTime updatedAt, LocalDateTime createdAt) {
         this.clan = clan;
         this.user = user;
         this.points = points;
         this.date = date;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -72,5 +80,21 @@ public class ClanMemberContribution {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

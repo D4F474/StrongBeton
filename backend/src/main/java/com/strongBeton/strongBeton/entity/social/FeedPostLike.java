@@ -3,6 +3,8 @@ package com.strongBeton.strongBeton.entity.social;
 import com.strongBeton.strongBeton.entity.user.User;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "feed_post_like")
 public class FeedPostLike {
@@ -19,12 +21,20 @@ public class FeedPostLike {
     @ManyToOne(fetch = FetchType.LAZY)
     private FeedPost feedPost;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public FeedPostLike() {
     }
 
-    public FeedPostLike(User user, FeedPost feedPost) {
+    public FeedPostLike(User user, FeedPost feedPost, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
         this.feedPost = feedPost;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -49,5 +59,21 @@ public class FeedPostLike {
 
     public void setFeedPost(FeedPost feedPost) {
         this.feedPost = feedPost;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

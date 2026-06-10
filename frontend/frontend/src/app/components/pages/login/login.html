@@ -39,46 +39,61 @@
           Continue your block. The board is waiting.
         </p>
       </div>
-
-      <div class="space-y-5">
-        <div>
-          <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
-            Email
-          </label>
+      <form [formGroup]="logInForm" (ngSubmit)="onSubmit()">
+        <div
+          *ngIf="submitError"
+          class="mb-5 border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700"
+          role="alert"
+        >
+          {{ submitError }}
+        </div>
+           
+          <div class="space-y-5">
+            <div>
+              <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
+                Email
+              </label>
           <input
             type="email"
             placeholder="dimitar@email.com"
+            formControlName="email"
             class="w-full border border-[#E5E7EB] bg-[#F7FAFC] px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none focus:border-[#2563EB]"
-          />
-        </div>
-
-        <div>
-          <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
-            Password
-          </label>
-          <input
+            />
+            <p *ngIf="hasError('email', 'required')" class="mt-2 text-xs font-bold text-red-600">Email is required.</p>
+            <p *ngIf="hasError('email', 'email')" class="mt-2 text-xs font-bold text-red-600">Enter a valid email.</p>
+          </div>
+          
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
+              Password
+            </label>
+            <input
             type="password"
             placeholder="********"
+            formControlName="password"
             class="w-full border border-[#E5E7EB] bg-[#F7FAFC] px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none focus:border-[#2563EB]"
-          />
+            />
+            <p *ngIf="hasError('password', 'required')" class="mt-2 text-xs font-bold text-red-600">Password is required.</p>
+            <p *ngIf="hasError('password', 'minlength')" class="mt-2 text-xs font-bold text-red-600">Password must be at least 8 characters.</p>
+            <p *ngIf="hasError('password', 'maxlength')" class="mt-2 text-xs font-bold text-red-600">Password must be 100 characters or less.</p>
+          </div>
+          
+          <div class="flex items-center justify-between text-xs text-[#6B7280]">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" class="accent-[#2563EB]" />
+              Remember me
+            </label>
+            
+            <a href="#" class="hover:text-[#F59E0B]">
+              Forgot password?
+            </a>
+          </div>
+          
+          <button type="submit" class="sb-primary-btn h-14 w-full text-sm" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Signing in...' : 'Enter the Floor' }}
+          </button>
         </div>
-
-        <div class="flex items-center justify-between text-xs text-[#6B7280]">
-          <label class="flex items-center gap-2">
-            <input type="checkbox" class="accent-[#2563EB]" />
-            Remember me
-          </label>
-
-          <a href="#" class="hover:text-[#F59E0B]">
-            Forgot password?
-          </a>
-        </div>
-
-        <a routerLink="/app/home" class="sb-primary-btn h-14 w-full text-sm">
-          Enter the Floor
-        </a>
-      </div>
-
+      </form>
       <div class="mt-8 border-t border-[#E5E7EB] pt-6 text-sm text-[#6B7280]">
         No account yet?
         <a routerLink="/register" class="font-bold uppercase text-[#F59E0B] hover:underline">

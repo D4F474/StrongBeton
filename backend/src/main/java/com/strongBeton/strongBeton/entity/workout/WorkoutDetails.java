@@ -2,6 +2,7 @@ package com.strongBeton.strongBeton.entity.workout;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,12 +48,17 @@ public class WorkoutDetails {
     @Column(name = "anomaly_reason")
     private String anomalyReason;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     public WorkoutDetails() {
     }
 
     public WorkoutDetails(Exercise exercise, MuscleGroup muscleGroup, UUID workoutId, Double volume,
                           Double estimatedOneRepMax, Double exercisePoints, boolean suspicious,
-                          Double anomalyScore, String anomalyReason) {
+                          Double anomalyScore, String anomalyReason, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.exercise = exercise;
         this.muscleGroup = muscleGroup;
         this.workoutId = workoutId;
@@ -62,6 +68,8 @@ public class WorkoutDetails {
         this.suspicious = suspicious;
         this.anomalyScore = anomalyScore;
         this.anomalyReason = anomalyReason;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -143,6 +151,22 @@ public class WorkoutDetails {
 
     public void setAnomalyReason(String anomalyReason) {
         this.anomalyReason = anomalyReason;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

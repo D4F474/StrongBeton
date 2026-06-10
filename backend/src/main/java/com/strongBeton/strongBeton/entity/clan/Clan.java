@@ -27,12 +27,14 @@ public class Clan {
     private ClanLeague currLeague;
     @Column(name = "is_invite_only")
     private boolean isInvite;
+    @Column(name = "clan_level")
+    private int clanLevel;
     @Column(name = "clan_points")
     private int clanPoints;
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     @OneToMany(mappedBy = "clan")
     private List<ClanMember> members;
 
@@ -40,17 +42,20 @@ public class Clan {
     public Clan() {
     }
 
-    public Clan(String name, String description, String logoUrl,
-                int totalXP, ClanLeague currLeague, boolean isInvite,
-                int clanPoints, LocalDateTime createdAt) {
+    public Clan(String name, String description, String logoUrl, int totalXP, ClanLeague currLeague,
+                boolean isInvite, int clanLevel, int clanPoints,
+                LocalDateTime createdAt, LocalDateTime updatedAt, List<ClanMember> members) {
         this.name = name;
         this.description = description;
         this.logoUrl = logoUrl;
         this.totalXP = totalXP;
         this.currLeague = currLeague;
         this.isInvite = isInvite;
+        this.clanLevel = clanLevel;
         this.clanPoints = clanPoints;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.members = members;
     }
 
     public int getId() {
@@ -131,5 +136,21 @@ public class Clan {
 
     public void setMembers(List<ClanMember> members) {
         this.members = members;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getClanLevel() {
+        return clanLevel;
+    }
+
+    public void setClanLevel(int clanLevel) {
+        this.clanLevel = clanLevel;
     }
 }

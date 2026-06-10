@@ -1,9 +1,17 @@
 package com.strongBeton.strongBeton.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class LoginDTO {
 
+    @NotBlank
+    @Email
     private String email;
 
+    @NotBlank
+    @Size(min = 8, max = 100)
     private String password;
 
     public LoginDTO() {
@@ -18,7 +26,7 @@ public class LoginDTO {
         return email;
     }
 
-    public void setUsername(String Email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -34,7 +42,7 @@ public class LoginDTO {
     public String toString() {
         return "LoginDTO{" +
                 "email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", password='[PROTECTED]'" +
                 '}';
     }
 }

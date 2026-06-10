@@ -6,6 +6,7 @@ import com.strongBeton.strongBeton.enums.WorkoutStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -50,17 +51,26 @@ public class Workout {
     @Column(name = "status", nullable = false)
     private WorkoutStatus status = WorkoutStatus.DRAFT;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public Workout() {
     }
 
     public Workout(User user, Set<WorkoutDetails> workoutDetails, LocalDate date,
-                   WorkoutTemplate workoutTemplate, Coach coach, WorkoutStatus status) {
+                   WorkoutTemplate workoutTemplate, Coach coach,
+                   WorkoutStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
         this.workoutDetails = workoutDetails;
         this.date = date;
         this.workoutTemplate = workoutTemplate;
         this.coach = coach;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -117,6 +127,22 @@ public class Workout {
 
     public void setStatus(WorkoutStatus status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

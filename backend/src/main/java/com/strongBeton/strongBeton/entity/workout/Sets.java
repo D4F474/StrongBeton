@@ -3,6 +3,8 @@ package com.strongBeton.strongBeton.entity.workout;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name="sets")
 public class Sets {
@@ -27,16 +29,24 @@ public class Sets {
     @Column(name = "estimated_1rm")
     private Double estimatedOneRepMax;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Sets() {
     }
 
-    public Sets(int reps, float kg, int setNumber, int workoutDetailsId, Double estimatedOneRepMax) {
+    public Sets(int reps, float kg, int setNumber, int workoutDetailsId, Double estimatedOneRepMax
+            , LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.reps = reps;
         this.kg = kg;
         this.setNumber = setNumber;
         this.workoutDetailsId = workoutDetailsId;
         this.estimatedOneRepMax = estimatedOneRepMax;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -85,6 +95,22 @@ public class Sets {
 
     public void setEstimatedOneRepMax(Double estimatedOneRepMax) {
         this.estimatedOneRepMax = estimatedOneRepMax;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

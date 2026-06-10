@@ -1,40 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { StatsService } from '../../../services/stats-service';
+import { StatsOverviewDto } from '../../../common/stats/stats-overview-dto';
+
+type LoadState =
+  | { status: 'loading' }
+  | { status: 'success'; data: StatsOverviewDto }
+  | { status: 'error'; message: string };
 
 @Component({
   selector: 'app-progress',
   imports: [CommonModule],
   templateUrl: './progress.html',
   styleUrl: './progress.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Progress {
-  metrics = [
-    { label: 'Strength Score', value: '766', sublabel: '+24 after last workout', tone: 'green' },
-    { label: 'Weekly Volume', value: '42,800 kg', sublabel: '85% of target', tone: 'gold' },
-    { label: 'Training Streak', value: '6 days', sublabel: 'Best streak: 18', tone: 'gold' },
-    { label: 'Personal Records', value: '14', sublabel: '3 this month', tone: 'green' },
-  ];
+export class Progress implements OnInit {
+  state: LoadState = { status: 'loading' };
 
-  volumeBars = [
-    { label: 'Mon', value: 82 },
-    { label: 'Tue', value: 36 },
-    { label: 'Wed', value: 68 },
-    { label: 'Thu', value: 44 },
-    { label: 'Fri', value: 96 },
-    { label: 'Sat', value: 52 },
-    { label: 'Sun', value: 20 },
-  ];
+  constructor(
+    private statsService: StatsService,
+    private destroyRef: DestroyRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  lifts = [
-    { name: 'Bench Press', current: '120kg x 5', previous: '115kg x 5', progress: 86 },
-    { name: 'Squat', current: '155kg x 3', previous: '150kg x 3', progress: 78 },
-    { name: 'Deadlift', current: '190kg x 2', previous: '185kg x 2', progress: 92 },
-    { name: 'Overhead Press', current: '72.5kg x 4', previous: '70kg x 4', progress: 64 },
-  ];
+  ngOnInit(): void {
+    this.loadStats();
+  }
 
-  records = [
-    { lift: 'Incline Dumbbell Press', result: '32.5kg x 9', date: 'Today' },
-    { lift: 'Bench Press', result: '120kg x 5', date: 'May 29' },
-    { lift: 'Triceps Pushdown', result: '55kg x 11', date: 'May 26' },
-  ];
+  private loadStats(): void {
+    this.state = { status: 'loading' };
+    this.cdr.markForCheck();
+
+    this.statsService
+      .getOverview()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.state = { status: 'success', data };
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          console.error(err);
+          this.state = { status: 'error', message: 'Не успяхме да заредим статистиките.' };
+          this.cdr.markForCheck();
+        },
+      });
+  }
+
+  get maxWeeklyVolume(): number {
+    if (this.state.status !== 'success') return 1;
+    const bars = this.state.data.weeklyVolumeBars ?? [];
+    return Math.max(...bars.map((b) => b.volume), 1);
+  }
+
+  getVolumePercent(volume: number): number {
+    if (!volume || volume <= 0) return 0;
+    return Math.round((volume / this.maxWeeklyVolume) * 100);
+  }
 }

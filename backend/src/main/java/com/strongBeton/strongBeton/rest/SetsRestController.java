@@ -27,13 +27,14 @@ public class SetsRestController {
     }
 
     @PostMapping("/workout/newSet")
-    public ResponseEntity<SetsDTO> newSet(@RequestBody Sets sets){
+    public ResponseEntity<SetsDTO> newSet(@RequestBody SetsDTO sets){
         SetsDTO set =  setsService.saveSet(sets);
+
         return ResponseEntity.ok(set);
     }
 
     @PutMapping("/workout/sets")
-    public SetsDTO updateSets(@RequestBody Sets sets){
+    public SetsDTO updateSets(@RequestBody SetsDTO sets){
         return setsService.saveSet(sets);
     }
 

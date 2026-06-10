@@ -9,6 +9,7 @@ import com.strongBeton.strongBeton.service.security.AuthService;
 import com.strongBeton.strongBeton.service.ImageService;
 import com.strongBeton.strongBeton.service.security.JwtService;
 import com.strongBeton.strongBeton.service.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +38,13 @@ public class AuthRestController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register (@RequestBody RegisterUserDTO registerUserDTO){
-        System.out.println(registerUserDTO);
-        User registeredUser = authService.signup(registerUserDTO);
+    public ResponseEntity<UserDTO> register (@Valid @RequestBody RegisterUserDTO registerUserDTO){
+        UserDTO registeredUser = authService.signup(registerUserDTO);
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody LoginDTO loginUserDto) {
+    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginDTO loginUserDto) {
         try {
             User authenticatedUser = authService.authenticate(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -61,9 +61,8 @@ public class AuthRestController {
             loginResponse.setUserDTO(userDTO);
 
             return ResponseEntity.ok(loginResponse);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad username or password");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad username or password");
         }
     }
 }

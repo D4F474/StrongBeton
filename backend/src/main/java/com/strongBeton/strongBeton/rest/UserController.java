@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.rest;
 
+import com.strongBeton.strongBeton.dto.user.UserUpdateDTO;
 import com.strongBeton.strongBeton.dto.workout.InjuriesDTO;
 import com.strongBeton.strongBeton.dto.user.UserDTO;
 import com.strongBeton.strongBeton.dto.user.UserStatusDTO;
@@ -92,6 +93,12 @@ public class UserController {
     @PostMapping("/AddNewInjury")
     public ResponseEntity<?> addInjury(@AuthenticationPrincipal User currentUser, @RequestBody InjuriesDTO injuriesDTO){
         return ResponseEntity.ok(this.injuriesService.addInjuryForCurrentUser(currentUser,injuriesDTO));
+    }
+
+    @PutMapping("/updateUserData")
+    public ResponseEntity<?> updateUserData(@AuthenticationPrincipal User currentUser,
+                                            @RequestBody UserDTO userUpdateDTO){
+        return ResponseEntity.ok(this.userService.updateUser(currentUser.getUuid(), userUpdateDTO));
     }
 
     @DeleteMapping("/declineFriendRequest/{username}")

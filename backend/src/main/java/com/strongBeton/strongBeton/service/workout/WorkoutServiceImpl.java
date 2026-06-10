@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.service.workout;
 
+import com.strongBeton.strongBeton.dto.workout.ActiveWorkoutPreviewDTO;
 import com.strongBeton.strongBeton.dto.workout.ExerciseDTO;
 import com.strongBeton.strongBeton.dto.workout.WorkoutDTO;
 import com.strongBeton.strongBeton.dto.workout.WorkoutDetailsDTO;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,9 +84,14 @@ public class WorkoutServiceImpl implements WorkoutService {
         }
         workout.setStatus(WorkoutStatus.DRAFT);
         workout.setDate(LocalDate.now());
-        workout.setWorkoutTemplate(new WorkoutTemplate(workoutDTO.getWorkoutName()));
+        workout.setCreatedAt(LocalDateTime.now());
+        workout.setUpdatedAt(LocalDateTime.now());
+        workout.setWorkoutTemplate(new WorkoutTemplate(workoutDTO.getWorkoutName(),
+                LocalDateTime.now(),
+                LocalDateTime.now()));
 
-        return modelMapper.map(workoutRepository.save(workout), WorkoutDTO.class);
+        Workout saved = workoutRepository.save(workout);
+        return mapWorkoutToDTO(saved);
     }
 
 
@@ -158,9 +165,16 @@ public class WorkoutServiceImpl implements WorkoutService {
         return isOwner || isAuthorizedCoach;
     }
 
-    @Override
-    @Transactional
     public WorkoutDetailsDTO saveWorkoutDetails(WorkoutDetails workoutDetails) {
+
+        if (workoutDetails.getWorkoutId() == null || workoutDetails.getWorkoutId() == null) {
+            throw new IllegalArgumentException("Workout id is required");
+        }
+
+        Workout workout = workoutRepository.findById(workoutDetails.getWorkoutId())
+                .orElseThrow(() -> new EntityNotFoundException("Workout not found"));
+
+        ensureWorkoutIsEditable(workout);
 
         if (workoutDetails.getExercise() == null || workoutDetails.getExercise().getId() == 0) {
             throw new IllegalArgumentException("Exercise id is required");
@@ -184,6 +198,10 @@ public class WorkoutServiceImpl implements WorkoutService {
         workoutDetails.setVolume(0.0);
         workoutDetails.setEstimatedOneRepMax(0.0);
         workoutDetails.setExercisePoints(0.0);
+
+        LocalDateTime now = LocalDateTime.now();
+        workoutDetails.setCreatedAt(now);
+        workoutDetails.setUpdatedAt(now);
 
         WorkoutDetails saved = workoutDetailsRepository.save(workoutDetails);
 
@@ -227,17 +245,25 @@ public class WorkoutServiceImpl implements WorkoutService {
             return mapWorkoutToDTO(workout);
         }
 
-            Double workoutScore = workoutDetailsRepository.getWorkoutScore(workout.getId());
+        System.out.println("FINISH WORKOUT ID: " + workout.getId());
+        System.out.println("WORKOUT STATUS: " + workout.getStatus());
 
-            if (workoutScore == null || workoutScore <= 0) {
-                throw new IllegalArgumentException("Workout cannot be finished without score");
-            }
-            this.clanContributionService.addContributionForFinishedWorkout(workout);
-            workout.setStatus(WorkoutStatus.FINISHED);
+        Double workoutScore = workoutDetailsRepository.getWorkoutScore(workout.getId());
 
-            Workout saved = workoutRepository.save(workout);
+        System.out.println("WORKOUT SCORE: " + workoutScore);
 
-            return mapWorkoutToDTO(saved);
+        if (workoutScore == null || workoutScore <= 0) {
+            throw new IllegalArgumentException("Workout cannot be finished without score");
+        }
+
+        workout.setStatus(WorkoutStatus.FINISHED);
+        workout.setUpdatedAt(LocalDateTime.now());
+
+        this.clanContributionService.addContributionForFinishedWorkout(workout);
+
+        Workout saved = workoutRepository.save(workout);
+
+        return mapWorkoutToDTO(saved);
     }
 
     private WorkoutDTO mapWorkoutToDTO(Workout workout) {
@@ -268,6 +294,35 @@ public class WorkoutServiceImpl implements WorkoutService {
         workoutDTO.setWorkoutDetails(details);
 
         return workoutDTO;
+    }
+
+    @Override
+    public Optional<ActiveWorkoutPreviewDTO> findActiveWorkoutPreview(User user) {
+
+        return workoutRepository
+                .findFirstByUserIdAndStatusNotOrderByCreatedAtDesc(
+                        user.getId(),
+                        WorkoutStatus.FINISHED
+                )
+                .map(workout -> new ActiveWorkoutPreviewDTO(
+                        workout.getId(),
+                        workout.getWorkoutTemplate() != null
+                                ? workout.getWorkoutTemplate().getWorkout_name()
+                                : "Workout",
+                        null
+                ));
+    }
+
+    private void ensureWorkoutIsEditable(Workout workout) {
+        if (workout.getStatus() == null) {
+            return;
+        }
+
+        String status = workout.getStatus().toString();
+
+        if ("FINISHED".equalsIgnoreCase(status)) {
+            throw new IllegalStateException("Finished workout cannot be modified");
+        }
     }
 
 }

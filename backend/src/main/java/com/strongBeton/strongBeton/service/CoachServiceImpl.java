@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class CoachServiceImpl implements CoachService{
             Role role = roleRepository.findByRoleName("Betonovoz")
                     .orElseThrow(() -> new EntityNotFoundException("No role like this"));
             user.setRole(role);
-            Coach coach = new Coach(user);
+            Coach coach = new Coach(user, LocalDateTime.now(), LocalDateTime.now());
             this.userRepository.save(user);
             this.coachRepository.save(coach);
             return true;

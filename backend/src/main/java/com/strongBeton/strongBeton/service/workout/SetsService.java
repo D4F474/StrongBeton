@@ -10,7 +10,7 @@ import java.util.List;
 public interface SetsService {
     public List<SetsDTO> findSetsByWorkoutId(int workoutDetailsId);
 
-    public SetsDTO saveSet(Sets sets);
+    public SetsDTO saveSet(SetsDTO sets);
 
     public void deleteSet(int theId);
 

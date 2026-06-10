@@ -41,30 +41,101 @@ public class ClanServiceImpl implements ClanService{
 
     @Override
     @Transactional
+    public ClanDTO getMyClan(User user) {
+        ClanMember clanMember = this.clanMembersRepository
+                .findByUserId(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("User is not in a clan"));
+
+        Clan clan = clanMember.getClan();
+
+        if (clan == null) {
+            throw new EntityNotFoundException("No clan");
+        }
+
+        ClanDTO clanDTO = new ClanDTO();
+
+        clanDTO.setId(clan.getId());
+        clanDTO.setName(clan.getName());
+        clanDTO.setDescription(clan.getDescription());
+        clanDTO.setLogoUrl(clan.getLogoUrl());
+        clanDTO.setTotalXP(clan.getTotalXP());
+        clanDTO.setClanPoints(clan.getClanPoints());
+        clanDTO.setInvite(clan.isInvite());
+        clanDTO.setCreatedAt(clan.getCreatedAt());
+        List<ClanMemberDTO> clanMemberDTOS = new ArrayList<>();
+        for (ClanMember tempClanMember : clan.getMembers()) {
+            ClanMemberDTO clanMemberDTO = new ClanMemberDTO();
+
+            clanMemberDTO.setId(tempClanMember.getId());
+
+            if (tempClanMember.getUser() != null) {
+                String username = tempClanMember.getUser().getUsername();
+
+                if (username != null && !username.isBlank()) {
+                    clanMemberDTO.setUsername(username);
+                } else {
+                    clanMemberDTO.setUsername(tempClanMember.getUser().getEmail());
+                }
+            } else {
+                clanMemberDTO.setUsername("Athlete");
+            }
+
+            clanMemberDTO.setClanId(tempClanMember.getClan().getId());
+            clanMemberDTO.setClanRoleType(tempClanMember.getClanRoleType().getText());
+            clanMemberDTO.setPoints(tempClanMember.getPoints());
+            clanMemberDTO.setJoinedAt(tempClanMember.getJoinedAt());
+
+            clanMemberDTOS.add(clanMemberDTO);
+        }
+        clanDTO.setMembers(clanMemberDTOS);
+        clanDTO.setClanPoints(clan.getClanPoints());
+        clanDTO.setCurrLeague(
+                clan.getCurrLeague() != null
+                        ? clan.getCurrLeague().getText()
+                        : "Unranked"
+        );
+
+        return clanDTO;
+    }
+    @Override
+    @Transactional
     public ClanDTO createClan(ClanDTO clanDTO, User user) {
         Optional<Clan> result = clanRepository.findByName(clanDTO.getName());
-        if(result.isPresent()){
+
+        if (result.isPresent()) {
             throw new IllegalStateException("Clan with this name already exists");
         }
+
+        User managedUser = userRepository.findByUuid(user.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
         Clan clan = new Clan();
         clan.setName(clanDTO.getName());
         clan.setInvite(clanDTO.isInvite());
         clan.setDescription(clanDTO.getDescription());
-        //clan.setLogoUrl(new CloudPhoto(clanDTO.getLogoUrl()));
+        clan.setLogoUrl(clanDTO.getLogoUrl());
         clan.setTotalXP(0);
         clan.setCurrLeague(ClanLeague.UNRANKED);
         clan.setClanPoints(0);
+        clan.setClanLevel(1);
         clan.setCreatedAt(LocalDateTime.now());
-        clan.setMembers(new ArrayList<>());
+        clan.setUpdatedAt(LocalDateTime.now());
+
+        Clan savedClan = clanRepository.save(clan);
+
         ClanMember clanMember = new ClanMember();
-        clanMember.setClan(clan);
+        clanMember.setClan(savedClan);
+        clanMember.setUser(managedUser);
         clanMember.setPoints(0);
         clanMember.setClanRoleType(ClanRoleType.LEADER);
-        clanMember.setUser(user);
         clanMember.setJoinderAt(LocalDateTime.now());
-        clan.getMembers().add(clanMember);
-        clanRepository.save(clan);
-        return this.modelMapper.map(clan, ClanDTO.class);
+        clanMember.setUpdatedAt(LocalDateTime.now());
+
+        ClanMember savedMember = clanMembersRepository.save(clanMember);
+
+        savedClan.setMembers(List.of(savedMember));
+
+        return getMyClan(managedUser);
     }
 
     @Override
@@ -102,22 +173,20 @@ public class ClanServiceImpl implements ClanService{
     }
 
     @Override
-    public void joinClan(int clanId, UUID userId) {
+    @Transactional
+    public void joinClan(int clanId, User user) {
         Clan clan = this.clanRepository.findById(clanId)
                 .orElseThrow(() -> new EntityNotFoundException("Clan not found!"));
 
-        if (clan.getMembers().size() >= 32) {
+        if (clanMembersRepository.countMembersByClanId(clanId) >= 32) {
             throw new IllegalStateException("No more space in this clan!");
         }
 
-        User user = this.userRepository.findByUuid(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found!"));
 
-        boolean alreadyInClan = clan.getMembers().stream()
-                .anyMatch(m -> m.getUser().getUuid().equals(userId));
+        boolean alreadyInAnyClan = clanMembersRepository.findByUserId(user.getId()).isPresent();
 
-        if (alreadyInClan) {
-            throw new IllegalStateException("User is already in this clan!");
+        if (alreadyInAnyClan) {
+            throw new IllegalStateException("User is already in a clan!");
         }
 
         ClanMember clanMember = new ClanMember();
@@ -125,28 +194,30 @@ public class ClanServiceImpl implements ClanService{
         clanMember.setClan(clan);
         clanMember.setPoints(0);
         clanMember.setJoinderAt(LocalDateTime.now());
-        clanMember.setClanRoleType(clan.isInvite() ? ClanRoleType.PENDING : ClanRoleType.MEMBER);
+        clanMember.setUpdatedAt(LocalDateTime.now());
+        clanMember.setClanRoleType(
+                clan.isInvite()
+                        ? ClanRoleType.PENDING
+                        : ClanRoleType.MEMBER
+        );
 
-        clan.getMembers().add(clanMember);
-        this.clanRepository.save(clan);
+        this.clanMembersRepository.save(clanMember);
     }
-    //#TODO NAPRAVI GO ZA LEADER DA E NA RANDOM AKO NE E PREHVURLIL TITLATA
     @Override
-    public void leaveClan(int clanId, int userId) {
+    @Transactional
+    public void leaveClan(int clanId, User user) {
         Clan clan = this.clanRepository.findById(clanId)
                 .orElseThrow(() -> new EntityNotFoundException("Clan not found!"));
 
-        ClanMember member = clan.getMembers().stream()
-                .filter(m -> m.getUser().getId() == userId)
-                .findFirst()
+        ClanMember member = this.clanMembersRepository
+                .findByClanAndUser(clan, user)
                 .orElseThrow(() -> new EntityNotFoundException("User is not in this clan!"));
 
         if (member.getClanRoleType() == ClanRoleType.LEADER) {
             throw new IllegalStateException("Leader cannot leave! Transfer leadership first.");
         }
 
-        clan.getMembers().remove(member);
-        this.clanRepository.save(clan);
+        this.clanMembersRepository.delete(member);
     }
 
     @Override

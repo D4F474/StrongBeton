@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.service.workout;
 
+import com.strongBeton.strongBeton.dao.KGLogRepository;
 import com.strongBeton.strongBeton.dao.SetsRepository;
 import com.strongBeton.strongBeton.dao.WorkoutDetailsRepository;
 import com.strongBeton.strongBeton.dao.WorkoutRepository;
@@ -25,19 +26,22 @@ public class WorkoutScoreUpdaterServiceImpl implements WorkoutScoreUpdaterServic
     private final SetsRepository setsRepository;
     private final StrengthScoreCalculator strengthScoreCalculator;
     private final AnomalyDetector anomalyDetector;
+    private final KGLogRepository kgLogRepository;
 
     public WorkoutScoreUpdaterServiceImpl(
             WorkoutDetailsRepository workoutDetailsRepository,
             WorkoutRepository workoutRepository,
             SetsRepository setsRepository,
             StrengthScoreCalculator strengthScoreCalculator,
-            AnomalyDetector anomalyDetector
+            AnomalyDetector anomalyDetector,
+            KGLogRepository kgLogRepository
     ) {
         this.workoutDetailsRepository = workoutDetailsRepository;
         this.workoutRepository = workoutRepository;
         this.setsRepository = setsRepository;
         this.strengthScoreCalculator = strengthScoreCalculator;
         this.anomalyDetector = anomalyDetector;
+        this.kgLogRepository = kgLogRepository;
     }
 
     @Override
@@ -72,9 +76,10 @@ public class WorkoutScoreUpdaterServiceImpl implements WorkoutScoreUpdaterServic
                 .max()
                 .orElse(0.0);
 
-        double bodyWeight = workout.getUser()
-                .getAdditionalInfo()
-                .getKg();
+        double bodyWeight = kgLogRepository
+                .findTopByUserIdOrderByLoggedAtDesc(workout.getUser().getId())
+                .map(kgLog -> kgLog.getKg())
+                .orElseThrow(() -> new RuntimeException("User has no body weight log"));
 
         ExerciseDifficulty difficulty = detail.getExercise().getExerciseDifficulty();
 

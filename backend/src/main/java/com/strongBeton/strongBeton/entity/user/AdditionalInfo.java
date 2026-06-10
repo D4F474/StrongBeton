@@ -19,21 +19,8 @@ public class AdditionalInfo {
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE,
-                    CascadeType.PERSIST, CascadeType.REFRESH
-            })
-    @JoinColumn(name="city_id")
-    private City city;
-
-    @Column(name = "street_info")
-    private String streetInfo;
-
     @Column(name = "cm")
     private int cm;
-
-    @Column(name = "kg")
-    private float kg;
 
     @Column(name = "born_date")
     private LocalDate bornDate;
@@ -46,18 +33,12 @@ public class AdditionalInfo {
 
     public AdditionalInfo(String firstName,
                           String lastName,
-                          City city,
-                          String streetInfo,
                           int cm,
-                          float kg,
                           LocalDate bornDate,
                           boolean gender) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.city = city;
-        this.streetInfo = streetInfo;
         this.cm = cm;
-        this.kg = kg;
         this.bornDate = bornDate;
         this.gender = gender;
     }
@@ -86,36 +67,12 @@ public class AdditionalInfo {
         this.lastName = lastName;
     }
 
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    public String getStreetInfo() {
-        return streetInfo;
-    }
-
-    public void setStreetInfo(String streetInfo) {
-        this.streetInfo = streetInfo;
-    }
-
     public int getCm() {
         return cm;
     }
 
     public void setCm(int cm) {
         this.cm = cm;
-    }
-
-    public float getKg() {
-        return kg;
-    }
-
-    public void setKg(float kg) {
-        this.kg = kg;
     }
 
     public LocalDate getBornDate() {
@@ -147,8 +104,6 @@ public class AdditionalInfo {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", city=" + city +
-                ", streetInfo='" + streetInfo + '\'' +
                 '}';
     }
 }

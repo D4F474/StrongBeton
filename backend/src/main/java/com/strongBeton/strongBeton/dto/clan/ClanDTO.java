@@ -25,7 +25,7 @@ public class ClanDTO {
 
     private LocalDateTime createdAt;
 
-    private List<ClanMember> members;
+    private List<ClanMemberDTO> members;
 
     public ClanDTO() {
     }
@@ -102,11 +102,11 @@ public class ClanDTO {
         this.createdAt = createdAt;
     }
 
-    public List<ClanMember> getMembers() {
+    public List<ClanMemberDTO> getMembers() {
         return members;
     }
 
-    public void setMembers(List<ClanMember> members) {
+    public void setMembers(List<ClanMemberDTO> members) {
         this.members = members;
     }
 }

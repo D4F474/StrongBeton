@@ -1,51 +1,66 @@
 package com.strongBeton.strongBeton.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class RegisterUserDTO {
+    @NotBlank
+    @Size(min = 2, max = 45)
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
+
+    @NotBlank
+    @Size(min = 8, max = 100)
     private String password;
-    private String firstName;
-    private String lastName;
+
+    @NotBlank
+    @Email
     private String email;
-    private String streetName;
-    private String cityName;
+
+    @Min(1)
+    @Max(260)
     private int cm;
+
+    @DecimalMin(value = "30.1")
+    @DecimalMax(value = "350.0")
     private float kg;
+
+    @NotNull
+    @Past
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate bornDate;
-    private boolean gender;
-    private String role;
+
+    @NotNull
+    private Boolean gender;
 
     public RegisterUserDTO() {
     }
 
     public RegisterUserDTO(String username,
                            String password,
-                           String firstName,
-                           String lastName,
                            String email,
-                           String cityName,
-                           String streetName,
                            int cm,
                            float kg,
                            LocalDate bornDate,
-                           boolean gender,
-                           String role) {
+                           Boolean gender) {
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.email = email;
-        this.streetName = streetName;
-        this.cityName = cityName;
         this.cm = cm;
         this.kg = kg;
         this.bornDate = bornDate;
         this.gender = gender;
-        this.role = role;
     }
 
     public String getUsername() {
@@ -64,21 +79,6 @@ public class RegisterUserDTO {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public String getEmail() {
         return email;
@@ -88,28 +88,12 @@ public class RegisterUserDTO {
         this.email = email;
     }
 
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
-    }
-
     public int getCm() {
         return cm;
     }
 
     public void setCm(int cm) {
         this.cm = cm;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
     }
 
     public float getKg() {
@@ -128,37 +112,24 @@ public class RegisterUserDTO {
         this.bornDate = bornDate;
     }
 
-    public boolean isGender() {
+    public Boolean getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     @Override
     public String toString() {
         return "RegisterUserDTO{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", password='[PROTECTED]'" +
                 ", email='" + email + '\'' +
-                ", streetName='" + streetName + '\'' +
-                ", cityName='" + cityName + '\'' +
                 ", cm=" + cm +
                 ", kg=" + kg +
                 ", bornDate=" + bornDate +
                 ", gender=" + gender +
-                ", role='" + role + '\'' +
                 '}';
     }
 }

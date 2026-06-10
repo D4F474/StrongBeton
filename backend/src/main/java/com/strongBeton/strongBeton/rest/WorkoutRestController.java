@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.rest;
 
+import com.strongBeton.strongBeton.dto.workout.ActiveWorkoutPreviewDTO;
 import com.strongBeton.strongBeton.dto.workout.WorkoutDTO;
 import com.strongBeton.strongBeton.dto.workout.WorkoutDetailsDTO;
 import com.strongBeton.strongBeton.entity.user.User;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin
@@ -39,6 +41,16 @@ public class WorkoutRestController {
         return ResponseEntity.ok(workoutService.findWorkoutDetailsById(workoutId,currUser));
     }
 
+    @GetMapping("/workout/active")
+    public ResponseEntity<ActiveWorkoutPreviewDTO> getActiveWorkout(
+            @AuthenticationPrincipal User user
+    ) {
+
+
+        return ResponseEntity.ok(workoutService.findActiveWorkoutPreview(user).orElseThrow());
+
+    }
+
     @PostMapping("/workout/{userId}")
     public ResponseEntity<WorkoutDTO> newWorkout(@RequestBody WorkoutDTO workoutJSON, @PathVariable UUID userId,
                                                  @AuthenticationPrincipal User user){
@@ -56,8 +68,8 @@ public class WorkoutRestController {
     public ResponseEntity<WorkoutDTO> finishWorkout(
             @PathVariable UUID workoutId,
             @AuthenticationPrincipal User user
-    ) {
-
+    )
+    {
         return ResponseEntity.ok(workoutService.finishWorkout(workoutId, user));
     }
 
@@ -83,6 +95,4 @@ public class WorkoutRestController {
     public void deleteWorkout(@PathVariable UUID workoutId){
         workoutService.deleteWorkoutById(workoutId);
     }
-
-
 }

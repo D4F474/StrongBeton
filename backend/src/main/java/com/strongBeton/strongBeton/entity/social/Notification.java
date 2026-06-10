@@ -34,16 +34,21 @@ public class Notification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     public Notification() {
     }
 
-    public Notification(User user, User sender, Clan clan, NotificationType notificationType, boolean isRead, LocalDateTime createdAt) {
+    public Notification(User user, User sender, Clan clan,
+                        NotificationType notificationType, boolean isRead, LocalDateTime createdAt,
+                        LocalDateTime updatedAt) {
         this.user = user;
         this.sender = sender;
         this.clan = clan;
         this.notificationType = notificationType;
         this.isRead = isRead;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -100,5 +105,13 @@ public class Notification {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
