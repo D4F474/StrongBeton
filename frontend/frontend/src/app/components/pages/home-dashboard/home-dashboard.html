@@ -1,0 +1,137 @@
+<section *ngIf="!dashboardReady" class="space-y-4 md:space-y-5">
+  <div class="sb-panel p-4 md:p-8 animate-pulse">
+    <div class="h-10 w-48 bg-[#E5E7EB] rounded mb-3"></div>
+    <div class="h-6 w-72 bg-[#E5E7EB] rounded"></div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+    <div *ngFor="let i of [0,1,2,3]" class="sb-panel p-4 md:p-5 animate-pulse">
+      <div class="h-3 w-20 bg-[#E5E7EB] rounded mb-4"></div>
+      <div class="h-8 w-16 bg-[#E5E7EB] rounded mb-3"></div>
+      <div class="h-3 w-24 bg-[#E5E7EB] rounded"></div>
+    </div>
+  </div>
+</section>
+
+<!-- РЕАЛЕН CONTENT -->
+<section *ngIf="dashboardReady" class="space-y-4 md:space-y-5">
+  <div class="sb-panel overflow-hidden p-4 md:p-8">
+    <div class="grid gap-4 md:gap-6 xl:grid-cols-[180px_1fr_320px] xl:items-end">
+      <div class="sb-logo-poster hidden aspect-[2/3] xl:block">
+        <img
+          src="assets/strongbeton-logo.png"
+          alt="StrongBeton logo"
+          class="object-cover object-top"
+        />
+      </div>
+
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
+          Bulgarian Strength Club
+        </p>
+
+        <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
+          {{ heroTitle }}
+          <span class="block text-[#2563EB]">{{ heroHighlight }}</span>
+        </h1>
+
+        <p class="mt-3 max-w-2xl text-xs font-black uppercase leading-relaxed tracking-wide text-[#6B7280] md:mt-4 md:text-sm">
+          {{ heroDescription }}
+        </p>
+      </div>
+
+      <div class="grid gap-3">
+        <ng-container *ngIf="hasActiveWorkout; else newWorkoutBtn">
+          <a
+            routerLink="/app/workout"
+            [queryParams]="primaryWorkoutQueryParams"
+            class="sb-workout-btn h-16 px-6 text-center text-xl md:h-20 md:text-2xl"
+          >
+            Continue Workout
+          </a>
+        </ng-container>
+
+        <ng-template #newWorkoutBtn>
+          <a          
+            routerLink="/app/workout"
+            class="sb-workout-btn h-16 px-6 text-center text-xl md:h-20 md:text-2xl"
+          >
+            Train Now
+          </a>
+        </ng-template>
+
+        <a
+          routerLink="/app/progress"
+          class="sb-secondary-btn h-12 px-6 text-xs md:h-14 md:text-sm"
+        >
+          Check Numbers
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+    <article
+      *ngFor="let stat of stats; trackBy: trackByIndex"
+      class="sb-panel p-4 md:p-5"
+    >
+      <div class="text-[10px] font-black uppercase tracking-wide text-[#6B7280] md:text-xs">
+        {{ stat.label }}
+      </div>
+
+      <div
+        class="mt-3 font-black md:mt-4"
+        [ngClass]="stat.valueClass"
+      >
+        {{ stat.value }}
+      </div>
+
+      <div
+        class="mt-2 text-[10px] font-black uppercase tracking-wide md:mt-3 md:text-xs"
+        [ngClass]="stat.helperClass"
+      >
+        {{ stat.helper }}
+      </div>
+    </article>
+  </div>
+
+  <div class="hidden gap-5 sm:grid" *ngIf="recentWorkouts.length > 0">
+    <article class="sb-panel p-5">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+        <h2 class="text-sm font-black uppercase tracking-wide text-[#172033]">
+          Recent Workouts
+        </h2>
+
+        <span class="text-xs font-black uppercase text-[#6B7280]">
+          Latest sessions
+        </span>
+      </div>
+
+      <div class="mt-4 grid gap-3 md:grid-cols-3">
+        <div
+          *ngFor="let workout of recentWorkouts; trackBy: trackByIndex"
+          class="sb-card p-4"
+        >
+          <div class="text-xs font-black uppercase text-[#6B7280]">
+            {{ workout.day }}
+          </div>
+
+          <div class="mt-2 text-xl font-black uppercase text-[#172033]">
+            {{ workout.title }}
+          </div>
+
+          <div class="mt-3 text-sm font-black text-[#F59E0B]">
+            {{ workout.volume }}
+          </div>
+
+          <div
+            class="mt-2 text-xs font-black uppercase"
+            [ngClass]="workout.statusClass"
+          >
+            {{ workout.status }}
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

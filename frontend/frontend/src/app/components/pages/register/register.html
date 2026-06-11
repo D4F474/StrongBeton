@@ -1,0 +1,510 @@
+<div class="flex min-h-screen items-center justify-center bg-[#F7FAFC] px-4 py-10 text-[#172033]">
+  <div
+    class="grid w-full max-w-6xl grid-cols-1 border border-[#E5E7EB] bg-[#FFFFFF] shadow-[6px_6px_0_#172033] lg:grid-cols-[420px_1fr]"
+  >
+    <!-- LEFT PANEL -->
+    <section
+      class="hidden border-r border-[#E5E7EB] bg-[#FFFFFF] p-6 lg:flex lg:flex-col lg:justify-between"
+    >
+      <div>
+        <div class="sb-logo-poster aspect-[2/3]">
+          <img
+            src="assets/strongbeton-logo.png"
+            alt="StrongBeton logo"
+            class="object-cover"
+          />
+        </div>
+
+        <p class="sb-club-label mt-6 text-xs">New athlete intake</p>
+
+        <h1 class="mt-3 text-4xl font-black uppercase leading-none">
+          Join.
+          <br />
+          Set baseline.
+          <br />
+          Train.
+        </h1>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center">
+        <div class="sb-stat-badge">
+          <div class="text-2xl font-black text-[#F59E0B]">01</div>
+          <div class="text-[10px] uppercase text-[#6B7280]">Account</div>
+        </div>
+
+        <div class="sb-stat-badge">
+          <div class="text-2xl font-black text-[#F59E0B]">02</div>
+          <div class="text-[10px] uppercase text-[#6B7280]">Athlete</div>
+        </div>
+
+        <div class="sb-stat-badge">
+          <div class="text-2xl font-black text-[#F59E0B]">03</div>
+          <div class="text-[10px] uppercase text-[#6B7280]">Build</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORM PANEL -->
+    <section class="p-6 sm:p-10 lg:p-14">
+      <div class="mb-8">
+        <a routerLink="/" class="flex items-center gap-3 lg:hidden">
+          <div class="sb-logo-poster h-12 w-12">
+            <img
+              src="assets/strongbeton-logo.png"
+              alt="StrongBeton logo"
+              class="object-top"
+            />
+          </div>
+
+          <div class="text-xl font-black uppercase text-[#172033]">
+            StrongBeton
+          </div>
+        </a>
+
+        <p
+          class="mt-8 text-xs font-black uppercase tracking-[0.25em] text-[#2563EB] lg:mt-0"
+        >
+          Step {{ currentStep }} of 3
+        </p>
+
+        <h2 class="mt-3 text-4xl font-black uppercase">
+          Join the crew
+        </h2>
+      </div>
+
+      <!-- STEP PROGRESS -->
+      <div class="mb-8 grid grid-cols-3 gap-3">
+        <div
+          class="h-2 border border-[#E5E7EB]"
+          [ngClass]="currentStep >= 1 ? 'bg-[#2563EB]' : 'bg-[#FFFFFF]'"
+        ></div>
+
+        <div
+          class="h-2 border border-[#E5E7EB]"
+          [ngClass]="currentStep >= 2 ? 'bg-[#2563EB]' : 'bg-[#FFFFFF]'"
+        ></div>
+
+        <div
+          class="h-2 border border-[#E5E7EB]"
+          [ngClass]="currentStep >= 3 ? 'bg-[#2563EB]' : 'bg-[#FFFFFF]'"
+        ></div>
+      </div>
+
+      <form [formGroup]="registerGroup" (ngSubmit)="onSubmit()">
+        <!-- STEP ERROR -->
+        <div
+          *ngIf="stepError"
+          class="mb-5 border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700"
+          role="alert"
+        >
+          {{ stepError }}
+        </div>
+
+        <!-- STEP 1 -->
+        <div *ngIf="currentStep === 1" class="space-y-5">
+          <!-- USERNAME -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Username
+            </label>
+
+            <input
+              type="text"
+              formControlName="username"
+              placeholder="username"
+              autocomplete="username"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('username')"
+            />
+
+            <p
+              *ngIf="hasError('username', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Username is required.
+            </p>
+
+            <p
+              *ngIf="hasError('username', 'minlength')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Username must be at least 2 characters.
+            </p>
+
+            <p
+              *ngIf="hasError('username', 'maxlength')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Username must be 45 characters or less.
+            </p>
+
+            <p
+              *ngIf="hasError('username', 'pattern')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Use only letters, numbers, and underscore.
+            </p>
+
+            <p
+              *ngIf="hasError('username', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('username') }}
+            </p>
+          </div>
+
+          <!-- EMAIL -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Email
+            </label>
+
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="yourmail@email.com"
+              autocomplete="email"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('email')"
+            />
+
+            <p
+              *ngIf="hasError('email', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Email is required.
+            </p>
+
+            <p
+              *ngIf="hasError('email', 'email')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Enter a valid email.
+            </p>
+
+            <p
+              *ngIf="hasError('email', 'maxlength')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Email must be 100 characters or less.
+            </p>
+
+            <p
+              *ngIf="hasError('email', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('email') }}
+            </p>
+          </div>
+
+          <!-- PASSWORD -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Password
+            </label>
+
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="********"
+              autocomplete="new-password"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('password')"
+            />
+
+            <p class="mt-2 text-xs text-[#6B7280]">
+              Minimum 8 characters. Keep it strong.
+            </p>
+
+            <p
+              *ngIf="hasError('password', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Password is required.
+            </p>
+
+            <p
+              *ngIf="hasError('password', 'minlength')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Password must be at least 8 characters.
+            </p>
+
+            <p
+              *ngIf="hasError('password', 'maxlength')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Password must be 100 characters or less.
+            </p>
+
+            <p
+              *ngIf="hasError('password', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('password') }}
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div
+          *ngIf="currentStep === 2"
+          class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        >
+          <!-- BORN DATE -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Born Date
+            </label>
+
+            <input
+              type="date"
+              formControlName="bornDate"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('bornDate')"
+            />
+
+            <p
+              *ngIf="hasError('bornDate', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Born date is required.
+            </p>
+
+            <p
+              *ngIf="hasError('bornDate', 'pastDate')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Born date must be in the past.
+            </p>
+
+            <p
+              *ngIf="hasError('bornDate', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('bornDate') }}
+            </p>
+          </div>
+
+          <!-- GENDER -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Gender
+            </label>
+
+            <div
+              class="grid grid-cols-2 border border-[#E5E7EB] bg-[#F7FAFC] shadow-[3px_3px_0_#172033]"
+            >
+              <label
+                class="flex cursor-pointer items-center justify-center gap-2 border-r border-[#E5E7EB] px-4 py-3 text-xs font-black uppercase text-[#172033]"
+              >
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  [value]="true"
+                  class="accent-[#2563EB]"
+                />
+                Male
+              </label>
+
+              <label
+                class="flex cursor-pointer items-center justify-center gap-2 px-4 py-3 text-xs font-black uppercase text-[#172033]"
+              >
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  [value]="false"
+                  class="accent-[#2563EB]"
+                />
+                Female
+              </label>
+            </div>
+          </div>
+
+          <!-- KG -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Body Weight
+            </label>
+
+            <input
+              type="number"
+              formControlName="kg"
+              placeholder="82"
+              inputmode="decimal"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('kg')"
+            />
+
+            <p
+              *ngIf="hasError('kg', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Body weight is required.
+            </p>
+
+            <p
+              *ngIf="hasError('kg', 'min')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Body weight must be above 30 kg.
+            </p>
+
+            <p
+              *ngIf="hasError('kg', 'max')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Body weight must be 350 kg or less.
+            </p>
+
+            <p
+              *ngIf="hasError('kg', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('kg') }}
+            </p>
+          </div>
+
+          <!-- CM -->
+          <div>
+            <label
+              class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+            >
+              Height
+            </label>
+
+            <input
+              type="number"
+              formControlName="cm"
+              placeholder="180"
+              inputmode="numeric"
+              class="w-full border px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none transition"
+              [ngClass]="getFieldStateClass('cm')"
+            />
+
+            <p
+              *ngIf="hasError('cm', 'required')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Height is required.
+            </p>
+
+            <p
+              *ngIf="hasError('cm', 'min')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Height must be above 0 cm.
+            </p>
+
+            <p
+              *ngIf="hasError('cm', 'max')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              Height must be 260 cm or less.
+            </p>
+
+            <p
+              *ngIf="hasError('cm', 'server')"
+              class="mt-2 text-xs font-bold text-red-600"
+            >
+              {{ getServerError('cm') }}
+            </p>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div *ngIf="currentStep === 3" class="space-y-5">
+          <div class="sb-card p-5">
+            <h3 class="text-xl font-black uppercase text-[#F59E0B]">
+              Profile almost forged
+            </h3>
+
+            <p class="mt-3 text-[#6B7280]">
+              Start your first workout, log sets, and let Strength Score grow
+              from real training.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="sb-stat-badge">
+              <div class="text-2xl font-black text-[#F59E0B]">0</div>
+              <div class="text-[10px] uppercase text-[#6B7280]">Workouts</div>
+            </div>
+
+            <div class="sb-stat-badge">
+              <div class="text-2xl font-black text-[#F59E0B]">0</div>
+              <div class="text-[10px] uppercase text-[#6B7280]">Score</div>
+            </div>
+
+            <div class="sb-stat-badge">
+              <div class="text-2xl font-black text-[#F59E0B]">1</div>
+              <div class="text-[10px] uppercase text-[#6B7280]">Level</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBMIT ERROR -->
+        <p
+          *ngIf="submitError"
+          class="mt-4 text-sm font-bold text-red-600"
+          role="alert"
+        >
+          {{ submitError }}
+        </p>
+
+        <!-- ACTIONS -->
+        <div class="mt-8 flex items-center gap-4">
+          <button
+            *ngIf="currentStep > 1"
+            type="button"
+            (click)="previousStep()"
+            class="sb-secondary-btn h-12 px-6 text-sm"
+          >
+            Back
+          </button>
+
+          <button
+            *ngIf="currentStep < 3"
+            type="button"
+            (click)="nextStep()"
+            class="sb-primary-btn h-12 flex-1 text-sm"
+          >
+            Next
+          </button>
+
+          <button
+            *ngIf="currentStep === 3"
+            type="submit"
+            class="sb-primary-btn h-12 flex-1 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="isSubmitting"
+          >
+            {{ isSubmitting ? 'Creating...' : 'Create Profile' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 border-t border-[#E5E7EB] pt-6 text-sm text-[#6B7280]">
+        Already have an account?
+
+        <a
+          routerLink="/login"
+          class="font-bold uppercase text-[#F59E0B] hover:underline"
+        >
+          Sign in
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

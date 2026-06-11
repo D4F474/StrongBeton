@@ -1,0 +1,106 @@
+<aside class="sb-sidebar sticky top-16 flex min-h-[calc(100vh-4rem)] flex-col border-r p-4">
+  <div>
+    <a routerLink="/app/home" class="block border-b border-[#E5E7EB] pb-4">
+      <div class="flex items-center gap-3">
+  <div
+    class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#172033] bg-[#F3F4F6]"
+  >
+    <img
+      *ngIf="hasProfileImage"
+      [src]="photoPreviewUrl"
+      alt="Profile photo"
+      class="h-full w-full object-cover"
+      (error)="hideProfilePhoto()"
+    />
+
+    <div
+      *ngIf="!hasProfileImage"
+      class="text-2xl font-black uppercase text-[#F59E0B]"
+    >
+      SB
+    </div>
+  </div>
+
+  <div class="min-w-0">
+    <div
+  class="truncate text-base font-black uppercase leading-none text-[#172033]"
+  [class.animate-pulse]="!userLoaded"
+>
+  {{ displayName }}
+</div>
+
+  </div>
+</div>
+    </a>
+
+      <div class="mt-5 grid grid-cols-2 gap-3">
+  <div class="sb-stat-badge">
+    <div
+  class="text-2xl font-black text-[#F59E0B]"
+  [class.animate-pulse]="statsLoading"
+>
+  {{ score }}
+</div>
+    <div class="text-[10px] font-black text-[#6B7280]">
+      Score
+    </div>
+  </div>
+
+  <div class="sb-stat-badge">
+    <div
+  class="text-2xl font-black text-[#22C55E]"
+  [class.animate-pulse]="statsLoading"
+>
+  {{ streak }}
+</div>
+    <div class="text-[10px] font-black text-[#6B7280]">
+      Streak
+    </div>
+  </div>
+</div>
+
+    <nav class="mt-6 space-y-1">
+      <a routerLink="/app/home" routerLinkActive="is-active" class="sb-sidebar-item">
+        Home
+      </a>
+
+      <a routerLink="/app/workout" routerLinkActive="is-active" class="sb-sidebar-item">
+        Workouts
+      </a>
+
+      <a routerLink="/app/progress" routerLinkActive="is-active" class="sb-sidebar-item">
+        Stats
+      </a>
+
+      <a routerLink="/app/clans" routerLinkActive="is-active" class="sb-sidebar-item">
+        Clans
+      </a>
+
+      <a
+        routerLink="/app/friends"
+        routerLinkActive="active"
+        class="sb-sidebar-item"
+      >
+        Friends
+      </a>
+
+      <a routerLink="/app/profile" routerLinkActive="is-active" class="sb-sidebar-item">
+        Profile
+      </a>
+    </nav>
+  </div>
+
+  <div class="mt-auto space-y-1 border-t border-[#E5E7EB] pt-4">
+    <a
+  routerLink="/app/feed"
+  routerLinkActive="active"
+  class="sb-sidebar-item"
+>
+  Feed
+</a>
+
+    <button (click)="logout()" class="sb-sidebar-item w-full text-left">
+      Logout
+    </button>
+  </div>
+</aside>

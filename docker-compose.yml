@@ -1,0 +1,43 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: strongbeton-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: strong_beton
+      MYSQL_USER: strongbeton_user
+      MYSQL_PASSWORD: strongbeton_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - strongbeton_mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: strongbeton-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/strong_beton?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: strongbeton_user
+      SPRING_DATASOURCE_PASSWORD: strongbeton_pass
+      JWT_SECRET: ${JWT_SECRET}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+    ports:
+      - "8081:8081"
+
+volumes:
+  strongbeton_mysql_data:

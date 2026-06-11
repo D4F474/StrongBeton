@@ -1,0 +1,253 @@
+<section *ngIf="!pageReady" class="space-y-4 md:space-y-5">
+  <div class="sb-panel p-4 md:p-8 animate-pulse">
+    <div class="h-4 w-48 rounded bg-[#E5E7EB]"></div>
+    <div class="mt-4 h-12 w-72 rounded bg-[#E5E7EB]"></div>
+    <div class="mt-4 h-4 w-full max-w-xl rounded bg-[#E5E7EB]"></div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="sb-panel h-32 animate-pulse bg-[#F3F4F6]"></div>
+    <div class="sb-panel h-32 animate-pulse bg-[#F3F4F6]"></div>
+    <div class="sb-panel h-32 animate-pulse bg-[#F3F4F6]"></div>
+  </div>
+</section>
+
+<section *ngIf="pageReady" class="space-y-4 md:space-y-5">
+  <div class="sb-panel overflow-hidden p-4 md:p-8">
+    <div class="grid gap-5 xl:grid-cols-[1fr_340px] xl:items-end">
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
+          StrongBeton Clans
+        </p>
+
+        <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
+          Lift together.
+          <span class="block text-[#2563EB]">Dominate the board.</span>
+        </h1>
+
+        <p class="mt-3 max-w-2xl text-xs font-black uppercase leading-relaxed tracking-wide text-[#6B7280] md:mt-4 md:text-sm">
+          Build a strength crew, finish workouts, earn points and climb the clan leaderboard.
+        </p>
+      </div>
+
+      <div class="rounded-[2rem] border border-[#E5E7EB] bg-white p-5 shadow-sm">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
+          Status
+        </p>
+
+        <p class="mt-2 text-3xl font-black uppercase text-[#172033]">
+          {{ hasClan ? 'In clan' : 'No clan' }}
+        </p>
+
+        <p class="mt-2 text-sm font-bold text-[#6B7280]">
+          {{
+            hasClan
+              ? myClan?.name
+              : 'Create or join a clan to start earning team points.'
+          }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="actionError" class="sb-panel border-red-200 bg-red-50 p-4">
+    <p class="text-sm font-black uppercase text-red-600">
+      {{ actionError }}
+    </p>
+  </div>
+
+  <div *ngIf="actionSuccess" class="sb-panel border-green-200 bg-green-50 p-4">
+    <p class="text-sm font-black uppercase text-green-600">
+      {{ actionSuccess }}
+    </p>
+  </div>
+
+  <div *ngIf="hasClan && isCurrentUserLeader" class="flex justify-end">
+    <button
+      type="button"
+      (click)="openSettings()"
+      class="sb-secondary-btn h-12 px-5 text-xs"
+    >
+      Clan Settings
+    </button>
+  </div>
+
+<article
+  *ngIf="hasClan && isCurrentUserLeader && pendingRequests.length > 0"
+  class="sb-panel p-5"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+    <div>
+      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
+        Pending Requests
+      </p>
+
+      <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
+        Join approvals
+      </h2>
+    </div>
+
+    <span class="text-xs font-black uppercase text-[#6B7280]">
+      {{ pendingRequests.length }} waiting
+    </span>
+  </div>
+
+  <div class="mt-4 grid gap-3 md:grid-cols-2">
+    <div
+      *ngFor="let request of pendingRequests; trackBy: trackByIndex"
+      class="border border-[#E5E7EB] bg-white p-4"
+    >
+      <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
+        Pending athlete
+      </p>
+
+      <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
+        {{ request.username || 'Athlete' }}
+      </p>
+
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          (click)="acceptPendingMember(request.userUuid)"
+          [disabled]="actionLoading || !request.userUuid"
+          class="h-11 border border-green-500 bg-green-50 text-xs font-black uppercase text-green-700 disabled:opacity-40"
+        >
+          Accept
+        </button>
+
+        <button
+          type="button"
+          (click)="declinePendingMember(request.userUuid)"
+          [disabled]="actionLoading || !request.userUuid"
+          class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
+        >
+          Decline
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+  <ng-container *ngIf="hasClan; else noClanState">
+    <div *ngIf="isCurrentUserPending; else acceptedClanView" class="sb-panel p-5">
+      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
+        Pending request
+      </p>
+
+      <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
+        Waiting for approval.
+      </h2>
+
+      <p class="mt-2 text-sm font-bold text-[#6B7280]">
+        Your request to join {{ myClan?.name }} is waiting for a clan leader to accept it.
+      </p>
+
+      <button
+        type="button"
+        (click)="leaveClan()"
+        [disabled]="actionLoading"
+        class="sb-secondary-btn mt-5 h-12 px-5 text-xs"
+      >
+        Cancel Request
+      </button>
+    </div>
+
+    <ng-template #acceptedClanView>
+      <article
+  *ngIf="isCurrentUserLeader && manageableMembers.length > 0"
+  class="sb-panel p-5"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+    <div>
+      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
+        Clan Management
+      </p>
+
+      <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
+        Manage members
+      </h2>
+    </div>
+
+    <span class="text-xs font-black uppercase text-[#6B7280]">
+      Leader actions
+    </span>
+  </div>
+
+  <div class="mt-4 grid gap-3 md:grid-cols-2">
+    <div
+      *ngFor="let member of manageableMembers; trackBy: trackByIndex"
+      class="border border-[#E5E7EB] bg-white p-4"
+    >
+      <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
+        {{ member.clanRoleType }}
+      </p>
+
+      <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
+        {{ member.username || 'Athlete' }}
+      </p>
+
+      <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
+        {{ member.points }} pts
+      </p>
+
+      <div class="mt-4 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          (click)="transferLeadership(member.userUuid)"
+          [disabled]="actionLoading || !member.userUuid"
+          class="h-11 border border-[#2563EB] bg-blue-50 text-xs font-black uppercase text-[#2563EB] disabled:opacity-40"
+        >
+          Make Leader
+        </button>
+
+        <button
+          type="button"
+          (click)="kickMember(member.userUuid)"
+          [disabled]="actionLoading || !member.userUuid"
+          class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
+        >
+          Kick
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+
+      <app-clan-overview [clan]="myClan"></app-clan-overview>
+
+      <app-clan-members
+        [clan]="myClan"
+        [actionLoading]="actionLoading"
+        (leaveClanRequested)="leaveClan()"
+      ></app-clan-members>
+
+      <app-clan-activity
+        *ngIf="myClan?.id"
+        [clanId]="myClan!.id"
+      ></app-clan-activity>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #noClanState>
+    <app-clan-empty-state
+      [actionLoading]="actionLoading"
+      (createClanRequested)="createClan($event)"
+      (joinClanRequested)="joinClan($event)"
+    ></app-clan-empty-state>
+  </ng-template>
+
+  <app-clan-leaderboard
+    [topClans]="topClans"
+    [hasClan]="hasClan"
+    [actionLoading]="actionLoading"
+    (joinClanRequested)="joinClan($event)"
+  ></app-clan-leaderboard>
+
+  <app-clan-settings
+    [clan]="myClan"
+    [open]="settingsOpen"
+    [actionLoading]="actionLoading"
+    (closeRequested)="closeSettings()"
+    (updateClanRequested)="updateClanSettings($event)"
+  ></app-clan-settings>
+</section>

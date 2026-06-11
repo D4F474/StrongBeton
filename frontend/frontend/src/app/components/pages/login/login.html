@@ -1,0 +1,105 @@
+<div class="flex min-h-screen items-center justify-center bg-[#F7FAFC] px-4 text-[#172033]">
+  <div class="grid w-full max-w-6xl grid-cols-1 border border-[#E5E7EB] bg-[#FFFFFF] shadow-[6px_6px_0_#172033] lg:grid-cols-[420px_1fr]">
+    <section class="hidden border-r border-[#E5E7EB] bg-[#FFFFFF] p-6 lg:block">
+      <div class="sb-logo-poster aspect-[2/3]">
+        <img src="assets/strongbeton-logo.png" alt="StrongBeton logo" class="object-cover" />
+      </div>
+
+      <div class="mt-6">
+        <p class="sb-club-label text-xs">Bulgarian Strength Club</p>
+        <h1 class="mt-3 text-4xl font-black uppercase leading-none">
+          Enter.
+          <br />
+          Log it.
+          <br />
+          Build.
+        </h1>
+        <p class="mt-4 text-sm font-bold leading-relaxed text-[#6B7280]">
+          Serious training, fast logging, visible progress. No noise.
+        </p>
+      </div>
+    </section>
+
+    <section class="p-6 sm:p-10 lg:p-14">
+      <div class="mb-10">
+        <a routerLink="/" class="flex items-center gap-3 lg:hidden">
+          <div class="sb-logo-poster h-12 w-12">
+            <img src="assets/strongbeton-logo.png" alt="StrongBeton logo" class="object-top" />
+          </div>
+          <div class="text-xl font-black uppercase text-[#172033]">StrongBeton</div>
+        </a>
+
+        <p class="mt-8 text-xs font-black uppercase tracking-[0.25em] text-[#2563EB] lg:mt-0">
+          Training floor access
+        </p>
+        <h2 class="mt-3 text-4xl font-black uppercase">
+          Sign in
+        </h2>
+        <p class="mt-3 text-sm font-bold uppercase tracking-wide text-[#6B7280]">
+          Continue your block. The board is waiting.
+        </p>
+      </div>
+      <form [formGroup]="logInForm" (ngSubmit)="onSubmit()">
+        <div
+          *ngIf="submitError"
+          class="mb-5 border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700"
+          role="alert"
+        >
+          {{ submitError }}
+        </div>
+           
+          <div class="space-y-5">
+            <div>
+              <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
+                Email
+              </label>
+          <input
+            type="email"
+            placeholder="dimitar@email.com"
+            formControlName="email"
+            class="w-full border border-[#E5E7EB] bg-[#F7FAFC] px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none focus:border-[#2563EB]"
+            />
+            <p *ngIf="hasError('email', 'required')" class="mt-2 text-xs font-bold text-red-600">Email is required.</p>
+            <p *ngIf="hasError('email', 'email')" class="mt-2 text-xs font-bold text-red-600">Enter a valid email.</p>
+          </div>
+          
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-[#6B7280]">
+              Password
+            </label>
+            <input
+            type="password"
+            placeholder="********"
+            formControlName="password"
+            class="w-full border border-[#E5E7EB] bg-[#F7FAFC] px-4 py-3 text-[#172033] shadow-[3px_3px_0_#172033] outline-none focus:border-[#2563EB]"
+            />
+            <p *ngIf="hasError('password', 'required')" class="mt-2 text-xs font-bold text-red-600">Password is required.</p>
+            <p *ngIf="hasError('password', 'minlength')" class="mt-2 text-xs font-bold text-red-600">Password must be at least 8 characters.</p>
+            <p *ngIf="hasError('password', 'maxlength')" class="mt-2 text-xs font-bold text-red-600">Password must be 100 characters or less.</p>
+          </div>
+          
+          <div class="flex items-center justify-between text-xs text-[#6B7280]">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" class="accent-[#2563EB]" />
+              Remember me
+            </label>
+            
+            <a href="#" class="hover:text-[#F59E0B]">
+              Forgot password?
+            </a>
+          </div>
+          
+          <button type="submit" class="sb-primary-btn h-14 w-full text-sm" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Signing in...' : 'Enter the Floor' }}
+          </button>
+        </div>
+      </form>
+      <div class="mt-8 border-t border-[#E5E7EB] pt-6 text-sm text-[#6B7280]">
+        No account yet?
+        <a routerLink="/register" class="font-bold uppercase text-[#F59E0B] hover:underline">
+          Join StrongBeton
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

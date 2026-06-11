@@ -1,0 +1,122 @@
+<div class="min-h-screen bg-[#F7FAFC] text-[#172033]">
+  <header class="border-b border-[#E5E7EB] bg-[#FFFFFF] px-5 py-4">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
+      <a routerLink="/" class="flex items-center gap-3">
+        <div class="sb-logo-poster h-12 w-12">
+          <img src="assets/strongbeton-logo.png" alt="StrongBeton logo" class="object-top" />
+        </div>
+        <div>
+          <div class="text-xl font-black uppercase leading-none text-[#172033]">StrongBeton</div>
+          <div class="mt-1 text-[10px] font-black uppercase tracking-[0.22em] text-[#2563EB]">
+            Strength Club
+          </div>
+        </div>
+      </a>
+
+      <nav class="hidden items-center gap-8 text-xs font-black uppercase tracking-wider text-[#6B7280] md:flex">
+        <a href="#features" class="hover:text-[#F59E0B]">System</a>
+        <a href="#score" class="hover:text-[#F59E0B]">Score</a>
+        <a href="#clans" class="hover:text-[#F59E0B]">Clans</a>
+        <a href="#coaching" class="hover:text-[#F59E0B]">Coach</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a
+          routerLink="/login"
+          class="hidden text-xs font-black uppercase tracking-wider text-[#6B7280] hover:text-[#172033] sm:inline-block"
+        >
+          Sign In
+        </a>
+
+        <a routerLink="/register" class="sb-primary-btn px-4 py-2 text-xs">
+          Join
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="border-b border-[#E5E7EB] px-5 py-10 md:py-16">
+      <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_420px] lg:items-center">
+        <div>
+          <p class="sb-club-label text-xs">
+            Retro Bulgarian fitness operating system
+          </p>
+
+          <h1 class="mt-5 text-5xl font-black uppercase leading-[0.92] text-[#172033] md:text-7xl">
+            Train hard.
+            <span class="block text-[#F59E0B]">Log fast.</span>
+            <span class="block text-[#2563EB]">No excuses.</span>
+          </h1>
+
+          <p class="mt-6 max-w-2xl text-base font-bold leading-relaxed text-[#6B7280] md:text-lg">
+            StrongBeton is a serious training system with a retro club soul: fast set logging,
+            visible progress, clan pressure, and numbers that matter.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a routerLink="/register" class="sb-primary-btn h-14 px-7 text-sm">
+              Start Training
+            </a>
+
+            <a href="#features" class="sb-secondary-btn h-14 px-7 text-sm">
+              View System
+            </a>
+          </div>
+        </div>
+
+        <div class="sb-logo-poster mx-auto aspect-[2/3] w-full max-w-sm lg:max-w-none">
+          <img src="assets/strongbeton-logo.png" alt="StrongBeton lion lifting barbell" class="object-cover" />
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="px-5 py-12">
+      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="sb-panel p-5">
+          <div class="text-2xl font-black text-[#F59E0B]">01</div>
+          <h3 class="mt-5 text-xl font-black uppercase">Fast Log</h3>
+          <p class="mt-3 text-sm text-[#6B7280]">
+            Big controls, repeat last set, minimum typing. Built for the gym floor.
+          </p>
+        </article>
+
+        <article id="score" class="sb-panel p-5">
+          <div class="text-2xl font-black text-[#F59E0B]">02</div>
+          <h3 class="mt-5 text-xl font-black uppercase">Strength Score</h3>
+          <p class="mt-3 text-sm text-[#6B7280]">
+            Gold progress signals for volume, consistency, rank, and real strength.
+          </p>
+        </article>
+
+        <article id="clans" class="sb-panel p-5">
+          <div class="text-2xl font-black text-[#F59E0B]">03</div>
+          <h3 class="mt-5 text-xl font-black uppercase">Iron Clans</h3>
+          <p class="mt-3 text-sm text-[#6B7280]">
+            Bulgarian club pressure without casino energy or fake hype.
+          </p>
+        </article>
+
+        <article id="coaching" class="sb-panel p-5">
+          <div class="text-2xl font-black text-[#F59E0B]">04</div>
+          <h3 class="mt-5 text-xl font-black uppercase">Coach Control</h3>
+          <p class="mt-3 text-sm text-[#6B7280]">
+            Programs, readiness, review queues, and direct training feedback.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="border-t border-[#E5E7EB] bg-[#FFFFFF] px-5 py-6">
+      <div class="mx-auto flex max-w-6xl flex-col justify-between gap-4 text-xs uppercase tracking-wider text-[#6B7280] md:flex-row">
+        <div class="font-black text-[#172033]">StrongBeton</div>
+        <div class="flex gap-5">
+          <span>Privacy Policy</span>
+          <span>Terms</span>
+          <span>Support</span>
+        </div>
+        <div>2026 StrongBeton. Built for strength.</div>
+      </div>
+    </footer>
+  </main>
+</div>

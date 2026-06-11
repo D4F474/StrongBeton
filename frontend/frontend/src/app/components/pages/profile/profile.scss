@@ -1,0 +1,13 @@
+.profile-input {
+  width: 100%;
+  border: 1px solid #172033;
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.profile-input:focus {
+  border-color: #f59e0b;
+}
