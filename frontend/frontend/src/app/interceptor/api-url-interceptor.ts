@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
-const API_URL = 'https://strongbeton.railway.internal';
+const API_URL = 'https://strongbeton-production.up.railway.app';
 
 export const apiUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const isExternalUrl =
