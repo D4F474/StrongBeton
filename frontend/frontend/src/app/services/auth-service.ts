@@ -15,7 +15,8 @@ import { ClanDto } from '../common/clan/clan-dto';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8081';
+  private readonly authUrl = '/auth';
+  private readonly usersUrl = '/users';
 
   constructor(
     private httpClient: HttpClient,
@@ -25,14 +26,14 @@ export class AuthService {
 
   register(registerJSON: RegisterDto): Observable<RegisterDto> {
     return this.httpClient.post<RegisterDto>(
-      `${this.baseUrl}/auth/signup`,
+      `${this.authUrl}/signup`,
       registerJSON
     );
   }
 
   login(loginJSON: LoginDto): Observable<AuthToken> {
     return this.httpClient.post<AuthToken>(
-      `${this.baseUrl}/auth/login`,
+      `${this.authUrl}/login`,
       loginJSON
     ).pipe(
       tap((res) => {
@@ -43,7 +44,7 @@ export class AuthService {
   }
 
   getMe(): Observable<userDto> {
-    return this.httpClient.get<userDto>(`${this.baseUrl}/users/me`);
+    return this.httpClient.get<userDto>(`${this.usersUrl}/me`);
   }
 
   restoreSession(): Observable<userDto | null> {
@@ -75,7 +76,7 @@ export class AuthService {
 
   updateProfile(updatedUser: Partial<userDto>): Observable<userDto> {
   return this.httpClient.put<userDto>(
-    `${this.baseUrl}/users/me`,
+    `${this.usersUrl}/updateUserData`,
     updatedUser
   );
 }

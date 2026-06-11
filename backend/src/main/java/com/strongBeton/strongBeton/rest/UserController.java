@@ -9,6 +9,7 @@ import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.service.social.FriendService;
 import com.strongBeton.strongBeton.service.workout.InjuriesService;
 import com.strongBeton.strongBeton.service.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,7 +98,7 @@ public class UserController {
 
     @PutMapping("/updateUserData")
     public ResponseEntity<?> updateUserData(@AuthenticationPrincipal User currentUser,
-                                            @RequestBody UserDTO userUpdateDTO){
+                                            @Valid @RequestBody UserDTO userUpdateDTO){
         return ResponseEntity.ok(this.userService.updateUser(currentUser.getUuid(), userUpdateDTO));
     }
 

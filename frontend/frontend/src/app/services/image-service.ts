@@ -9,7 +9,7 @@ import { ProfileImageData } from '../common/image/profile-image-data';
   providedIn: 'root',
 })
 export class ImageService {
-  private readonly baseUrl = 'http://localhost:8081/api/';
+  private readonly baseUrl = '/api/';
 
   constructor(private httpClient: HttpClient) {}
 

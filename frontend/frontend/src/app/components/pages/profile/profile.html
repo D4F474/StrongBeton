@@ -232,7 +232,8 @@
 
         <button
           type="submit"
-          class="border border-[#2563EB] bg-[#2563EB] px-6 py-3 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:-translate-y-[1px] hover:bg-[#1D4ED8]"
+          [disabled]="form.invalid"
+          class="border border-[#2563EB] bg-[#2563EB] px-6 py-3 text-xs font-black uppercase tracking-wide text-white shadow-sm transition hover:-translate-y-[1px] hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-40"
         >
           Update Profile
         </button>

@@ -96,6 +96,7 @@ public class WorkoutServiceImpl implements WorkoutService {
 
 
     @Override
+    @Transactional
     public Map<String,List<WorkoutDTO>> findByUserId(UUID userUuid) {
         int userId = this.userRepository.findByUuid(userUuid).map(u -> u.getId())
                 .orElseThrow(() -> new RuntimeException("Theres no user like this!"));
@@ -103,7 +104,9 @@ public class WorkoutServiceImpl implements WorkoutService {
         List<WorkoutDTO> dtos = workoutRepository.findByUserId(userId)
                 .stream()
                 .map(workout -> {
-                    WorkoutDTO workoutDTO = modelMapper.map(workout, WorkoutDTO.class);
+                    WorkoutDTO workoutDTO = new WorkoutDTO();
+                    workoutDTO.setId(workout.getId());
+                    workoutDTO.setDate(workout.getDate());
 
                     Double sumOfKg = workoutRepository.getTonnageForWorkout(workout.getId());
                     workoutDTO.setTotal_tonnage_kg(sumOfKg != null ? sumOfKg : 0.0);
@@ -115,6 +118,9 @@ public class WorkoutServiceImpl implements WorkoutService {
                     workoutDTO.setWorkoutVolume(workoutVolume != null ? workoutVolume : 0.0);
 
                     workoutDTO.setWorkoutName(workout.getWorkoutTemplate().getWorkout_name());
+                    if (workout.getStatus() != null) {
+                        workoutDTO.setStatus(workout.getStatus().name());
+                    }
 
                     return workoutDTO;
                 })
@@ -165,6 +171,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         return isOwner || isAuthorizedCoach;
     }
 
+    @Transactional
     public WorkoutDetailsDTO saveWorkoutDetails(WorkoutDetails workoutDetails) {
 
         if (workoutDetails.getWorkoutId() == null || workoutDetails.getWorkoutId() == null) {
@@ -259,7 +266,7 @@ public class WorkoutServiceImpl implements WorkoutService {
         workout.setStatus(WorkoutStatus.FINISHED);
         workout.setUpdatedAt(LocalDateTime.now());
 
-        this.clanContributionService.addContributionForFinishedWorkout(workout);
+        this.clanContributionService.addContributionForFinishedWorkout(workout, user);
 
         Workout saved = workoutRepository.save(workout);
 
@@ -297,6 +304,7 @@ public class WorkoutServiceImpl implements WorkoutService {
     }
 
     @Override
+    @Transactional
     public Optional<ActiveWorkoutPreviewDTO> findActiveWorkoutPreview(User user) {
 
         return workoutRepository

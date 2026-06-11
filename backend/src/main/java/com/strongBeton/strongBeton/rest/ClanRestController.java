@@ -55,9 +55,9 @@ public class ClanRestController {
 
     @PutMapping("/{clanId}")
     public ResponseEntity<ClanDTO> updateClan(@PathVariable int clanId,
-                                              @RequestParam UUID userId,
+                                              @AuthenticationPrincipal User user,
                                               @RequestBody ClanDTO clanDTO) {
-        return ResponseEntity.ok(clanService.updateClan(clanId, userId, clanDTO));
+        return ResponseEntity.ok(clanService.updateClan(clanId, user, clanDTO));
     }
 
     @DeleteMapping("/{clanId}")
@@ -134,11 +134,13 @@ public class ClanRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{clanId}/leadership/transfer")
-    public ResponseEntity<Void> transferLeadership(@PathVariable int clanId,
-                                                   @RequestParam UUID newLeaderUserId,
-                                                   @RequestParam int currentLeaderId) {
-        clanService.transferLeadership(clanId, newLeaderUserId, currentLeaderId);
+    @PostMapping("/{clanId}/leadership/transfer")
+    public ResponseEntity<Void> transferLeadership(
+            @PathVariable int clanId,
+            @RequestParam UUID newLeaderUserId,
+            @AuthenticationPrincipal User requester
+    ) {
+        clanService.transferLeadership(clanId, newLeaderUserId, requester);
         return ResponseEntity.ok().build();
     }
 
@@ -148,4 +150,34 @@ public class ClanRestController {
     ) {
         return ResponseEntity.ok(clanContributionService.getRecentContributions(clanId));
     }
+
+    @GetMapping("/{clanId}/pending")
+    public ResponseEntity<List<ClanMemberDTO>> getPendingRequests(
+            @PathVariable int clanId,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(clanService.getPendingRequests(clanId, user));
+    }
+
+    @PostMapping("/{clanId}/pending/{targetUserUuid}/accept")
+    public ResponseEntity<Void> acceptPendingMember(
+            @PathVariable int clanId,
+            @PathVariable UUID targetUserUuid,
+            @AuthenticationPrincipal User user
+    ) {
+        clanService.acceptPendingMember(clanId, targetUserUuid, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{clanId}/pending/{targetUserUuid}/decline")
+    public ResponseEntity<Void> declinePendingMember(
+            @PathVariable int clanId,
+            @PathVariable UUID targetUserUuid,
+            @AuthenticationPrincipal User user
+    ) {
+        clanService.declinePendingMember(clanId, targetUserUuid, user);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

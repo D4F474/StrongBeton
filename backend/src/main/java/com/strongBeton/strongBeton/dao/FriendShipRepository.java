@@ -18,21 +18,43 @@ public interface FriendShipRepository extends JpaRepository<FriendShip, Integer>
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO friendship(user_id, friend_id, status) VALUES (:userId, :friendId, 1)", nativeQuery = true)
-    void sendingFriendRequest(@Param("userId")int userId,@Param("friendId") int friendId);
+    @Query(
+            value = "INSERT INTO friendship(user_id, friend_id, status) VALUES (:userId, :friendId, 'PENDING')",
+            nativeQuery = true
+    )
+    void sendingFriendRequest(
+            @Param("userId") int userId,
+            @Param("friendId") int friendId
+    );
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO friendship(user_id, friend_id, status) VALUES (:friendId, :userId, 4)", nativeQuery = true)
-    void receiveTheRequest(@Param("friendId") int friendId, @Param("userId")int userId);
-
+    @Query(
+            value = "INSERT INTO friendship(user_id, friend_id, status) VALUES (:friendId, :userId, 'RESPONSE')",
+            nativeQuery = true
+    )
+    void receiveTheRequest(
+            @Param("friendId") int friendId,
+            @Param("userId") int userId
+    );
     @Modifying
     @Transactional
-    @Query(value = "UPDATE friendship SET status = :statusD WHERE user_id = :userId AND friend_id = :friendId", nativeQuery = true)
-    void acceptFriendRequest(@Param("userId") int userId, @Param("friendId") int friendId, @Param("statusD")FriendStatus statusD);
-
+    @Query(
+            value = "UPDATE friendship SET status = 'ACCEPTED' WHERE user_id = :userId AND friend_id = :friendId",
+            nativeQuery = true
+    )
+    void acceptFriendRequest(
+            @Param("userId") int userId,
+            @Param("friendId") int friendId
+    );
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM friendship WHERE user_id = :userId AND friend_id = :friendId", nativeQuery = true)
-    void deleteFriendRequest(@Param("userId")int userId, @Param("friendId") int friendId);
+    @Query(
+            value = "DELETE FROM friendship WHERE user_id = :userId AND friend_id = :friendId",
+            nativeQuery = true
+    )
+    void deleteFriendRequest(
+            @Param("userId") int userId,
+            @Param("friendId") int friendId
+    );
 }

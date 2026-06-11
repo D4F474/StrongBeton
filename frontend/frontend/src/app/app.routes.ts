@@ -16,6 +16,9 @@ import { Profile } from './components/pages/profile/profile';
 import { WorkoutSummary } from './components/pages/workout-summary/workout-summary';
 import { Settings } from './components/pages/settings/settings';
 import { authGuard } from './guards/auth-guard';
+import { Friends } from './components/pages/friends/friends';
+import { Feed } from './components/pages/feed/feed';
+
 
 export const routes: Routes = [
   {
@@ -42,6 +45,8 @@ export const routes: Routes = [
       { path: 'coach', component: Coach },
       { path: 'profile', component: Profile },
       { path: 'settings', component: Settings },
+      { path: 'friends', component: Friends, canActivate: [authGuard] },
+      { path: 'feed', component: Feed, canActivate: [authGuard] },
     ],
   },
 ];

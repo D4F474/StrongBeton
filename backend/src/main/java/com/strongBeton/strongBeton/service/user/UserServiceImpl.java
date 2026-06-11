@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
         this.kgLogRepository = kgLogRepository;
     }
 
+    @Transactional
     public UserDTO loadUserDataByEmail(String email){
             User user = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("No such user"));
             //Optional<UserTrainingDetails> userTrainingDataExist = userTrainingDetails.findById(user.getId());
@@ -84,17 +86,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO updateUser(UUID UUID, UserDTO userUpdateDTO) {
-        System.out.println(userUpdateDTO);
         boolean updateData = false;
         User user = this.userRepository.findByUuid(UUID).orElseThrow();
+        AdditionalInfo additionalInfo = user.getAdditionalInfo();
 
-        if (!userUpdateDTO.getFirstName().equals(user.getAdditionalInfo().getFirstName())) {
+        String firstName = normalizeProfileName(userUpdateDTO.getFirstName());
+        String lastName = normalizeProfileName(userUpdateDTO.getLastName());
+
+        if (!Objects.equals(firstName, additionalInfo.getFirstName())) {
             updateData = true;
-            user.getAdditionalInfo().setFirstName(userUpdateDTO.getFirstName());
+            additionalInfo.setFirstName(firstName);
         }
-        if (!userUpdateDTO.getLastName().equals(user.getAdditionalInfo().getLastName())) {
+        if (!Objects.equals(lastName, additionalInfo.getLastName())) {
             updateData = true;
-            user.getAdditionalInfo().setLastName(userUpdateDTO.getLastName());
+            additionalInfo.setLastName(lastName);
         }
 
         KGLogs kgLogs = this.kgLogRepository.findTopByUserIdOrderByLoggedAtDesc(user.getId()).orElseThrow();
@@ -108,14 +113,26 @@ public class UserServiceImpl implements UserService {
 
         UserDTO userDto = new UserDTO();
         userDto.setId(user.getUuid());
-        userDto.setFirstName(user.getAdditionalInfo().getFirstName());
-        userDto.setLastName(user.getAdditionalInfo().getLastName());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstName(additionalInfo.getFirstName());
+        userDto.setLastName(additionalInfo.getLastName());
         userDto.setKg(kgLogs.getKg());
-        userDto.setCm(user.getAdditionalInfo().getCm());
-        userDto.setBornDate(user.getAdditionalInfo().getBornDate());
+        userDto.setCm(additionalInfo.getCm());
+        userDto.setBornDate(additionalInfo.getBornDate());
+        userDto.setGender(additionalInfo.isGender());
         if (updateData) {
             this.userRepository.save(user);
         }
         return userDto;
+    }
+
+    private String normalizeProfileName(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }

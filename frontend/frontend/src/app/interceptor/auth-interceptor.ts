@@ -9,8 +9,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authState = inject(AuthState);
   const router = inject(Router);
   const token = authState.token();
+  const isAuthRequest = req.url.startsWith('/auth/');
 
-  const authReq = token
+  const authReq = token && !isAuthRequest
     ? req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -22,6 +23,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: unknown) => {
       if (
         error instanceof HttpErrorResponse &&
+        !isAuthRequest &&
         (error.status === 401 || error.status === 403)
       ) {
         authState.clear();

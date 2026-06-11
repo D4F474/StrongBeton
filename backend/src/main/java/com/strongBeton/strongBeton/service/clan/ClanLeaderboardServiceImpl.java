@@ -4,6 +4,7 @@ import com.strongBeton.strongBeton.dao.ClanMembersRepository;
 import com.strongBeton.strongBeton.dao.ClanRepository;
 import com.strongBeton.strongBeton.dto.clan.ClanLeaderboardDTO;
 import com.strongBeton.strongBeton.entity.clan.Clan;
+import com.strongBeton.strongBeton.enums.ClanRoleType;
 import com.strongBeton.strongBeton.scoring.clan.ClanScoreCalculator;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,17 @@ public class ClanLeaderboardServiceImpl implements ClanLeaderboardService{
     }
 
     private ClanLeaderboardDTO mapClanToLeaderboardDTO(Clan clan) {
-        Integer totalMembersResult = clanMemberRepository.countMembersByClanId(clan.getId());
-        Integer activeMembersResult = clanMemberRepository.countActiveMembersByClanId(clan.getId());
+        Integer totalMembersResult =
+                clanMemberRepository.countMembersByClanIdExcludingRole(
+                        clan.getId(),
+                        ClanRoleType.PENDING
+                );
+
+        Integer activeMembersResult =
+                clanMemberRepository.countActiveMembersByClanIdExcludingRole(
+                        clan.getId(),
+                        ClanRoleType.PENDING
+                );
 
         int totalMembers = totalMembersResult != null ? totalMembersResult : 0;
         int activeMembers = activeMembersResult != null ? activeMembersResult : 0;

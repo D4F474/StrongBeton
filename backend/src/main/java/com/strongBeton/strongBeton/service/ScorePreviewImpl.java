@@ -32,8 +32,6 @@ public class ScorePreviewImpl implements ScorePreviewService{
                 .orElseThrow(() -> new EntityNotFoundException("Exercise not found"));
 
         ExerciseDifficulty difficulty = exercise.getExerciseDifficulty();
-        // Ако при теб getter-ът е друг, примерно:
-        // ExerciseDifficulty difficulty = exercise.getDifficultyType();
 
         OptionalDouble oneRmOptional = strengthScoreCalculator.estimateOneRepMax(
                 request.getWeight(),

@@ -157,7 +157,7 @@ export class ActiveWorkout implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (workout) => {
-          const name = workout.workoutName;
+          const name = workout.workoutName.trim();
 
           if (!this.workoutGroups[name]) {
             this.workoutGroups[name] = [];
@@ -306,7 +306,7 @@ export class ActiveWorkout implements OnInit {
   }
 
   logSet(): void {
-    if (!this.canEditWorkout || !this.selectedDetail) {
+    if (!this.canEditWorkout || !this.selectedDetail || this.currentKg <= 0 || this.currentReps <= 0) {
       return;
     }
 
@@ -321,13 +321,13 @@ export class ActiveWorkout implements OnInit {
     this.workoutService
       .saveSet(set)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (saved) => {
-          this.sets = [...this.sets, saved];
-          this.syncView();
-        },
-        error: (error) => console.error(error),
-      });
+      .subscribe({          
+          next: (saved) => {
+            this.sets = [...this.sets, saved];
+            this.syncView();
+          },
+          error: (error) => console.error(error),
+        });
   }
 
   finishWorkout(): void {

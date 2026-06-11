@@ -23,7 +23,7 @@ public class User implements UserDetails {
     @Column(name="username")
     private String username;
 
-    @Column(name="password_hash")
+    @Column(name="password_hash", length = 255)
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY,

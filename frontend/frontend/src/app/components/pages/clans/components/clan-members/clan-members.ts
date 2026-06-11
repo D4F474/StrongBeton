@@ -52,4 +52,10 @@ export class ClanMembers {
   trackByIndex(index: number): number {
     return index;
   }
+
+  private isAcceptedMember(member: ClanMemberDto): boolean {
+  const role = String(member.clanRoleType ?? '').toUpperCase();
+
+  return !role.includes('PENDING');
+}
 }

@@ -98,4 +98,20 @@ public class FeedPost {
     public void setPostType(PostType postType) {
         this.postType = postType;
     }
+
+    public List<FeedPostComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<FeedPostComment> comments) {
+        this.comments = comments;
+    }
+
+    public List<FeedPostLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<FeedPostLike> likes) {
+        this.likes = likes;
+    }
 }

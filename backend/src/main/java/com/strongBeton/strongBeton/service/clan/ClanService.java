@@ -13,7 +13,7 @@ public interface ClanService {
     ClanDTO createClan(ClanDTO clanDTO, User user);
     ClanDTO getMyClan(User user);
     ClanDTO getClanById(int clanId);
-    ClanDTO updateClan(int clanId, UUID userId, ClanDTO clanDTO);
+    ClanDTO updateClan(int clanId, User user, ClanDTO clanDTO);
     void deleteClan(int clanId, UUID userId);
 
     void joinClan(int clanId, User user);
@@ -25,8 +25,13 @@ public interface ClanService {
 
     void promoteMember(int clanId, int targetUserId, UUID requesterId);
     void demoteMember(int clanId, int targetUserId, UUID requesterId);
-    void transferLeadership(int clanId, UUID newLeaderUserId, int currentLeaderId);
+    public void transferLeadership(int clanId, UUID newLeaderUserId, User requester);
 
+    List<ClanMemberDTO> getPendingRequests(int clanId, User requester);
+
+    void acceptPendingMember(int clanId, UUID targetUserUuid, User requester);
+
+    void declinePendingMember(int clanId, UUID targetUserUuid, User requester);
 
 
 

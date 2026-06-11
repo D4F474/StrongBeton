@@ -10,8 +10,11 @@ import com.strongBeton.strongBeton.entity.user.AdditionalInfo;
 import com.strongBeton.strongBeton.entity.user.KGLogs;
 import com.strongBeton.strongBeton.entity.user.Role;
 import com.strongBeton.strongBeton.entity.user.User;
+import com.strongBeton.strongBeton.service.EmailService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,25 +27,31 @@ import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passswordEncoder;
     private final AuthenticationManager authenticationManager;
     private final KGLogRepository kgLogRepository;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
                            PasswordEncoder passswordEncoder,
                            AuthenticationManager authenticationManager,
                            RoleRepository roleRepository,
-                           KGLogRepository kgLogRepository,ModelMapper modelMapper) {
+                           KGLogRepository kgLogRepository,
+                           ModelMapper modelMapper,
+                           EmailService emailService) {
         this.userRepository = userRepository;
         this.passswordEncoder = passswordEncoder;
         this.authenticationManager = authenticationManager;
         this.roleRepository = roleRepository;
         this.kgLogRepository = kgLogRepository;
         this.modelMapper = modelMapper;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -91,6 +100,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(role);
         userRepository.save(user);
         kgLogRepository.save(kgLogs);
+        sendWelcomeEmail(user);
 
         userDTO.setId(user.getUuid());
         userDTO.setUsername(user.getUsername());
@@ -115,4 +125,18 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByEmail(input.getEmail())
                 .orElseThrow();
     }
+
+    private void sendWelcomeEmail(User user) {
+        try {
+            emailService.sendEmail(
+                    user.getEmail(),
+                    "Welcome to StrongBeton",
+                    "Welcome, " + user.getUsername() + "!\n\n"
+                            + "Your StrongBeton account was created successfully."
+            );
+        } catch (Exception ex) {
+            LOGGER.warn("Welcome email failed for user {}", user.getId(), ex);
+        }
+    }
+
 }

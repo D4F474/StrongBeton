@@ -7,13 +7,13 @@ import { ClanLeaderboardDto } from '../common/clan/clan-leaderboard-dto';
 import { catchError } from 'rxjs';
 import { ClanMemberContributionDto } from '../common/clan/clan-member-contribution-dto';
 import { UpdateClanPayLoad } from '../common/clan/update-clan-pay-load';
-
+import { ClanMemberDto } from '../common/clan/clan-member-dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClanService {
-   private readonly baseUrl = 'http://localhost:8081/api/clans';
+   private readonly baseUrl = '/api/clans';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -32,11 +32,10 @@ export class ClanService {
 
   updateClan(
   clanId: number,
-  userId: string,
-  payload: { name: string; description: string; invite: boolean }
+  payload: UpdateClanPayLoad
 ): Observable<ClanDto> {
   return this.httpClient.put<ClanDto>(
-    `${this.baseUrl}/${clanId}?userId=${userId}`,
+    `${this.baseUrl}/${clanId}`,
     payload
   );
 }
@@ -68,6 +67,39 @@ export class ClanService {
   getClanContributions(clanId: number): Observable<ClanMemberContributionDto[]> {
   return this.httpClient.get<ClanMemberContributionDto[]>(
     `${this.baseUrl}/${clanId}/contributions`
+  );
+}
+
+getPendingRequests(clanId: number): Observable<ClanMemberDto[]> {
+  return this.httpClient.get<ClanMemberDto[]>(
+    `${this.baseUrl}/${clanId}/pending`
+  );
+}
+
+acceptPendingMember(clanId: number, targetUserUuid: string): Observable<void> {
+  return this.httpClient.post<void>(
+    `${this.baseUrl}/${clanId}/pending/${targetUserUuid}/accept`,
+    {}
+  );
+}
+
+declinePendingMember(clanId: number, targetUserUuid: string): Observable<void> {
+  return this.httpClient.post<void>(
+    `${this.baseUrl}/${clanId}/pending/${targetUserUuid}/decline`,
+    {}
+  );
+}
+
+kickMember(clanId: number, targetUserUuid: string): Observable<void> {
+  return this.httpClient.delete<void>(
+    `${this.baseUrl}/${clanId}/kick?targetUserId=${targetUserUuid}`
+  );
+}
+
+transferLeadership(clanId: number, newLeaderUserUuid: string): Observable<void> {
+  return this.httpClient.post<void>(
+    `${this.baseUrl}/${clanId}/leadership/transfer?newLeaderUserId=${newLeaderUserUuid}`,
+    {}
   );
 }
 }

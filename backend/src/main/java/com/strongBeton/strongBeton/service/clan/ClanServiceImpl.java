@@ -48,12 +48,15 @@ public class ClanServiceImpl implements ClanService{
 
         Clan clan = clanMember.getClan();
 
+
         if (clan == null) {
             throw new EntityNotFoundException("No clan");
         }
 
         ClanDTO clanDTO = new ClanDTO();
 
+        clanDTO.setCurrentUserRole(clanMember.getClanRoleType().getText());
+        clanDTO.setCurrentUserUuid(user.getUuid());
         clanDTO.setId(clan.getId());
         clanDTO.setName(clan.getName());
         clanDTO.setDescription(clan.getDescription());
@@ -64,11 +67,17 @@ public class ClanServiceImpl implements ClanService{
         clanDTO.setCreatedAt(clan.getCreatedAt());
         List<ClanMemberDTO> clanMemberDTOS = new ArrayList<>();
         for (ClanMember tempClanMember : clan.getMembers()) {
+            if (tempClanMember.getClanRoleType() == ClanRoleType.PENDING) {
+                continue;
+            }
+
             ClanMemberDTO clanMemberDTO = new ClanMemberDTO();
 
             clanMemberDTO.setId(tempClanMember.getId());
 
             if (tempClanMember.getUser() != null) {
+                clanMemberDTO.setUserUuid(tempClanMember.getUser().getUuid());
+
                 String username = tempClanMember.getUser().getUsername();
 
                 if (username != null && !username.isBlank()) {
@@ -123,6 +132,7 @@ public class ClanServiceImpl implements ClanService{
 
         Clan savedClan = clanRepository.save(clan);
 
+
         ClanMember clanMember = new ClanMember();
         clanMember.setClan(savedClan);
         clanMember.setUser(managedUser);
@@ -146,25 +156,38 @@ public class ClanServiceImpl implements ClanService{
     }
 
     @Override
-    public ClanDTO updateClan(int clanId, UUID userId, ClanDTO clanDTO) {
-        Optional<Clan> result = clanRepository.findByName(clanDTO.getName());
-        if (result.isPresent()) {
-            throw new IllegalStateException("Clan with this name already exists");
-        }
-        User user = userRepository.findByUuid(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No user with this credits"));
-        Clan clan = clanRepository.findById(clanId) // ✅ вземаш правилния clan
+    @Transactional
+    public ClanDTO updateClan(int clanId, User user, ClanDTO clanDTO) {
+        Clan clan = clanRepository.findById(clanId)
                 .orElseThrow(() -> new EntityNotFoundException("No clan with this id"));
+
         ClanMember member = clanMembersRepository.findByClanAndUser(clan, user)
                 .orElseThrow(() -> new EntityNotFoundException("User is not in this clan"));
+
         if (member.getClanRoleType() != ClanRoleType.LEADER) {
             throw new IllegalStateException("Only leader can update clan");
         }
-        clan.setName(clanDTO.getName());
+
+        String newName = clanDTO.getName();
+
+        if (newName == null || newName.isBlank()) {
+            throw new IllegalArgumentException("Clan name is required");
+        }
+
+        Optional<Clan> result = clanRepository.findByName(newName.trim());
+
+        if (result.isPresent() && result.get().getId() != clanId) {
+            throw new IllegalStateException("Clan with this name already exists");
+        }
+
+        clan.setName(newName.trim());
         clan.setInvite(clanDTO.isInvite());
         clan.setDescription(clanDTO.getDescription());
+        clan.setUpdatedAt(LocalDateTime.now());
+
         clanRepository.save(clan);
-        return this.modelMapper.map(clan, ClanDTO.class);
+
+        return getMyClan(user);
     }
 
     @Override
@@ -221,39 +244,44 @@ public class ClanServiceImpl implements ClanService{
     }
 
     @Override
+    @Transactional
     public void kickMember(int clanId, UUID targetUserId, User requester) {
-        Clan clan = this.clanRepository.findById(clanId)
+        Clan clan = clanRepository.findById(clanId)
                 .orElseThrow(() -> new EntityNotFoundException("Clan not found!"));
 
-        ClanMember requesterMember = clan.getMembers().stream()
-                .filter(m -> m.getUser().getUuid().equals(requester.getUuid()))
-                .findFirst()
+        ClanMember requesterMember = clanMembersRepository.findByClanAndUser(clan, requester)
                 .orElseThrow(() -> new EntityNotFoundException("Requester is not in this clan!"));
 
-        boolean canKick = requesterMember.getClanRoleType() == ClanRoleType.LEADER
-                || requesterMember.getClanRoleType() == ClanRoleType.OFFICER;
+        boolean canKick =
+                requesterMember.getClanRoleType() == ClanRoleType.LEADER ||
+                        requesterMember.getClanRoleType() == ClanRoleType.OFFICER;
 
         if (!canKick) {
             throw new IllegalStateException("Insufficient permissions to kick members!");
         }
 
-        ClanMember target = clan.getMembers().stream()
-                .filter(m -> m.getUser().getUuid().equals(targetUserId))
-                .findFirst()
+        User targetUser = userRepository.findByUuid(targetUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Target user not found!"));
+
+        ClanMember targetMember = clanMembersRepository.findByClanAndUser(clan, targetUser)
                 .orElseThrow(() -> new EntityNotFoundException("Target member not found in clan!"));
 
-        if (target.getUser().getUuid().equals(requester.getUuid())) {
+        if (targetMember.getUser().getUuid().equals(requester.getUuid())) {
             throw new IllegalStateException("Cannot kick yourself!");
         }
 
-        if (requesterMember.getClanRoleType() == ClanRoleType.OFFICER
-                && (target.getClanRoleType() == ClanRoleType.LEADER
-                || target.getClanRoleType() == ClanRoleType.OFFICER)) {
-            throw new IllegalStateException("Officers can only kick members below their rank!");
+        if (targetMember.getClanRoleType() == ClanRoleType.LEADER) {
+            throw new IllegalStateException("Cannot kick the clan leader!");
         }
 
-        clan.getMembers().remove(target);
-        this.clanRepository.save(clan);
+        if (
+                requesterMember.getClanRoleType() == ClanRoleType.OFFICER &&
+                        targetMember.getClanRoleType() == ClanRoleType.OFFICER
+        ) {
+            throw new IllegalStateException("Officers cannot kick other officers!");
+        }
+
+        clanMembersRepository.delete(targetMember);
     }
 
     @Override
@@ -461,26 +489,26 @@ public class ClanServiceImpl implements ClanService{
     }
 
     @Override
-    public void transferLeadership(int clanId, UUID newLeaderUserId, int currentLeaderId) {
-        Clan clan = this.clanRepository.findById(clanId)
+    @Transactional
+    public void transferLeadership(int clanId, UUID newLeaderUserId, User requester) {
+        Clan clan = clanRepository.findById(clanId)
                 .orElseThrow(() -> new EntityNotFoundException("Clan not found!"));
 
-        ClanMember currentLeader = clan.getMembers().stream()
-                .filter(m -> m.getUser().getId() == currentLeaderId)
-                .findFirst()
-                .orElseThrow(() -> new EntityNotFoundException("Current leader not found in clan!"));
+        ClanMember currentLeader = clanMembersRepository.findByClanAndUser(clan, requester)
+                .orElseThrow(() -> new EntityNotFoundException("Requester is not in this clan!"));
 
         if (currentLeader.getClanRoleType() != ClanRoleType.LEADER) {
-            throw new IllegalStateException("Only the current Leader can transfer leadership!");
+            throw new IllegalStateException("Only the current leader can transfer leadership!");
         }
 
-        ClanMember newLeader = clan.getMembers().stream()
-                .filter(m -> m.getUser().getUuid().equals(newLeaderUserId))
-                .findFirst()
+        User newLeaderUser = userRepository.findByUuid(newLeaderUserId)
+                .orElseThrow(() -> new EntityNotFoundException("New leader user not found!"));
+
+        ClanMember newLeader = clanMembersRepository.findByClanAndUser(clan, newLeaderUser)
                 .orElseThrow(() -> new EntityNotFoundException("Target member not found in clan!"));
 
-        if (newLeader.getUser().getId() == currentLeaderId) {
-            throw new IllegalStateException("You are already the Leader!");
+        if (newLeader.getUser().getUuid().equals(requester.getUuid())) {
+            throw new IllegalStateException("You are already the leader!");
         }
 
         if (newLeader.getClanRoleType() == ClanRoleType.PENDING) {
@@ -488,8 +516,114 @@ public class ClanServiceImpl implements ClanService{
         }
 
         currentLeader.setClanRoleType(ClanRoleType.OFFICER);
-        newLeader.setClanRoleType(ClanRoleType.LEADER);
+        currentLeader.setUpdatedAt(LocalDateTime.now());
 
-        this.clanRepository.save(clan);
+        newLeader.setClanRoleType(ClanRoleType.LEADER);
+        newLeader.setUpdatedAt(LocalDateTime.now());
+
+        clanMembersRepository.save(currentLeader);
+        clanMembersRepository.save(newLeader);
+    }
+
+    @Override
+    @Transactional
+    public List<ClanMemberDTO> getPendingRequests(int clanId, User requester) {
+        Clan clan = clanRepository.findById(clanId)
+                .orElseThrow(() -> new EntityNotFoundException("Clan not found"));
+
+        ClanMember requesterMember = clanMembersRepository.findByClanAndUser(clan, requester)
+                .orElseThrow(() -> new EntityNotFoundException("User is not in this clan"));
+
+        if (requesterMember.getClanRoleType() != ClanRoleType.LEADER) {
+            throw new IllegalStateException("Only leader can view pending requests");
+        }
+
+        return clanMembersRepository.findByClanAndClanRoleType(clan, ClanRoleType.PENDING)
+                .stream()
+                .map(this::mapClanMemberToDTO)
+                .toList();
+    }
+
+
+    @Override
+    @Transactional
+    public void acceptPendingMember(int clanId, UUID targetUserUuid, User requester) {
+        Clan clan = clanRepository.findById(clanId)
+                .orElseThrow(() -> new EntityNotFoundException("Clan not found"));
+
+        ClanMember requesterMember = clanMembersRepository.findByClanAndUser(clan, requester)
+                .orElseThrow(() -> new EntityNotFoundException("User is not in this clan"));
+
+        if (requesterMember.getClanRoleType() != ClanRoleType.LEADER) {
+            throw new IllegalStateException("Only leader can accept pending members");
+        }
+
+        User targetUser = userRepository.findByUuid(targetUserUuid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        ClanMember pendingMember = clanMembersRepository.findByClanAndUser(clan, targetUser)
+                .orElseThrow(() -> new EntityNotFoundException("Pending request not found"));
+
+        if (pendingMember.getClanRoleType() != ClanRoleType.PENDING) {
+            throw new IllegalStateException("User is not pending");
+        }
+
+        pendingMember.setClanRoleType(ClanRoleType.MEMBER);
+        pendingMember.setUpdatedAt(LocalDateTime.now());
+
+        clanMembersRepository.save(pendingMember);
+    }
+
+    @Override
+    @Transactional
+    public void declinePendingMember(int clanId, UUID targetUserUuid, User requester) {
+        Clan clan = clanRepository.findById(clanId)
+                .orElseThrow(() -> new EntityNotFoundException("Clan not found"));
+
+        ClanMember requesterMember = clanMembersRepository.findByClanAndUser(clan, requester)
+                .orElseThrow(() -> new EntityNotFoundException("User is not in this clan"));
+
+        if (requesterMember.getClanRoleType() != ClanRoleType.LEADER) {
+            throw new IllegalStateException("Only leader can decline pending members");
+        }
+
+        User targetUser = userRepository.findByUuid(targetUserUuid)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        ClanMember pendingMember = clanMembersRepository.findByClanAndUser(clan, targetUser)
+                .orElseThrow(() -> new EntityNotFoundException("Pending request not found"));
+
+        if (pendingMember.getClanRoleType() != ClanRoleType.PENDING) {
+            throw new IllegalStateException("User is not pending");
+        }
+
+        clanMembersRepository.delete(pendingMember);
+    }
+
+    private ClanMemberDTO mapClanMemberToDTO(ClanMember clanMember) {
+        ClanMemberDTO dto = new ClanMemberDTO();
+
+        dto.setId(clanMember.getId());
+
+        if (clanMember.getUser() != null) {
+            dto.setUserUuid(clanMember.getUser().getUuid());
+
+            String username = clanMember.getUser().getUsername();
+
+            if (username != null && !username.isBlank()) {
+                dto.setUsername(username);
+            } else {
+                dto.setUsername(clanMember.getUser().getEmail());
+            }
+        } else {
+            dto.setUsername("Athlete");
+        }
+
+        dto.setClanId(clanMember.getClan().getId());
+        dto.setClanRoleType(clanMember.getClanRoleType().getText());
+        dto.setPoints(clanMember.getPoints());
+        dto.setJoinedAt(clanMember.getJoinedAt());
+
+        return dto;
     }
 }

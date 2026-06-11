@@ -20,7 +20,7 @@ export type ActiveWorkoutPreview = {
   providedIn: 'root',
 })
 export class WorkoutService {
-  private readonly baseUrl = 'http://localhost:8081/api';
+  private readonly baseUrl = '/api';
 
   constructor(private httpClient: HttpClient) {}
 

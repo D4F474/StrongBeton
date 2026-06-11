@@ -8,7 +8,9 @@ import com.strongBeton.strongBeton.dto.clan.ClanMemberContributionDTO;
 import com.strongBeton.strongBeton.entity.clan.Clan;
 import com.strongBeton.strongBeton.entity.clan.ClanMember;
 import com.strongBeton.strongBeton.entity.clan.ClanMemberContribution;
+import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.entity.workout.Workout;
+import com.strongBeton.strongBeton.enums.ClanRoleType;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
@@ -43,11 +45,23 @@ public class ClanContributionServiceImpl implements ClanContributionService{
     }
 
     @Transactional
-    public void addContributionForFinishedWorkout(Workout workout) {
+    public void addContributionForFinishedWorkout(Workout workout, User user) {
         Optional<ClanMember> clanMemberOptional =
                 clanMemberRepository.findByUserId(workout.getUser().getId());
 
         if (clanMemberOptional.isEmpty()) {
+            return;
+        }
+
+        ClanMember clanMember = clanMemberOptional.get();
+
+        if (clanMember.getClanRoleType() == ClanRoleType.PENDING) {
+            return;
+        }
+
+        Clan clan = clanMember.getClan();
+
+        if (clan == null) {
             return;
         }
 
@@ -56,9 +70,6 @@ public class ClanContributionServiceImpl implements ClanContributionService{
         if (workoutScore == null || workoutScore <= 0) {
             return;
         }
-
-        ClanMember clanMember = clanMemberOptional.get();
-        Clan clan = clanMember.getClan();
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();

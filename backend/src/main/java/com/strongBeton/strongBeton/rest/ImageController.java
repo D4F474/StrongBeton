@@ -24,7 +24,6 @@ public class ImageController {
     @GetMapping("/getPhoto")
     public ResponseEntity<?> getPhoto(@AuthenticationPrincipal User currentUser) {
         try {
-            System.out.println(imageService.getProfileImage(currentUser.getId()));
             return ResponseEntity.ok(imageService.getProfileImage(currentUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();

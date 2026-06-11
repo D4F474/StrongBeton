@@ -1,38 +1,94 @@
-<header class="sb-topbar sticky top-0 z-40 flex h-14 items-center justify-between border-b px-3 md:h-16 md:px-6">
-  <a routerLink="/app/home" class="flex items-center gap-3">
-    <div class="flex h-9 w-9 items-center justify-center rounded-none border border-[#2563EB]/20 bg-[#DBEAFE] text-sm font-black text-[#2563EB] shadow-[0_6px_14px_rgba(15,23,42,0.06)] md:hidden">
+<header
+  class="sb-topbar sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white/95 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] backdrop-blur md:px-6"
+>
+  <!-- LEFT: Brand -->
+  <a routerLink="/app/home" class="group flex items-center gap-3">
+    <div
+      class="flex h-10 w-10 items-center justify-center border border-[#2563EB]/25 bg-[#DBEAFE] text-sm font-black uppercase text-[#2563EB] shadow-[0_8px_18px_rgba(37,99,235,0.12)]"
+    >
       SB
     </div>
 
-    <div>
-      <div class="text-base font-black uppercase leading-none text-[#172033] md:text-xl">
+    <div class="leading-none">
+      <div
+        class="text-lg font-black uppercase tracking-tight text-[#172033] transition group-hover:text-[#2563EB] md:text-xl"
+      >
         StrongBeton
       </div>
-      <div class="hidden text-[10px] font-black uppercase tracking-[0.25em] text-[#6B7280] md:block">
+      <div
+        class="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-[#6B7280] sm:block"
+      >
         Training operating system
       </div>
     </div>
   </a>
 
-  <div class="flex items-center gap-3">
-    <div class="hidden rounded-none border border-[#E5E7EB] bg-[#FFFFFF] px-3 py-2 text-right sm:block">
-      <div class="text-[10px] font-black uppercase text-[#6B7280]">Rank</div>
-      <div class="text-xs font-black uppercase text-[#F59E0B]">Iron Legion</div>
+  <!-- RIGHT: Actions -->
+  <div class="flex items-center gap-2 md:gap-3">
+    <!-- Rank -->
+    <div
+      class="hidden border border-[#E5E7EB] bg-[#F9FAFB] px-4 py-2 text-right shadow-[0_6px_14px_rgba(15,23,42,0.03)] sm:block"
+    >
+      <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
+        Rank
+      </div>
+      <div class="text-xs font-black uppercase tracking-tight text-[#F59E0B]">
+        Iron Legion
+      </div>
     </div>
 
+    <!-- Profile -->
     <a
       routerLink="/app/profile"
-      class="flex h-9 w-9 items-center justify-center rounded-none border border-[#E5E7EB] bg-[#FFFFFF] text-sm font-black text-[#172033] md:h-10 md:w-10"
+      class="group flex h-10 items-center gap-2 border border-[#E5E7EB] bg-white px-2.5 text-sm font-black text-[#172033] shadow-[0_6px_14px_rgba(15,23,42,0.03)] transition hover:border-[#2563EB]/40 hover:bg-[#EFF6FF]"
       title="Profile"
     >
-      D
+      <span
+        class="flex h-7 w-7 items-center justify-center bg-[#F3F4F6] text-xs font-black uppercase text-[#172033] group-hover:bg-[#DBEAFE] group-hover:text-[#2563EB]"
+      >
+        D
+      </span>
+
+      <span class="hidden max-w-[120px] truncate text-xs uppercase md:inline">
+        Profile
+      </span>
     </a>
+
+    <!-- Logout -->
     <button
+      type="button"
       (click)="logout()"
-      class="flex h-9 w-9 items-center justify-center rounded-none border border-[#E5E7EB] bg-[#FFFFFF] text-sm font-black text-[#172033] md:h-10 md:w-10"
+      class="group flex h-10 items-center gap-2 border border-[#E5E7EB] bg-white px-3 text-sm font-black uppercase text-[#172033] shadow-[0_6px_14px_rgba(15,23,42,0.03)] transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
       title="Logout"
     >
-      Logout
+      <svg
+        class="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M10 7V5C10 3.89543 10.8954 3 12 3H18C19.1046 3 20 3.89543 20 5V19C20 20.1046 19.1046 21 18 21H12C10.8954 21 10 20.1046 10 19V17"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <path
+          d="M4 12H14"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <path
+          d="M7 8L3 12L7 16"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+      <span class="hidden sm:inline">Logout</span>
     </button>
   </div>
 </header>

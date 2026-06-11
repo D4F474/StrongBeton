@@ -1,6 +1,13 @@
 package com.strongBeton.strongBeton.dto.user;
 
-import com.strongBeton.strongBeton.entity.social.FriendView;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -8,15 +15,39 @@ import java.util.UUID;
 
 public class UserDTO {
     private UUID id;
+
+    @NotBlank
+    @Size(min = 2, max = 45)
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
+
+    @Size(max = 45)
     private String firstName;
+
+    @Size(max = 45)
     private String lastName;
+
+    @Min(1)
+    @Max(260)
     private int cm;
+
+    @DecimalMin(value = "30.1")
+    @DecimalMax(value = "350.0")
     private float kg;
+
     private LocalDate bornDate;
+
+    @Pattern(regexp = "^(Male|Female)$")
     private String gender;
+
     private List<FriendViewDTO> friends;
+
+    @Size(max = 2048)
     private String profilePhotoUrl;
+
+    @NotBlank
+    @Email
+    @Size(max = 100)
     private String email;
 
     public UserDTO() {

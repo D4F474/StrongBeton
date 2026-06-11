@@ -1,9 +1,11 @@
 package com.strongBeton.strongBeton.dto.clan;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class ClanMemberDTO {
     private int id;
+    private UUID userUuid;
     private String username;
     private int clanId;
     private String clanRoleType;
@@ -13,9 +15,11 @@ public class ClanMemberDTO {
     public ClanMemberDTO() {
     }
 
-    public ClanMemberDTO(int id, String user, int clanId ,String clanRoleType, int points, LocalDateTime joinedAt) {
+    public ClanMemberDTO(int id, UUID userUuid, String username, int clanId,
+                         String clanRoleType, int points, LocalDateTime joinedAt) {
         this.id = id;
-        this.username = user;
+        this.userUuid = userUuid;
+        this.username = username;
         this.clanId = clanId;
         this.clanRoleType = clanRoleType;
         this.points = points;
@@ -76,5 +80,13 @@ public class ClanMemberDTO {
 
     public void setJoinedAt(LocalDateTime joinedAt) {
         this.joinedAt = joinedAt;
+    }
+
+    public UUID getUserUuid() {
+        return userUuid;
+    }
+
+    public void setUserUuid(UUID userUuid) {
+        this.userUuid = userUuid;
     }
 }

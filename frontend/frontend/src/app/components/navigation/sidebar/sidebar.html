@@ -76,8 +76,12 @@
         Clans
       </a>
 
-      <a routerLink="/app/coach" routerLinkActive="is-active" class="sb-sidebar-item">
-        Coach
+      <a
+        routerLink="/app/friends"
+        routerLinkActive="active"
+        class="sb-sidebar-item"
+      >
+        Friends
       </a>
 
       <a routerLink="/app/profile" routerLinkActive="is-active" class="sb-sidebar-item">
@@ -87,9 +91,13 @@
   </div>
 
   <div class="mt-auto space-y-1 border-t border-[#E5E7EB] pt-4">
-    <a routerLink="/app/settings" routerLinkActive="is-active" class="sb-sidebar-item">
-      Settings
-    </a>
+    <a
+  routerLink="/app/feed"
+  routerLinkActive="active"
+  class="sb-sidebar-item"
+>
+  Feed
+</a>
 
     <button (click)="logout()" class="sb-sidebar-item w-full text-left">
       Logout

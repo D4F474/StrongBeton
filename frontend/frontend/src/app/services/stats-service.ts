@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class StatsService {
-  private readonly baseUrl = 'http://localhost:8081/api/stats';
+  private readonly baseUrl = '/api/stats';
 
   constructor(private httpClient: HttpClient) {}
 

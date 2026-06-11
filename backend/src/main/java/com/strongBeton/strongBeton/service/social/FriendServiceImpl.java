@@ -66,8 +66,8 @@ public class FriendServiceImpl implements FriendService {
             int friendId = result.get().getId();
             for (FriendShip friend : friends) {
                 if (friend.getStatus() == RESPONSE && friend.getFriend_id() == friendId) {
-                    this.friendShipRepository.acceptFriendRequest(userId, friend.getFriend_id(), ACCEPTED);
-                    this.friendShipRepository.acceptFriendRequest(friend.getFriend_id(), userId, ACCEPTED);
+                    this.friendShipRepository.acceptFriendRequest(userId, friend.getFriend_id());
+                    this.friendShipRepository.acceptFriendRequest(friend.getFriend_id(), userId);
                     break;
                 }
             }

@@ -29,7 +29,6 @@ public class ApplicationConfig {
     UserDetailsService userDetailsService() {
         return username -> {
             Optional<User> user = userRepository.findByEmail(username);
-            //TODO: Iztrii me pri test
             if (user.isEmpty()) {
                 user = userRepository.findByUsername(username);
             }

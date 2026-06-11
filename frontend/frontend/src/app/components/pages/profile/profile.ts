@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { userDto } from '../../../common/user/user-dto';
 import { AuthService } from '../../../services/auth-service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImageService } from '../../../services/image-service';
 import { ImageData } from '../../../common/image/image-data';
 import { ProfileImageData } from '../../../common/image/profile-image-data';
@@ -37,14 +37,22 @@ export class Profile implements OnInit {
       this.userDto = user;
 
       this.updateForm = this.formBuilder.group({
-        username: [user.username],
-        email: [user.email],
-        cm: [user.cm],
-        kg: [user.kg],
+        username: [
+          user.username,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(45),
+            Validators.pattern(/^[a-zA-Z0-9_]+$/),
+          ],
+        ],
+        email: [user.email, [Validators.required, Validators.email, Validators.maxLength(100)]],
+        cm: [user.cm, [Validators.required, Validators.min(1), Validators.max(260)]],
+        kg: [user.kg, [Validators.required, Validators.min(30.1), Validators.max(350)]],
         bornDate: [user.bornDate],
         gender: [user.gender],
-        firstName: [user.firstName],
-        lastName: [user.lastName],
+        firstName: [user.firstName, [Validators.maxLength(45)]],
+        lastName: [user.lastName, [Validators.maxLength(45)]],
         profilePhotoUrl: [user.profilePhotoUrl],
       });
 
@@ -59,18 +67,23 @@ export class Profile implements OnInit {
       return;
     }
 
+    if (this.updateForm.invalid) {
+      this.updateForm.markAllAsTouched();
+      return;
+    }
+
     const formValue = this.updateForm.value;
 
     const updatedUser: Partial<userDto> = {
       id: this.userDto.id,
-      username: formValue.username,
-      email: formValue.email,
+      username: String(formValue.username ?? '').trim(),
+      email: String(formValue.email ?? '').trim(),
       cm: formValue.cm,
       kg: formValue.kg,
       bornDate: formValue.bornDate,
       gender: formValue.gender,
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
+      firstName: this.normalizeOptionalText(formValue.firstName),
+      lastName: this.normalizeOptionalText(formValue.lastName),
       profilePhotoUrl: formValue.profilePhotoUrl,
     };
 
@@ -168,5 +181,14 @@ private loadProfileImage(): void {
 
   private syncView(): void {
     this.cdr.markForCheck();
+  }
+
+  private normalizeOptionalText(value: unknown): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const trimmed = String(value).trim();
+    return trimmed ? trimmed : null;
   }
 }
