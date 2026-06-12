@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import {
@@ -13,42 +12,50 @@ import {
 } from '../../../common/workout';
 import { AuthService } from '../../../services/auth-service';
 import { WorkoutService } from '../../../services/workout-service';
+import { AddExerciseDialog } from './components/dialogs/add-exercise-dialog/add-exercise-dialog';
+import { CurrentSetPanel } from './components/current-set-panel/current-set-panel';
+import { ExerciseQueue } from './components/exercise-queue/exercise-queue';
+import { WorkoutPicker } from './components/workout-picker/workout-picker';
+import { WorkoutTopbar } from './components/workout-topbar/workout-topbar';
 
 @Component({
   selector: 'app-active-workout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    AddExerciseDialog,
+    CurrentSetPanel,
+    ExerciseQueue,
+    WorkoutPicker,
+    WorkoutTopbar,
+  ],
   templateUrl: './active-workout.html',
 })
 export class ActiveWorkout implements OnInit {
-  // Data
   workoutGroups: WorkoutGroups = {};
   workoutNames: string[] = [];
-  filteredWorkoutNames: string[] = [];
   workoutDetails: WorkoutDetailsDto[] = [];
   sets: SetDto[] = [];
   exercises: ExerciseDto[] = [];
-  isFinishingWorkout = false;
-  finishWorkoutError: string | null = null;
 
-  // Pagination
-  currentPage = 0;
-  pageSize = 5;
-  searchQuery = '';
-
-  // State
   selectedWorkout: WorkoutDto | null = null;
   selectedDetail: WorkoutDetailsDto | null = null;
   userUUID = '';
-  newWorkoutName = '';
 
-  // Modal
-  showAddExerciseModal = false;
-  selectedExerciseId: number | null = null;
-
-  // Active set controls
   currentKg = 0;
   currentReps = 0;
+
+  showAddExerciseModal = false;
+  isCreatingWorkout = false;
+  isFinishingWorkout = false;
+  deletingWorkoutDetailId: number | null = null;
+  deletingSetId: number | null = null;
+  savingEditedSetId: number | null = null;
+
+  createWorkoutError: string | null = null;
+  exerciseMutationError: string | null = null;
+  setMutationError: string | null = null;
+  finishWorkoutError: string | null = null;
 
   constructor(
     private workoutService: WorkoutService,
@@ -64,33 +71,16 @@ export class ActiveWorkout implements OnInit {
     this.authService
       .getMe()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        this.userUUID = user.id;
-        this.syncView();
-
-        this.workoutService
-          .getUserWorkouts(this.userUUID)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((groups) => {
-            this.workoutGroups = groups;
-            this.workoutNames = Object.keys(groups);
-            this.filteredWorkoutNames = this.workoutNames;
-
-            if (workoutIdFromUrl) {
-              this.openWorkoutById(workoutIdFromUrl);
-              return;
-            }
-
-            this.syncView();
-          });
-
-        this.workoutService
-          .getExercises()
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((exercises) => {
-            this.exercises = exercises;
-            this.syncView();
-          });
+      .subscribe({
+        next: (user) => {
+          this.userUUID = user.id;
+          this.loadWorkouts(workoutIdFromUrl);
+          this.loadExercises();
+        },
+        error: (error) => {
+          this.createWorkoutError = this.getApiErrorMessage(error, 'Could not load your profile.');
+          this.syncView();
+        },
       });
   }
 
@@ -102,163 +92,88 @@ export class ActiveWorkout implements OnInit {
     return !!this.selectedWorkout && !this.isWorkoutFinished;
   }
 
-  private openWorkoutById(workoutId: string): void {
-    const workout = this.findWorkoutById(workoutId);
-
-    if (workout) {
-      this.selectWorkout(workout);
+  createNewWorkout(workoutName: string): void {
+    if (!workoutName.trim() || !this.userUUID || this.isCreatingWorkout) {
       return;
     }
 
-    console.warn('Workout from URL was not found in workout groups:', workoutId);
-
-    this.selectedWorkout = {
-      id: workoutId,
-      workoutName: 'Active workout',
-    } as WorkoutDto;
-
-    this.selectedDetail = null;
-    this.sets = [];
+    this.isCreatingWorkout = true;
+    this.createWorkoutError = null;
     this.syncView();
 
     this.workoutService
-      .getWorkoutDetails(workoutId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((details) => {
-        this.workoutDetails = details;
-        this.syncView();
-      });
-  }
-
-  private findWorkoutById(workoutId: string): WorkoutDto | null {
-    const allWorkouts = Object.values(this.workoutGroups).reduce(
-      (result, group) => [...result, ...group],
-      [] as WorkoutDto[]
-    );
-
-    return allWorkouts.find((workout) => workout.id === workoutId) ?? null;
-  }
-
-  // Step 1: Workout
-
-  get suggestedWorkoutNames(): string[] {
-    if (!this.newWorkoutName.trim()) return [];
-
-    return this.workoutNames.filter((name) =>
-      name.toLowerCase().includes(this.newWorkoutName.toLowerCase())
-    );
-  }
-
-  createNewWorkout(): void {
-    if (!this.newWorkoutName.trim()) return;
-
-    this.workoutService
-      .createWorkout(this.userUUID, this.newWorkoutName)
+      .createWorkout(this.userUUID, workoutName.trim())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (workout) => {
-          const name = workout.workoutName.trim();
-
-          if (!this.workoutGroups[name]) {
-            this.workoutGroups[name] = [];
-            this.workoutNames = Object.keys(this.workoutGroups);
-            this.filteredWorkoutNames = this.workoutNames;
-          }
-
-          this.workoutGroups[name].push(workout);
+          this.addWorkoutToGroups(workout);
           this.selectWorkout(workout);
+          this.isCreatingWorkout = false;
           this.syncView();
         },
-        error: (error) => console.error(error),
+        error: (error) => {
+          this.createWorkoutError = this.getApiErrorMessage(
+            error,
+            'Could not create workout.'
+          );
+          this.isCreatingWorkout = false;
+          this.syncView();
+        },
       });
   }
 
   selectWorkout(workout: WorkoutDto): void {
     this.selectedWorkout = workout;
     this.selectedDetail = null;
+    this.workoutDetails = [];
     this.sets = [];
     this.finishWorkoutError = null;
+    this.exerciseMutationError = null;
+    this.setMutationError = null;
     this.closeAddExercise();
     this.syncView();
 
-    this.workoutService
-      .getWorkoutDetails(workout.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((details) => {
-        this.workoutDetails = details;
-        this.syncView();
-      });
-  }
-
-  // Step 2: Exercises
-
-  get filteredExercises(): ExerciseDto[] {
-    if (!this.searchQuery.trim()) return this.exercises;
-
-    return this.exercises.filter(
-      (exercise) =>
-        exercise.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        exercise.muscleGroup.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
-  }
-
-  get pagedExercises(): ExerciseDto[] {
-    const start = this.currentPage * this.pageSize;
-    return this.filteredExercises.slice(start, start + this.pageSize);
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredExercises.length / this.pageSize);
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages - 1) {
-      this.currentPage++;
-    }
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-    }
-  }
-
-  onSearch(): void {
-    this.currentPage = 0;
+    this.loadWorkoutDetails(workout.id);
   }
 
   selectDetail(detail: WorkoutDetailsDto): void {
     this.selectedDetail = detail;
     this.currentKg = 0;
     this.currentReps = 0;
+    this.sets = [];
+    this.setMutationError = null;
     this.syncView();
 
     this.workoutService
       .getSets(detail.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((sets) => {
-        this.sets = sets;
-        this.syncView();
+      .subscribe({
+        next: (sets) => {
+          this.sets = sets;
+          this.syncView();
+        },
+        error: (error) => {
+          this.setMutationError = this.getApiErrorMessage(error, 'Could not load sets.');
+          this.syncView();
+        },
       });
   }
 
-  addSelectedExercise(): void {
-    if (!this.canEditWorkout || !this.selectedWorkout || !this.selectedExerciseId) {
+  goBack(): void {
+    if (this.selectedDetail) {
+      this.selectedDetail = null;
+      this.sets = [];
+      this.setMutationError = null;
+      this.syncView();
       return;
     }
 
-    this.workoutService
-      .addWorkoutDetail(this.selectedWorkout.id, this.selectedExerciseId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (detail) => {
-          this.workoutDetails = [...this.workoutDetails, detail];
-          this.selectDetail(detail);
-          this.closeAddExercise();
-          this.syncView();
-        },
-        error: (error) => console.error(error),
-      });
+    this.selectedWorkout = null;
+    this.workoutDetails = [];
+    this.finishWorkoutError = null;
+    this.exerciseMutationError = null;
+    this.closeAddExercise();
+    this.syncView();
   }
 
   openAddExercise(): void {
@@ -267,42 +182,75 @@ export class ActiveWorkout implements OnInit {
     }
 
     this.showAddExerciseModal = true;
-    this.currentPage = 0;
-    this.searchQuery = '';
-    this.selectedExerciseId = null;
+    this.exerciseMutationError = null;
+    this.syncView();
   }
 
   closeAddExercise(): void {
     this.showAddExerciseModal = false;
-    this.selectedExerciseId = null;
-    this.searchQuery = '';
-    this.currentPage = 0;
   }
 
-  // Step 3: Sets
+  addSelectedExercise(exerciseId: number): void {
+    if (!this.canEditWorkout || !this.selectedWorkout) {
+      return;
+    }
 
-  increaseKg(): void {
-    if (!this.canEditWorkout) return;
+    this.exerciseMutationError = null;
+    this.syncView();
 
-    this.currentKg = Math.round((this.currentKg + 2.5) * 10) / 10;
+    this.workoutService
+      .addWorkoutDetail(this.selectedWorkout.id, exerciseId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (detail) => {
+          this.upsertWorkoutDetail(detail);
+          this.selectDetail(detail);
+          this.closeAddExercise();
+          this.syncView();
+        },
+        error: (error) => {
+          this.exerciseMutationError = this.getApiErrorMessage(
+            error,
+            'Could not add exercise.'
+          );
+          this.syncView();
+        },
+      });
   }
 
-  decreaseKg(): void {
-    if (!this.canEditWorkout) return;
+  deleteWorkoutDetail(detail: WorkoutDetailsDto): void {
+    if (!this.canEditWorkout || this.deletingWorkoutDetailId !== null) {
+      return;
+    }
 
-    this.currentKg = Math.max(0, Math.round((this.currentKg - 2.5) * 10) / 10);
-  }
+    this.deletingWorkoutDetailId = detail.id;
+    this.exerciseMutationError = null;
+    this.syncView();
 
-  increaseReps(): void {
-    if (!this.canEditWorkout) return;
+    this.workoutService
+      .deleteWorkoutDetail(detail.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.workoutDetails = this.workoutDetails.filter((item) => item.id !== detail.id);
 
-    this.currentReps++;
-  }
+          if (this.selectedDetail?.id === detail.id) {
+            this.selectedDetail = null;
+            this.sets = [];
+          }
 
-  decreaseReps(): void {
-    if (!this.canEditWorkout) return;
-
-    this.currentReps = Math.max(0, this.currentReps - 1);
+          this.deletingWorkoutDetailId = null;
+          this.syncView();
+        },
+        error: (error) => {
+          this.exerciseMutationError = this.getApiErrorMessage(
+            error,
+            'Could not delete exercise.'
+          );
+          this.deletingWorkoutDetailId = null;
+          this.syncView();
+        },
+      });
   }
 
   logSet(): void {
@@ -312,22 +260,87 @@ export class ActiveWorkout implements OnInit {
 
     const set: SetDto = {
       id: 0,
-      reps: this.currentReps,
-      kg: this.currentKg,
+      reps: Math.floor(Number(this.currentReps)),
+      kg: Math.round(Number(this.currentKg) * 10) / 10,
       setNumber: this.sets.length + 1,
       workoutDetailsId: this.selectedDetail.id,
     };
 
+    this.setMutationError = null;
+    this.syncView();
+
     this.workoutService
       .saveSet(set)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({          
-          next: (saved) => {
-            this.sets = [...this.sets, saved];
-            this.syncView();
-          },
-          error: (error) => console.error(error),
-        });
+      .subscribe({
+        next: (saved) => {
+          this.sets = [...this.sets, saved];
+          this.currentKg = 0;
+          this.currentReps = 0;
+          this.reloadSelectedDetail();
+          this.syncView();
+        },
+        error: (error) => {
+          this.setMutationError = this.getApiErrorMessage(error, 'Could not save set.');
+          this.syncView();
+        },
+      });
+  }
+
+  updateSet(set: SetDto): void {
+    if (!this.canEditWorkout || this.savingEditedSetId !== null) {
+      return;
+    }
+
+    this.savingEditedSetId = set.id;
+    this.setMutationError = null;
+    this.syncView();
+
+    this.workoutService
+      .updateSet(set)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (saved) => {
+          this.sets = this.sets.map((item) => (item.id === saved.id ? saved : item));
+          this.savingEditedSetId = null;
+          this.reloadSelectedDetail();
+          this.syncView();
+        },
+        error: (error) => {
+          this.setMutationError = this.getApiErrorMessage(error, 'Could not update set.');
+          this.savingEditedSetId = null;
+          this.syncView();
+        },
+      });
+  }
+
+  deleteSet(set: SetDto): void {
+    if (!this.canEditWorkout || this.deletingSetId !== null) {
+      return;
+    }
+
+    this.deletingSetId = set.id;
+    this.setMutationError = null;
+    this.syncView();
+
+    this.workoutService
+      .deleteSet(set.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.sets = this.reorderSets(
+            this.sets.filter((item) => item.id !== set.id)
+          );
+          this.deletingSetId = null;
+          this.reloadSelectedDetail();
+          this.syncView();
+        },
+        error: (error) => {
+          this.setMutationError = this.getApiErrorMessage(error, 'Could not delete set.');
+          this.deletingSetId = null;
+          this.syncView();
+        },
+      });
   }
 
   finishWorkout(): void {
@@ -336,7 +349,7 @@ export class ActiveWorkout implements OnInit {
     }
 
     if (this.workoutDetails.length === 0) {
-      this.finishWorkoutError = 'Не можеш да приключиш тренировка без упражнения.';
+      this.finishWorkoutError = 'Add at least one exercise before finishing the workout.';
       this.syncView();
       return;
     }
@@ -349,42 +362,27 @@ export class ActiveWorkout implements OnInit {
       .finishWorkout(this.selectedWorkout.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (finishedWorkout) => {
-          this.selectedWorkout = {
-            ...this.selectedWorkout!,
-            status: finishedWorkout.status,
-          };
-
+        next: () => {
           this.isFinishingWorkout = false;
-
           this.selectedWorkout = null;
           this.selectedDetail = null;
           this.workoutDetails = [];
           this.sets = [];
-
-          this.reloadWorkouts();
+          this.loadWorkouts();
           this.syncView();
         },
         error: (error) => {
-          console.error('Could not finish workout:', error);
-
-          if (typeof error.error === 'string') {
-            this.finishWorkoutError = error.error;
-          } else {
-            this.finishWorkoutError =
-              error?.error?.error ||
-              error?.error?.message ||
-              error?.message ||
-              'Не успяхме да приключим тренировката.';
-          }
-
+          this.finishWorkoutError = this.getApiErrorMessage(
+            error,
+            'Could not finish workout.'
+          );
           this.isFinishingWorkout = false;
           this.syncView();
         },
       });
   }
 
-  private reloadWorkouts(): void {
+  private loadWorkouts(workoutIdToOpen?: string | null): void {
     if (!this.userUUID) {
       return;
     }
@@ -392,12 +390,171 @@ export class ActiveWorkout implements OnInit {
     this.workoutService
       .getUserWorkouts(this.userUUID)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((groups) => {
-        this.workoutGroups = groups;
-        this.workoutNames = Object.keys(groups);
-        this.filteredWorkoutNames = this.workoutNames;
-        this.syncView();
+      .subscribe({
+        next: (groups) => {
+          this.workoutGroups = groups;
+          this.workoutNames = Object.keys(groups);
+
+          if (workoutIdToOpen) {
+            this.openWorkoutById(workoutIdToOpen);
+          }
+
+          this.syncView();
+        },
+        error: (error) => {
+          this.createWorkoutError = this.getApiErrorMessage(error, 'Could not load workouts.');
+          this.syncView();
+        },
       });
+  }
+
+  private loadExercises(): void {
+    this.workoutService
+      .getExercises()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (exercises) => {
+          this.exercises = exercises;
+          this.syncView();
+        },
+        error: (error) => {
+          this.exerciseMutationError = this.getApiErrorMessage(
+            error,
+            'Could not load exercises.'
+          );
+          this.syncView();
+        },
+      });
+  }
+
+  private loadWorkoutDetails(workoutId: string): void {
+    this.workoutService
+      .getWorkoutDetails(workoutId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (details) => {
+          this.workoutDetails = details;
+          this.syncView();
+        },
+        error: (error) => {
+          this.exerciseMutationError = this.getApiErrorMessage(
+            error,
+            'Could not load workout exercises.'
+          );
+          this.syncView();
+        },
+      });
+  }
+
+  private openWorkoutById(workoutId: string): void {
+    const workout = this.findWorkoutById(workoutId);
+
+    if (workout) {
+      this.selectWorkout(workout);
+      return;
+    }
+
+    this.selectedWorkout = {
+      id: workoutId,
+      workoutName: 'Active workout',
+      date: '',
+      status: 'DRAFT',
+    };
+    this.selectedDetail = null;
+    this.sets = [];
+    this.loadWorkoutDetails(workoutId);
+    this.syncView();
+  }
+
+  private findWorkoutById(workoutId: string): WorkoutDto | null {
+    const allWorkouts = Object.values(this.workoutGroups).flat();
+
+    return allWorkouts.find((workout) => workout.id === workoutId) ?? null;
+  }
+
+  private addWorkoutToGroups(workout: WorkoutDto): void {
+    const workoutName = workout.workoutName.trim();
+    const currentGroup = this.workoutGroups[workoutName] ?? [];
+
+    this.workoutGroups = {
+      ...this.workoutGroups,
+      [workoutName]: [...currentGroup, workout],
+    };
+    this.workoutNames = Object.keys(this.workoutGroups);
+  }
+
+  private upsertWorkoutDetail(detail: WorkoutDetailsDto): void {
+    const exists = this.workoutDetails.some((item) => item.id === detail.id);
+
+    this.workoutDetails = exists
+      ? this.workoutDetails.map((item) => (item.id === detail.id ? detail : item))
+      : [...this.workoutDetails, detail];
+  }
+
+  private reloadSelectedDetail(): void {
+    if (!this.selectedWorkout || !this.selectedDetail) {
+      return;
+    }
+
+    this.workoutService
+      .getWorkoutDetails(this.selectedWorkout.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (details) => {
+          this.workoutDetails = details;
+          this.selectedDetail =
+            details.find((detail) => detail.id === this.selectedDetail?.id) ?? this.selectedDetail;
+          this.syncView();
+        },
+      });
+  }
+
+  private reorderSets(sets: SetDto[]): SetDto[] {
+    return sets.map((set, index) => ({
+      ...set,
+      setNumber: index + 1,
+    }));
+  }
+
+  private getApiErrorMessage(error: unknown, fallback: string): string {
+    if (typeof error !== 'object' || error === null) {
+      return fallback;
+    }
+
+    const httpError = error as {
+      error?: unknown;
+      message?: string;
+      status?: number;
+    };
+
+    if (typeof httpError.error === 'string') {
+      return httpError.error;
+    }
+
+    if (typeof httpError.error === 'object' && httpError.error !== null) {
+      const problem = httpError.error as {
+        detail?: string;
+        description?: string;
+        message?: string;
+        error?: string;
+        title?: string;
+      };
+
+      return (
+        problem.detail ||
+        problem.description ||
+        problem.message ||
+        problem.error ||
+        problem.title ||
+        fallback
+      );
+    }
+
+    if (httpError.status === 0) {
+      return 'Cannot connect to the server.';
+    }
+
+    return httpError.message || fallback;
   }
 
   private syncView(): void {

@@ -215,8 +215,9 @@ public class WorkoutServiceImpl implements WorkoutService {
         return mapWorkoutDetailsToDTO(saved);
     }
 
-    @Override
+    @Transactional
     public void deleteWorkoutDetailsById(int workoutDetailId) {
+        setsRepository.deleteByWorkoutDetailsId(workoutDetailId);
         workoutDetailsRepository.deleteById(workoutDetailId);
     }
 

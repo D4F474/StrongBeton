@@ -1,0 +1,96 @@
+<div class="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/35 p-4 md:items-center">
+  <div class="w-full max-w-2xl border border-[#172033] bg-white">
+    <div class="flex items-start justify-between border-b border-[#172033] p-5">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
+          Add Exercise
+        </p>
+
+        <h2 class="mt-1 text-2xl font-black uppercase">
+          Choose exercise
+        </h2>
+      </div>
+
+      <button
+        type="button"
+        (click)="close.emit()"
+        class="sb-secondary-btn h-12 w-12"
+      >
+        X
+      </button>
+    </div>
+
+    <div class="px-5 pt-4">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearch()"
+        placeholder="Search by name or muscle..."
+        class="w-full border border-[#172033] px-4 py-3 text-sm font-black uppercase focus:outline-none focus:border-[#F59E0B]"
+      />
+    </div>
+
+    <div class="px-5 pt-3">
+      <label
+        *ngFor="let ex of pagedExercises"
+        (click)="selectedExerciseId = ex.id"
+        class="block cursor-pointer border-b border-[#E5E7EB] p-4 border-l-[3px]"
+        [class.border-l-[#F59E0B]]="selectedExerciseId === ex.id"
+        [class.border-l-transparent]="selectedExerciseId !== ex.id"
+      >
+        <div
+          class="font-black uppercase"
+          [class.text-[#F59E0B]]="selectedExerciseId === ex.id"
+        >
+          {{ ex.name }}
+        </div>
+
+        <div class="text-xs text-[#6B7280]">
+          {{ ex.muscleGroup }}
+        </div>
+      </label>
+    </div>
+
+    <div
+      *ngIf="pagedExercises.length === 0"
+      class="px-5 py-8 text-center text-xs font-black uppercase text-[#6B7280]"
+    >
+      No exercises found.
+    </div>
+
+    <div class="flex items-center justify-between border-t border-[#E5E7EB] px-5 py-3">
+      <button
+        type="button"
+        (click)="prevPage()"
+        [disabled]="currentPage === 0"
+        class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
+      >
+        Back
+      </button>
+
+      <span class="text-xs font-black uppercase text-[#6B7280]">
+        {{ currentPage + 1 }} / {{ totalPages }}
+      </span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages - 1"
+        class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
+      >
+        Next
+      </button>
+    </div>
+
+    <div class="p-5 border-t border-[#172033]">
+      <button
+        type="button"
+        (click)="submit()"
+        [disabled]="!selectedExerciseId || !canEditWorkout"
+        class="sb-workout-btn h-16 w-full text-sm disabled:opacity-30"
+      >
+        Select
+      </button>
+    </div>
+  </div>
+</div>

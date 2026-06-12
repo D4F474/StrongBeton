@@ -1,30 +1,38 @@
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '../../../services/auth-service';
 
+import { AuthService } from '../../../services/auth-service';
 import { FeedService } from '../../../services/feed-service';
+
 import { FeedPostDto } from '../../../common/social/feed-post-dto';
 import { FeedPostCommentDto } from '../../../common/social/feed-post-comment-dto';
+
+import { FeedPostCardComponent } from './components/feed-post-card/feed-post-card';
+import { CreatePostComponent } from './components/create-post/create-post';
+
 @Component({
   selector: 'app-feed',
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    CreatePostComponent,
+    FeedPostCardComponent,
+  ],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',
 })
-export class Feed {
-posts: FeedPostDto[] = [];
+export class Feed implements OnInit {
+  posts: FeedPostDto[] = [];
 
   pageReady = false;
-  actionLoading = false;
+  createLoading = false;
+
   currentUserUuid: string | null = null;
 
   actionError: string | null = null;
   actionSuccess: string | null = null;
 
-  newPostContent = '';
-  commentDrafts: Record<number, string> = {};
+  private busyPostIds = new Set<number | string>();
 
   constructor(
     private feedService: FeedService,
@@ -35,31 +43,28 @@ posts: FeedPostDto[] = [];
 
   ngOnInit(): void {
     this.loadCurrentUser();
-    this.loadFeed();
   }
 
   private loadCurrentUser(): void {
-  this.authService
-    .getMe()
-    .pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: (user) => {
-        this.currentUserUuid = user.id ?? null;
-        this.loadFeed();
-      },
-      error: (error) => {
-        console.error('Failed to load current user:', error);
-        this.loadFeed();
-      },
-    });
-}
-
-canDeletePost(post: FeedPostDto): boolean {
-  return !!post.userUuid && !!this.currentUserUuid && post.userUuid === this.currentUserUuid;
-}
+    this.authService
+      .getMe()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          this.currentUserUuid = user.id ?? null;
+          this.loadFeed();
+        },
+        error: (error) => {
+          console.error('Failed to load current user:', error);
+          this.currentUserUuid = null;
+          this.loadFeed();
+        },
+      });
+  }
 
   loadFeed(): void {
     this.pageReady = false;
+    this.actionError = null;
     this.syncView();
 
     this.feedService
@@ -69,7 +74,6 @@ canDeletePost(post: FeedPostDto): boolean {
         next: (posts) => {
           this.posts = posts ?? [];
           this.pageReady = true;
-
           this.syncView();
         },
         error: (error) => {
@@ -83,37 +87,41 @@ canDeletePost(post: FeedPostDto): boolean {
       });
   }
 
-  createPost(): void {
-    const content = this.newPostContent.trim();
+  createPost(content: string): void {
+    const trimmedContent = content.trim();
 
-    if (!content || this.actionLoading) {
+    if (!trimmedContent || this.createLoading) {
       return;
     }
 
-    this.actionLoading = true;
+    this.createLoading = true;
     this.actionError = null;
     this.actionSuccess = null;
     this.syncView();
 
     this.feedService
       .createPost({
-        content,
+        content: trimmedContent,
         type: 'TEXT',
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.newPostContent = '';
-          this.actionLoading = false;
+        next: (createdPost) => {
+          this.createLoading = false;
           this.actionSuccess = 'Post created.';
 
-          this.loadFeed();
+          if (createdPost) {
+            this.posts = [createdPost, ...this.posts];
+          } else {
+            this.loadFeed();
+          }
+
           this.syncView();
         },
         error: (error) => {
           console.error('Failed to create post:', error);
 
-          this.actionLoading = false;
+          this.createLoading = false;
           this.actionError =
             error?.error?.message ||
             error?.error?.error ||
@@ -127,65 +135,110 @@ canDeletePost(post: FeedPostDto): boolean {
   }
 
   likePost(post: FeedPostDto): void {
-    if (!post.id || this.actionLoading) {
-      return;
-    }
+  const postId = post.id;
 
-    this.actionLoading = true;
-    this.actionError = null;
-    this.actionSuccess = null;
-    this.syncView();
-
-    this.feedService
-      .likePost(post.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.actionLoading = false;
-          this.loadFeed();
-          this.syncView();
-        },
-        error: (error) => {
-          console.error('Failed to like post:', error);
-
-          this.actionLoading = false;
-          this.actionError = 'Could not like post.';
-          this.syncView();
-        },
-      });
+  if (!postId || this.isPostBusy(postId)) {
+    return;
   }
 
-  addComment(post: FeedPostDto): void {
-    if (!post.id || this.actionLoading) {
+  this.actionError = null;
+  this.actionSuccess = null;
+  this.setPostBusy(postId, true);
+  this.syncView();
+
+  this.feedService
+    .likePost(postId)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe({
+      next: (result) => {
+        const normalizedResult = result.toLowerCase();
+
+        const wasLiked =
+          normalizedResult.includes('liked') &&
+          !normalizedResult.includes('unliked') &&
+          !normalizedResult.includes('removed');
+
+        const wasUnliked =
+          normalizedResult.includes('unliked') ||
+          normalizedResult.includes('removed') ||
+          normalizedResult.includes('deleted');
+
+        this.posts = this.posts.map((currentPost) => {
+          if (currentPost.id !== postId) {
+            return currentPost;
+          }
+
+          const currentLikesCount = this.getLikesCount(currentPost);
+
+          return {
+            ...currentPost,
+            likesCount: wasUnliked
+              ? Math.max(currentLikesCount - 1, 0)
+              : wasLiked
+                ? currentLikesCount + 1
+                : currentLikesCount,
+          };
+        });
+
+        this.setPostBusy(postId, false);
+        this.syncView();
+      },
+      error: (error) => {
+        console.error('Failed to toggle like:', error);
+
+        this.setPostBusy(postId, false);
+        this.actionError = 'Could not update like.';
+        this.syncView();
+      },
+    });
+}
+
+  addComment(event: { post: FeedPostDto; content: string }): void {
+    const postId = event.post.id;
+    const content = event.content.trim();
+
+    if (!postId || !content || this.isPostBusy(postId)) {
       return;
     }
 
-    const content = (this.commentDrafts[post.id] ?? '').trim();
-
-    if (!content) {
-      return;
-    }
-
-    this.actionLoading = true;
     this.actionError = null;
     this.actionSuccess = null;
+    this.setPostBusy(postId, true);
     this.syncView();
 
     this.feedService
-      .commentPost(post.id, content)
+      .commentPost(postId, content)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.commentDrafts[post.id!] = '';
-          this.actionLoading = false;
+        next: (createdComment) => {
+          const commentToAdd: FeedPostCommentDto =
+            createdComment ?? {
+              content,
+              username: 'You',
+            };
 
-          this.loadFeed();
+          this.posts = this.posts.map((currentPost) => {
+            if (currentPost.id !== postId) {
+              return currentPost;
+            }
+
+            return {
+              ...currentPost,
+              comments: [
+                ...(currentPost.comments ?? []),
+                commentToAdd,
+              ],
+              commentsCount: this.getCommentsCount(currentPost) + 1,
+            };
+          });
+
+          this.setPostBusy(postId, false);
           this.syncView();
         },
         error: (error) => {
           console.error('Failed to comment post:', error);
 
-          this.actionLoading = false;
+          this.setPostBusy(postId, false);
           this.actionError = 'Could not add comment.';
           this.syncView();
         },
@@ -193,7 +246,9 @@ canDeletePost(post: FeedPostDto): boolean {
   }
 
   deletePost(post: FeedPostDto): void {
-    if (!post.id || this.actionLoading) {
+    const postId = post.id;
+
+    if (!postId || this.isPostBusy(postId)) {
       return;
     }
 
@@ -203,26 +258,26 @@ canDeletePost(post: FeedPostDto): boolean {
       return;
     }
 
-    this.actionLoading = true;
     this.actionError = null;
     this.actionSuccess = null;
+    this.setPostBusy(postId, true);
     this.syncView();
 
     this.feedService
-      .deletePost(post.id)
+      .deletePost(postId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.actionLoading = false;
-          this.actionSuccess = 'Post deleted.';
+          this.posts = this.posts.filter((currentPost) => currentPost.id !== postId);
 
-          this.loadFeed();
+          this.setPostBusy(postId, false);
+          this.actionSuccess = 'Post deleted.';
           this.syncView();
         },
         error: (error) => {
           console.error('Failed to delete post:', error);
 
-          this.actionLoading = false;
+          this.setPostBusy(postId, false);
           this.actionError =
             error?.error?.message ||
             error?.error?.error ||
@@ -235,12 +290,24 @@ canDeletePost(post: FeedPostDto): boolean {
       });
   }
 
-  getAuthorName(post: FeedPostDto): string {
-    return post.username || post.user?.username || post.user?.email || 'Athlete';
+  isPostBusy(postId: number | string | undefined | null): boolean {
+    if (postId === undefined || postId === null) {
+      return false;
+    }
+
+    return this.busyPostIds.has(postId);
   }
 
-  getPostType(post: FeedPostDto): string {
-    return String(post.type || post.postType || 'TEXT');
+  private setPostBusy(postId: number | string, busy: boolean): void {
+    const nextBusyPostIds = new Set(this.busyPostIds);
+
+    if (busy) {
+      nextBusyPostIds.add(postId);
+    } else {
+      nextBusyPostIds.delete(postId);
+    }
+
+    this.busyPostIds = nextBusyPostIds;
   }
 
   getLikesCount(post: FeedPostDto): number {
@@ -259,27 +326,76 @@ canDeletePost(post: FeedPostDto): boolean {
     return post.comments?.length ?? 0;
   }
 
-  getComments(post: FeedPostDto): FeedPostCommentDto[] {
-    return post.comments ?? [];
-  }
-
-  formatDate(value?: string | null): string {
-    if (!value) {
-      return '';
-    }
-
-    return new Date(value).toLocaleString();
-  }
-
   trackByPostId(index: number, post: FeedPostDto): number {
     return post.id ?? index;
-  }
-
-  trackByIndex(index: number): number {
-    return index;
   }
 
   private syncView(): void {
     this.cdr.markForCheck();
   }
+
+  private isPostLikedByCurrentUser(post: FeedPostDto): boolean {
+  if (!this.currentUserUuid) {
+    return false;
+  }
+
+  return (post.likes ?? []).some((like: any) => {
+    if (typeof like === 'string') {
+      return like === this.currentUserUuid;
+    }
+
+    return (
+      like.userUuid === this.currentUserUuid ||
+      like.user?.id === this.currentUserUuid ||
+      like.user?.uuid === this.currentUserUuid
+    );
+  });
+}
+
+private removeCurrentUserLike(likes: any[]): any[] {
+  if (!this.currentUserUuid) {
+    return likes;
+  }
+
+  return likes.filter((like: any) => {
+    if (typeof like === 'string') {
+      return like !== this.currentUserUuid;
+    }
+
+    return (
+      like.userUuid !== this.currentUserUuid &&
+      like.user?.id !== this.currentUserUuid &&
+      like.user?.uuid !== this.currentUserUuid
+    );
+  });
+}
+
+private addCurrentUserLike(likes: any[]): any[] {
+  if (!this.currentUserUuid) {
+    return likes;
+  }
+
+  const alreadyExists = likes.some((like: any) => {
+    if (typeof like === 'string') {
+      return like === this.currentUserUuid;
+    }
+
+    return (
+      like.userUuid === this.currentUserUuid ||
+      like.user?.id === this.currentUserUuid ||
+      like.user?.uuid === this.currentUserUuid
+    );
+  });
+
+  if (alreadyExists) {
+    return likes;
+  }
+
+  return [
+    ...likes,
+    {
+      userUuid: this.currentUserUuid,
+    },
+  ];
+}
 }

@@ -74,6 +74,20 @@ export class WorkoutService {
     );
   }
 
+  updateSet(set: SetDto): Observable<SetDto> {
+    return this.httpClient.put<SetDto>(`${this.baseUrl}/workout/sets`, set);
+  }
+
+  deleteSet(setId: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/deleteSet/${setId}`);
+  }
+
+  deleteWorkoutDetail(workoutDetailId: number): Observable<void> {
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/deleteWorkoutDetail/${workoutDetailId}`
+    );
+  }
+
   finishWorkout(workoutId: string): Observable<WorkoutDto> {
     return this.httpClient.post<WorkoutDto>(
       `${this.baseUrl}/${workoutId}/finish`,

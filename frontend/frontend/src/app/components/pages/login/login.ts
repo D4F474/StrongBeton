@@ -1,106 +1,157 @@
-import { RouterLink } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { timeout, take, finalize } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { LoginDto } from '../../../common/user/login-dto';
 import { AuthService } from '../../../services/auth-service';
-import { Router } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
 import { AuthState } from '../../../common/user/auth-state';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [RouterLink, CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login implements OnInit {
-
   logInForm!: FormGroup;
   submitError = '';
   isSubmitting = false;
 
-constructor(
-  private formBuilder: FormBuilder,
-  private authService: AuthService,
-  private authState: AuthState,
-  private router: Router
-) {}
+  private readonly destroyRef = inject(DestroyRef);
 
-ngOnInit(): void {
-  this.logInForm = this.formBuilder.group({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(8),
-      Validators.maxLength(100)
-    ])
-  });
-}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private authState: AuthState,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-get email() {
-  return this.logInForm.get('email');
-}
-
-get password() {
-  return this.logInForm.get('password');
-}
-
-onSubmit(): void {
-  this.submitError = '';
-
-  if (this.logInForm.invalid) {
-    this.logInForm.markAllAsTouched();
-    this.submitError = 'Check the highlighted fields and try again.';
-    return;
+  ngOnInit(): void {
+    this.logInForm = this.formBuilder.group({
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(100),
+      ]),
+    });
   }
 
-  this.isSubmitting = true;
+  onSubmit(): void {
+    this.submitError = '';
 
-  const user = new LoginDto();
-  user.email = this.logInForm.value.email;
-  user.password = this.logInForm.value.password;
-
-  this.authService.login(user).subscribe({
-    next: () => {
-      this.isSubmitting = false;
-      this.router.navigate(['/app/home']);
-    },
-    error: (err) => {
-      this.isSubmitting = false;
-      this.authState.clear();
-      this.submitError = this.resolveSubmitError(err);
+    if (this.logInForm.invalid) {
+      this.logInForm.markAllAsTouched();
+      this.submitError = 'Check the highlighted fields and try again.';
+      this.syncView();
+      return;
     }
-  });
-}
 
-hasError(controlName: string, errorName?: string): boolean {
-  const control = this.logInForm.get(controlName);
+    this.isSubmitting = true;
+    this.syncView();
 
-  if (!control || !(control.touched || control.dirty)) {
-    return false;
+    const user = new LoginDto();
+    user.email = this.logInForm.value.email;
+    user.password = this.logInForm.value.password;
+
+    console.log('LOGIN START');
+
+    this.authService.login(user)
+      .pipe(
+        timeout(10000),
+        take(1),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          console.log('LOGIN FINALIZE');
+          this.isSubmitting = false;
+          this.syncView();
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('LOGIN SUCCESS', res);
+          this.router.navigate(['/app/home']);
+        },
+        error: (err) => {
+          console.log('LOGIN ERROR', err);
+
+          this.authState.clear();
+          this.submitError = this.resolveSubmitError(err);
+
+          this.syncView();
+        },
+      });
   }
 
-  return errorName ? control.hasError(errorName) : control.invalid;
-}
+  hasError(controlName: string, errorName?: string): boolean {
+    const control = this.logInForm.get(controlName);
 
-private resolveSubmitError(err: unknown): string {
-  if (typeof err === 'object' && err !== null && 'error' in err) {
-    const error = (err as { error?: unknown }).error;
-
-    if (typeof error === 'string') {
-      return error;
+    if (!control || !(control.touched || control.dirty)) {
+      return false;
     }
 
-    if (typeof error === 'object' && error !== null) {
-      const problem = error as { detail?: string; description?: string };
-      return problem.detail || problem.description || 'Sign in failed.';
-    }
+    return errorName ? control.hasError(errorName) : control.invalid;
   }
 
-  return 'Sign in failed.';
-}
+  private resolveSubmitError(err: unknown): string {
+    if (typeof err === 'object' && err !== null) {
+      const httpError = err as {
+        status?: number;
+        error?: unknown;
+        message?: string;
+        name?: string;
+      };
+
+      if (httpError.name === 'TimeoutError') {
+        return 'Server is not responding. Try again later.';
+      }
+
+      if (typeof httpError.error === 'string') {
+        return httpError.error;
+      }
+
+      if (httpError.status === 0) {
+        return 'Cannot connect to the server.';
+      }
+
+      if (httpError.status === 401 || httpError.status === 403) {
+        return 'Invalid email or password.';
+      }
+
+      if (httpError.status && httpError.status >= 500) {
+        return 'Server error. Try again later.';
+      }
+
+      if (typeof httpError.error === 'object' && httpError.error !== null) {
+        const problem = httpError.error as {
+          detail?: string;
+          description?: string;
+          message?: string;
+          error?: string;
+        };
+
+        return (
+          problem.detail ||
+          problem.description ||
+          problem.message ||
+          problem.error ||
+          'Sign in failed.'
+        );
+      }
+    }
+
+    return 'Sign in failed.';
+  }
+
+  private syncView(): void {
+    this.cdr.detectChanges();
+  }
 }

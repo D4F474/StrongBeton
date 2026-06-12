@@ -1,0 +1,216 @@
+<div
+  *ngIf="isWorkoutFinished"
+  class="mb-4 border border-[#22C55E] bg-green-50 p-3 text-xs font-black uppercase text-[#15803D]"
+>
+  Read-only режим. Тренировката вече е приключена.
+</div>
+
+<div
+  *ngIf="setMutationError"
+  class="mb-4 border border-red-200 bg-red-50 p-3 text-xs font-bold uppercase text-red-700"
+>
+  {{ setMutationError }}
+</div>
+
+<div *ngIf="sets.length > 0; else noSets" class="mb-6">
+  <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280] mb-2">
+    Записани серии
+  </div>
+
+  <div
+    *ngFor="let set of sets"
+    class="border-b border-[#E5E7EB] py-3"
+  >
+    <div
+      *ngIf="editingSetId !== set.id; else editSetTemplate"
+      class="flex items-center justify-between gap-4"
+    >
+      <span class="font-black uppercase text-sm">
+        Серия {{ set.setNumber }}
+      </span>
+
+      <div class="flex items-center gap-3">
+        <span class="font-black text-[#F59E0B]">
+          {{ set.kg }} KG × {{ set.reps }} REPS
+        </span>
+
+        <button
+          *ngIf="canEditWorkout"
+          type="button"
+          (click)="startEditSet(set)"
+          class="border border-[#172033] px-3 py-2 text-[10px] font-black uppercase tracking-wide hover:bg-[#FEF3C7]"
+        >
+          Промени
+        </button>
+
+        <button
+          *ngIf="canEditWorkout"
+          type="button"
+          (click)="deleteSet.emit(set)"
+          [disabled]="deletingSetId === set.id"
+          class="border border-red-600 px-3 py-2 text-[10px] font-black uppercase tracking-wide text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {{ deletingSetId === set.id ? 'Триене...' : 'Изтрий' }}
+        </button>
+      </div>
+    </div>
+
+    <ng-template #editSetTemplate>
+      <div class="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
+        <div>
+          <label class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+            KG
+          </label>
+
+          <input
+            type="number"
+            min="0"
+            step="0.5"
+            [(ngModel)]="editKg"
+            class="mt-1 w-full border border-[#172033] px-3 py-2 text-sm font-black uppercase focus:outline-none focus:border-[#F59E0B]"
+          />
+        </div>
+
+        <div>
+          <label class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+            Reps
+          </label>
+
+          <input
+            type="number"
+            min="0"
+            step="1"
+            [(ngModel)]="editReps"
+            class="mt-1 w-full border border-[#172033] px-3 py-2 text-sm font-black uppercase focus:outline-none focus:border-[#F59E0B]"
+          />
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            type="button"
+            (click)="saveEditedSet(set)"
+            [disabled]="savingEditedSetId === set.id || editKg <= 0 || editReps <= 0"
+            class="border border-[#22C55E] bg-[#22C55E] px-4 py-3 text-[10px] font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {{ savingEditedSetId === set.id ? 'Запис...' : 'Запази' }}
+          </button>
+
+          <button
+            type="button"
+            (click)="cancelEditSet()"
+            class="border border-[#172033] px-4 py-3 text-[10px] font-black uppercase tracking-wide hover:bg-[#F3F4F6]"
+          >
+            Отказ
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #noSets>
+  <div class="mb-6 border-y border-[#172033] py-6 text-center">
+    <p class="text-sm font-black uppercase text-[#6B7280]">
+      {{ canEditWorkout ? 'Няма записани серии.' : 'Няма записани серии за това упражнение.' }}
+    </p>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="canEditWorkout; else finishedExerciseView">
+  <div class="mb-6">
+  <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+    Weight
+  </div>
+
+  <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+    <button
+      type="button"
+      (click)="decreaseKg()"
+      class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+    >
+      -
+    </button>
+
+    <input
+      type="number"
+      min="0"
+      step="0.5"
+      inputmode="decimal"
+      [ngModel]="currentKg"
+      (ngModelChange)="setKgFromInput($event)"
+      class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
+    />
+
+    <button
+      type="button"
+      (click)="increaseKg()"
+      class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+    >
+      +
+    </button>
+  </div>
+
+  <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
+    KG
+  </div>
+</div>
+
+<div class="mb-6">
+  <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+    Reps
+  </div>
+
+  <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+    <button
+      type="button"
+      (click)="decreaseReps()"
+      class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+    >
+      -
+    </button>
+
+    <input
+      type="number"
+      min="0"
+      step="1"
+      inputmode="numeric"
+      [ngModel]="currentReps"
+      (ngModelChange)="setRepsFromInput($event)"
+      class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
+    />
+
+    <button
+      type="button"
+      (click)="increaseReps()"
+      class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+    >
+      +
+    </button>
+  </div>
+
+  <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
+    REPS
+  </div>
+</div>
+
+  <button
+    type="button"
+    (click)="logSet.emit()"
+    [disabled]="!canEditWorkout || !selectedDetail || currentKg <= 0 || currentReps <= 0"
+    class="sb-workout-btn mx-auto mt-4 flex h-16 w-full text-2xl disabled:opacity-40"
+  >
+    Log Set
+  </button>
+
+  <p *ngIf="currentKg <= 0 || currentReps <= 0" class="mt-2 text-xs font-bold text-red-600">
+    Add weight and reps before logging the set.
+  </p>
+</ng-container>
+
+<ng-template #finishedExerciseView>
+  <div class="mt-6 border border-[#22C55E] bg-green-50 p-4">
+    <p class="text-xs font-black uppercase text-[#15803D]">
+      Упражнението е заключено, защото тренировката е приключена.
+    </p>
+  </div>
+</ng-template>

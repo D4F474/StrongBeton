@@ -66,7 +66,7 @@ public class AuthRestController {
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
             LOGGER.warn("Login failed for email {}", loginUserDto.getEmail(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad email or password");
         }
     }
 }

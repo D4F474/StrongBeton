@@ -1,0 +1,59 @@
+<header class="border-b border-[#172033] pb-4 mb-6 flex items-center justify-between">
+  <div>
+    <button
+      type="button"
+      (click)="back.emit()"
+      class="text-xs font-black uppercase text-[#6B7280] mb-1 block"
+    >
+      ← Назад
+    </button>
+
+    <ng-container *ngIf="selectedDetail; else workoutTitle">
+      <h1 class="text-xl font-black uppercase md:text-3xl">
+        {{ selectedDetail.exercise.name }}
+      </h1>
+
+      <p class="text-xs text-[#6B7280] font-black uppercase mt-1">
+        {{ selectedDetail.exercise.muscleGroup }}
+      </p>
+    </ng-container>
+
+    <ng-template #workoutTitle>
+      <h1 class="text-xl font-black uppercase md:text-3xl">
+        {{ selectedWorkout?.workoutName }}
+      </h1>
+
+      <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
+        {{ selectedWorkout?.date }} — {{ selectedWorkout?.status }}
+      </p>
+    </ng-template>
+  </div>
+
+  <div *ngIf="!selectedDetail" class="flex gap-3">
+    <button
+      *ngIf="canEditWorkout"
+      type="button"
+      (click)="addExercise.emit()"
+      class="sb-primary-btn h-11 px-5 text-xs"
+    >
+      + Упражнение
+    </button>
+
+    <button
+      *ngIf="canEditWorkout"
+      type="button"
+      (click)="finishWorkout.emit()"
+      [disabled]="isFinishingWorkout || workoutDetailsCount === 0"
+      class="h-11 border border-[#22C55E] bg-[#22C55E] px-5 text-xs font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      {{ isFinishingWorkout ? 'Приключване...' : 'Finish' }}
+    </button>
+
+    <div
+      *ngIf="isWorkoutFinished"
+      class="flex h-11 items-center border border-[#22C55E] bg-green-50 px-5 text-xs font-black uppercase tracking-wide text-[#15803D]"
+    >
+      Finished
+    </div>
+  </div>
+</header>
