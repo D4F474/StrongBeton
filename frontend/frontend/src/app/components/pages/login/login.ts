@@ -62,7 +62,6 @@ export class Login implements OnInit {
     user.email = this.logInForm.value.email;
     user.password = this.logInForm.value.password;
 
-    console.log('LOGIN START');
 
     this.authService.login(user)
       .pipe(
@@ -70,18 +69,15 @@ export class Login implements OnInit {
         take(1),
         takeUntilDestroyed(this.destroyRef),
         finalize(() => {
-          console.log('LOGIN FINALIZE');
           this.isSubmitting = false;
           this.syncView();
         })
       )
       .subscribe({
         next: (res) => {
-          console.log('LOGIN SUCCESS', res);
           this.router.navigate(['/app/home']);
         },
         error: (err) => {
-          console.log('LOGIN ERROR', err);
 
           this.authState.clear();
           this.submitError = this.resolveSubmitError(err);
