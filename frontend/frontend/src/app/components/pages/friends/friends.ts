@@ -20,6 +20,7 @@ export class Friends implements OnInit {
 
   suggestions: UserStatusDto[] = [];
   friends: FriendViewDto[] = [];
+  private failedImageUrls = new Set<string>();
 
   pageReady = false;
   actionLoading = false;
@@ -99,6 +100,7 @@ export class Friends implements OnInit {
       .subscribe({
         next: (friends) => {
           this.friends = friends ?? [];
+          this.pruneFailedImageUrls();
           this.pageReady = true;
           this.syncView();
         },
@@ -121,6 +123,7 @@ export class Friends implements OnInit {
       .subscribe({
         next: (suggestions) => {
           this.suggestions = suggestions ?? [];
+          this.pruneFailedImageUrls();
           this.syncView();
         },
       });
@@ -235,9 +238,52 @@ export class Friends implements OnInit {
     return user.username ?? String(index);
   }
 
+  getProfileImageUrl(entity: FriendViewDto | UserStatusDto): string | null {
+    const url = entity.profileImageUrl?.trim();
+
+    if (!url || this.failedImageUrls.has(url)) {
+      return null;
+    }
+
+    return url;
+  }
+
+  markImageFailed(url: string | null): void {
+    if (url) {
+      this.failedImageUrls.add(url);
+      this.syncView();
+    }
+  }
+
   private syncView(): void {
     this.cdr.markForCheck();
   }
 
-  
+  getInitials(value: string | null | undefined): string {
+    if (!value) {
+      return '?';
+    }
+
+    return value
+      .trim()
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  private pruneFailedImageUrls(): void {
+    const visibleUrls = new Set(
+      [...this.friends, ...this.suggestions]
+        .map((item) => item.profileImageUrl?.trim())
+        .filter((url): url is string => !!url)
+    );
+
+    this.failedImageUrls.forEach((url) => {
+      if (!visibleUrls.has(url)) {
+        this.failedImageUrls.delete(url);
+      }
+    });
+  }
 }

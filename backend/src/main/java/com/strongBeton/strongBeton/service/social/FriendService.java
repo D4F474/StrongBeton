@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.service.social;
 
+import com.strongBeton.strongBeton.dto.user.FriendViewDTO;
 import com.strongBeton.strongBeton.dto.user.UserStatusDTO;
 import com.strongBeton.strongBeton.entity.social.FriendView;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Set;
 public interface FriendService {
 
     void sendInviteRequest(int userId, String username);
-    List<FriendView> getFriendsByUsername(String username);
+    List<FriendViewDTO> getFriendsByUsername(String username);
     void acceptFriend(int userId, String username);
     void declineFriend(int userId, String username);
     void removeFriend(int userId, String username);

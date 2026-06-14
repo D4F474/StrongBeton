@@ -4,14 +4,14 @@
 
     <div class="relative z-10">
       <p class="text-xs font-black uppercase tracking-[0.25em] text-[#2563EB]">
-        Coach Dashboard
+        Треньорски панел
       </p>
       <h1 class="mt-4 text-3xl md:text-5xl font-black uppercase leading-tight">
-        Manage the
-        <span class="text-[#2563EB]">training floor</span>
+        Управлявай
+        <span class="text-[#2563EB]">тренировъчния процес</span>
       </h1>
       <p class="mt-4 max-w-2xl text-[#6B7280]">
-        Client readiness, adherence, review queue, and program signals in one quiet command view.
+        Готовност на клиентите, постоянство, задачи за преглед и програмни сигнали в един ясен команден изглед.
       </p>
     </div>
   </div>
@@ -30,8 +30,8 @@
   <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
     <article class="xl:col-span-2 border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
-        <h2 class="text-sm font-black uppercase tracking-wide">Client Roster</h2>
-        <span class="text-xs uppercase text-[#6B7280]">Current block</span>
+        <h2 class="text-sm font-black uppercase tracking-wide">Списък с клиенти</h2>
+        <span class="text-xs uppercase text-[#6B7280]">Текущ блок</span>
       </div>
 
       <div class="mt-4 space-y-3">
@@ -45,7 +45,7 @@
           </div>
 
           <div>
-            <div class="text-xs font-black uppercase text-[#6B7280]">Adherence</div>
+            <div class="text-xs font-black uppercase text-[#6B7280]">Постоянство</div>
             <div class="mt-2 h-3 border border-[#E5E7EB] bg-[#FFFFFF]">
               <div class="h-full bg-[#2563EB]" [style.width.%]="client.adherence"></div>
             </div>
@@ -59,7 +59,7 @@
           </div>
 
           <div class="text-xs font-black uppercase text-[#6B7280] md:text-right">
-            Score {{ client.score }}
+            Резултат {{ client.score }}
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
     <aside class="space-y-5">
       <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
-        <h2 class="text-sm font-black uppercase tracking-wide">Review Queue</h2>
+        <h2 class="text-sm font-black uppercase tracking-wide">Задачи за преглед</h2>
         <div class="mt-5 space-y-3">
           <div *ngFor="let task of tasks" class="border border-[#E5E7EB] bg-[#F7FAFC] p-4">
             <div class="font-black uppercase text-[#172033]">{{ task.title }}</div>
@@ -77,17 +77,17 @@
       </article>
 
       <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
-        <h2 class="text-sm font-black uppercase tracking-wide">Block Health</h2>
+        <h2 class="text-sm font-black uppercase tracking-wide">Състояние на блока</h2>
         <div class="mt-5 border border-[#E5E7EB] bg-[#F7FAFC] p-4">
           <div class="flex justify-between text-xs font-black uppercase text-[#6B7280]">
-            <span>Overall</span>
+            <span>Общо</span>
             <span>88%</span>
           </div>
           <div class="mt-2 h-3 border border-[#E5E7EB] bg-[#FFFFFF]">
             <div class="h-full w-[88%] bg-[#2563EB]"></div>
           </div>
           <p class="mt-4 text-sm text-[#6B7280]">
-            Most clients are progressing cleanly. Review fatigue notes before adding volume.
+            Повечето клиенти напредват чисто. Прегледай бележките за умора, преди да добавиш още обем.
           </p>
         </div>
       </article>

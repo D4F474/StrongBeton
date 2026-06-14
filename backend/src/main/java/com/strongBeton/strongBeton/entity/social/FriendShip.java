@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "friendship")
 public class FriendShip {
 
-    //TODO TUKA IMA NESHTO S GETUSERNAME PROUCHI GO
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_friendship")

@@ -5,17 +5,17 @@
     <div class="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.25em] text-[#2563EB]">
-          Workout Summary
+          Обобщение на тренировката
         </p>
 
         <h1 class="mt-4 text-3xl font-black uppercase leading-tight md:text-5xl">
-          Monday Push A
-          <span class="block text-[#2563EB]">Completed</span>
+          Понеделник Бутане A
+          <span class="block text-[#2563EB]">Завършена</span>
         </h1>
 
         <p class="mt-4 max-w-2xl text-[#6B7280]">
-          Strong session. Bench moved up, pressing stayed clean, and total volume beat the
-          previous push day.
+          Силна тренировка. Лежанката върви нагоре, бутането остана чисто, а общият обем
+          надмина предишния ден за бутане.
         </p>
       </div>
 
@@ -24,14 +24,14 @@
           routerLink="/app/workout"
           class="border border-[#2563EB] bg-[#FFFFFF] px-5 py-3 text-sm font-black uppercase tracking-wider text-[#172033] shadow-[4px_4px_0_#172033] hover:border-[#2563EB]"
         >
-          Repeat
+          Повтори
         </a>
 
         <a
           routerLink="/app/home"
           class="border border-[#172033] bg-[#2563EB] px-5 py-3 text-sm font-black uppercase tracking-wider text-[#172033] shadow-[4px_4px_0_#172033]"
         >
-          Done
+          Готово
         </a>
       </div>
     </div>
@@ -57,8 +57,8 @@
   <div class="grid grid-cols-1 gap-5 xl:grid-cols-3">
     <article class="xl:col-span-2 border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
-        <h2 class="text-sm font-black uppercase tracking-wide">Exercise Breakdown</h2>
-        <span class="text-xs font-black uppercase text-[#6B7280]">5 exercises logged</span>
+        <h2 class="text-sm font-black uppercase tracking-wide">Разбивка по упражнения</h2>
+        <span class="text-xs font-black uppercase text-[#6B7280]">5 записани упражнения</span>
       </div>
 
       <div class="mt-4 space-y-3">
@@ -69,14 +69,14 @@
           <div>
             <div class="font-black uppercase text-[#172033]">
               {{ exercise.name }}
-              <span *ngIf="exercise.pr" class="ml-2 text-xs text-[#2563EB]">PR</span>
+              <span *ngIf="exercise.pr" class="ml-2 text-xs text-[#2563EB]">ЛР</span>
             </div>
             <div class="mt-1 text-xs uppercase text-[#6B7280]">{{ exercise.topSet }}</div>
           </div>
           <div class="text-xs font-black uppercase text-[#6B7280] md:text-right">{{ exercise.sets }}</div>
           <div class="text-xs font-black uppercase text-[#6B7280] md:text-right">{{ exercise.volume }}</div>
           <div class="text-xs font-black uppercase text-[#22C55E] md:text-right">
-            {{ exercise.pr ? 'Record set' : 'Solid work' }}
+            {{ exercise.pr ? 'Рекордна серия' : 'Стабилна работа' }}
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
 
     <aside class="space-y-5">
       <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
-        <h2 class="text-sm font-black uppercase tracking-wide">Badges Earned</h2>
+        <h2 class="text-sm font-black uppercase tracking-wide">Спечелени значки</h2>
         <div class="mt-5 flex flex-wrap gap-2">
           <span
             *ngFor="let badge of badges"
@@ -96,10 +96,10 @@
       </article>
 
       <article class="border border-[#E5E7EB] bg-[#FFFFFF] p-5 shadow-[4px_4px_0_#172033]">
-        <h2 class="text-sm font-black uppercase tracking-wide">Next Target</h2>
+        <h2 class="text-sm font-black uppercase tracking-wide">Следваща цел</h2>
         <div class="mt-5 border border-[#E5E7EB] bg-[#F7FAFC] p-4">
-          <div class="text-xs uppercase text-[#6B7280]">Bench Press</div>
-          <div class="mt-2 text-2xl font-black text-[#2563EB]">97.5kg x 5</div>
+          <div class="text-xs uppercase text-[#6B7280]">Лежанка</div>
+          <div class="mt-2 text-2xl font-black text-[#2563EB]">97.5 кг × 5</div>
         </div>
       </article>
     </aside>

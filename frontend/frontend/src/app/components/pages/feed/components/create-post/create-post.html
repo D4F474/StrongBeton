@@ -1,25 +1,24 @@
-<p>create-post works!</p>
 <article class="sb-panel p-5">
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
     <div>
       <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-        Create Post
+        Създаване на публикация
       </p>
 
       <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Say something strong
+        Кажи нещо силно
       </h2>
     </div>
 
     <span class="text-xs font-black uppercase text-[#6B7280]">
-      TEXT POST
+      ТЕКСТОВА ПУБЛИКАЦИЯ
     </span>
   </div>
 
   <textarea
     rows="4"
     [(ngModel)]="content"
-    placeholder="What did you train today?"
+    placeholder="Какво тренира днес?"
     class="mt-4 w-full border border-[#172033] px-4 py-3 text-sm font-bold text-[#172033] outline-none focus:border-[#F59E0B]"
   ></textarea>
 
@@ -30,7 +29,7 @@
       [disabled]="loading || !content.trim()"
       class="sb-workout-btn h-12 px-6 text-xs disabled:opacity-40"
     >
-      {{ loading ? 'Posting...' : 'Post' }}
+      {{ loading ? 'Публикуване...' : 'Публикувай' }}
     </button>
   </div>
 </article>

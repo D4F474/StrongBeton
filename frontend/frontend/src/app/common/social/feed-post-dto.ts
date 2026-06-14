@@ -8,6 +8,7 @@ export interface FeedPostDto {
   type?: string | null;
   postType?: string | null;
 
+  profilePhotoUrl: string;
   username?: string | null;
 
   user?: {

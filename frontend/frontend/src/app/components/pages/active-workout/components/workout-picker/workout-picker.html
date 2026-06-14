@@ -1,16 +1,16 @@
 <header class="border-b border-[#172033] pb-4 mb-6">
   <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B7280]">
-    Workout Mode
+    Режим тренировка
   </p>
 
   <h1 class="mt-1 text-xl font-black uppercase md:text-3xl">
-    Choose workout
+    Избери тренировка
   </h1>
 </header>
 
 <div class="mb-6">
   <label class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-    Workout name
+    Име на тренировката
   </label>
 
   <form class="mt-2 flex gap-3" (ngSubmit)="submitWorkout()">
@@ -18,7 +18,7 @@
       type="text"
       name="newWorkoutName"
       [(ngModel)]="newWorkoutName"
-      placeholder="e.g. Pull, Push, Legs..."
+      placeholder="напр. Бутане, Дърпане, Крака..."
       class="flex-1 border border-[#172033] px-4 py-3 font-black uppercase text-sm focus:outline-none focus:border-[#F59E0B]"
     />
 
@@ -27,7 +27,7 @@
       [disabled]="isCreatingWorkout || !newWorkoutName.trim()"
       class="sb-primary-btn h-12 px-6 text-sm disabled:cursor-not-allowed disabled:opacity-40"
     >
-      {{ isCreatingWorkout ? 'Creating...' : '+ New' }}
+      {{ isCreatingWorkout ? 'Създаване...' : '+ Нова' }}
     </button>
   </form>
 

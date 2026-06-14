@@ -1,11 +1,11 @@
 <article class="sb-panel p-5">
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
     <h2 class="text-sm font-black uppercase tracking-wide text-[#172033]">
-      Global Clan Leaderboard
+      Глобална класация на клановете
     </h2>
 
     <span class="text-xs font-black uppercase text-[#6B7280]">
-      Top clans
+      Топ кланове
     </span>
   </div>
 
@@ -15,19 +15,19 @@
       class="sb-card p-4"
     >
       <div class="text-xs font-black uppercase text-[#6B7280]">
-        Rank #{{ i + 1 }}
+        Позиция #{{ i + 1 }}
       </div>
 
       <div class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
-        {{ clan.clanName || 'Unnamed clan' }}
+        {{ clan.clanName || 'Безименен клан' }}
       </div>
 
       <div class="mt-3 text-sm font-black text-[#F59E0B]">
-        {{ clan.teamScore || 0 }} team score
+        {{ clan.teamScore || 0 }} отборен резултат
       </div>
 
       <div class="mt-2 text-xs font-black uppercase text-[#6B7280]">
-        {{ clan.totalPoints || 0 }} pts · {{ clan.totalMembers || 0 }} members
+        {{ clan.totalPoints || 0 }} т. · {{ clan.totalMembers || 0 }} членове
       </div>
 
       <button
@@ -37,7 +37,7 @@
         [disabled]="actionLoading"
         (click)="joinClan(clan.clanId)"
       >
-        {{ actionLoading ? 'Joining...' : 'Join' }}
+        {{ actionLoading ? 'Присъединяване...' : 'Присъедини се' }}
       </button>
     </div>
   </div>
@@ -45,11 +45,11 @@
   <ng-template #emptyLeaderboard>
     <div class="mt-4 rounded-[1.5rem] border border-dashed border-[#E5E7EB] bg-white p-5">
       <p class="text-sm font-black uppercase text-[#6B7280]">
-        No clans on the board yet.
+        Все още няма кланове в класацията.
       </p>
 
       <p class="mt-2 text-sm font-bold text-[#6B7280]">
-        Create the first clan and own the leaderboard.
+        Създай първия клан и завладей класацията.
       </p>
     </div>
   </ng-template>

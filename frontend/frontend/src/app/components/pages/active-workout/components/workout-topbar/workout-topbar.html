@@ -46,14 +46,14 @@
       [disabled]="isFinishingWorkout || workoutDetailsCount === 0"
       class="h-11 border border-[#22C55E] bg-[#22C55E] px-5 text-xs font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
     >
-      {{ isFinishingWorkout ? 'Приключване...' : 'Finish' }}
+      {{ isFinishingWorkout ? 'Приключване...' : 'Приключи' }}
     </button>
 
     <div
       *ngIf="isWorkoutFinished"
       class="flex h-11 items-center border border-[#22C55E] bg-green-50 px-5 text-xs font-black uppercase tracking-wide text-[#15803D]"
     >
-      Finished
+      Приключена
     </div>
   </div>
 </header>

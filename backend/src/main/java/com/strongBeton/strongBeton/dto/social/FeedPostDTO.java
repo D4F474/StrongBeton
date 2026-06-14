@@ -18,6 +18,7 @@ public class FeedPostDTO {
     private String username;
     private UUID userUuid;
 
+    private String profilePhotoUrl;
     private int likesCount;
     private int commentsCount;
     private boolean likedByMe;
@@ -30,7 +31,10 @@ public class FeedPostDTO {
     public FeedPostDTO() {
     }
 
-    public FeedPostDTO(Integer id, String content, String type, String username, UUID userUuid, int likesCount, int commentsCount, boolean likedByMe, LocalDateTime createdAt, LocalDateTime updatedAt, List<FeedPostCommentDTO> comments) {
+    public FeedPostDTO(Integer id, String content, String type,
+                       String username, UUID userUuid, int likesCount,
+                       int commentsCount, boolean likedByMe, LocalDateTime createdAt,
+                       LocalDateTime updatedAt, List<FeedPostCommentDTO> comments, String profilePhotoUrl) {
         this.id = id;
         this.content = content;
         this.type = type;
@@ -42,6 +46,7 @@ public class FeedPostDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.comments = comments;
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public Integer getId() {
@@ -130,5 +135,13 @@ public class FeedPostDTO {
 
     public void setComments(List<FeedPostCommentDTO> comments) {
         this.comments = comments;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 }

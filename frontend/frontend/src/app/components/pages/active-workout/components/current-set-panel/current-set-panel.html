@@ -2,7 +2,7 @@
   *ngIf="isWorkoutFinished"
   class="mb-4 border border-[#22C55E] bg-green-50 p-3 text-xs font-black uppercase text-[#15803D]"
 >
-  Read-only режим. Тренировката вече е приключена.
+  Режим само за преглед. Тренировката вече е приключена.
 </div>
 
 <div
@@ -31,7 +31,7 @@
 
       <div class="flex items-center gap-3">
         <span class="font-black text-[#F59E0B]">
-          {{ set.kg }} KG × {{ set.reps }} REPS
+          {{ set.kg }} КГ × {{ set.reps }} ПОВТОРЕНИЯ
         </span>
 
         <button
@@ -59,7 +59,7 @@
       <div class="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-end">
         <div>
           <label class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
-            KG
+            КГ
           </label>
 
           <input
@@ -73,7 +73,7 @@
 
         <div>
           <label class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
-            Reps
+            Повторения
           </label>
 
           <input
@@ -92,7 +92,7 @@
             [disabled]="savingEditedSetId === set.id || editKg <= 0 || editReps <= 0"
             class="border border-[#22C55E] bg-[#22C55E] px-4 py-3 text-[10px] font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {{ savingEditedSetId === set.id ? 'Запис...' : 'Запази' }}
+            {{ savingEditedSetId === set.id ? 'Записване...' : 'Запази' }}
           </button>
 
           <button
@@ -118,80 +118,80 @@
 
 <ng-container *ngIf="canEditWorkout; else finishedExerciseView">
   <div class="mb-6">
-  <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
-    Weight
+    <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+      Тежест
+    </div>
+
+    <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+      <button
+        type="button"
+        (click)="decreaseKg()"
+        class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+      >
+        -
+      </button>
+
+      <input
+        type="number"
+        min="0"
+        step="0.5"
+        inputmode="decimal"
+        [ngModel]="currentKg"
+        (ngModelChange)="setKgFromInput($event)"
+        class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
+      />
+
+      <button
+        type="button"
+        (click)="increaseKg()"
+        class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+      >
+        +
+      </button>
+    </div>
+
+    <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
+      КГ
+    </div>
   </div>
 
-  <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
-    <button
-      type="button"
-      (click)="decreaseKg()"
-      class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
-    >
-      -
-    </button>
+  <div class="mb-6">
+    <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+      Повторения
+    </div>
 
-    <input
-      type="number"
-      min="0"
-      step="0.5"
-      inputmode="decimal"
-      [ngModel]="currentKg"
-      (ngModelChange)="setKgFromInput($event)"
-      class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
-    />
+    <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
+      <button
+        type="button"
+        (click)="decreaseReps()"
+        class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
+      >
+        -
+      </button>
 
-    <button
-      type="button"
-      (click)="increaseKg()"
-      class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
-    >
-      +
-    </button>
+      <input
+        type="number"
+        min="0"
+        step="1"
+        inputmode="numeric"
+        [ngModel]="currentReps"
+        (ngModelChange)="setRepsFromInput($event)"
+        class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
+      />
+
+      <button
+        type="button"
+        (click)="increaseReps()"
+        class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
+      >
+        +
+      </button>
+    </div>
+
+    <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
+      ПОВТОРЕНИЯ
+    </div>
   </div>
-
-  <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
-    KG
-  </div>
-</div>
-
-<div class="mb-6">
-  <div class="mb-2 text-xs font-black uppercase tracking-wide text-[#6B7280]">
-    Reps
-  </div>
-
-  <div class="grid grid-cols-[64px_minmax(0,1fr)_64px] border-y border-[#172033]">
-    <button
-      type="button"
-      (click)="decreaseReps()"
-      class="sb-number-btn h-[74px] border-r border-[#E5E7EB] text-3xl"
-    >
-      -
-    </button>
-
-    <input
-      type="number"
-      min="0"
-      step="1"
-      inputmode="numeric"
-      [ngModel]="currentReps"
-      (ngModelChange)="setRepsFromInput($event)"
-      class="no-number-arrows sb-number-display h-[74px] w-full border-0 bg-transparent text-center text-3xl font-black focus:outline-none"
-    />
-
-    <button
-      type="button"
-      (click)="increaseReps()"
-      class="sb-number-btn h-[74px] border-l border-[#E5E7EB] text-3xl"
-    >
-      +
-    </button>
-  </div>
-
-  <div class="mt-1 text-center text-xs font-black uppercase text-[#6B7280]">
-    REPS
-  </div>
-</div>
 
   <button
     type="button"
@@ -199,11 +199,11 @@
     [disabled]="!canEditWorkout || !selectedDetail || currentKg <= 0 || currentReps <= 0"
     class="sb-workout-btn mx-auto mt-4 flex h-16 w-full text-2xl disabled:opacity-40"
   >
-    Log Set
+    Запиши серия
   </button>
 
   <p *ngIf="currentKg <= 0 || currentReps <= 0" class="mt-2 text-xs font-bold text-red-600">
-    Add weight and reps before logging the set.
+    Добави тежест и повторения, преди да запишеш серията.
   </p>
 </ng-container>
 

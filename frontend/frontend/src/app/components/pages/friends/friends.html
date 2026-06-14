@@ -8,22 +8,22 @@
     <div class="grid gap-5 xl:grid-cols-[1fr_320px] xl:items-end">
       <div>
         <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
-          StrongBeton Social
+          Социална зона на StrongBeton
         </p>
 
         <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
-          Build your crew.
-          <span class="block text-[#2563EB]">Train louder.</span>
+          Събери своя отбор.
+          <span class="block text-[#2563EB]">Тренирай по-силно.</span>
         </h1>
 
         <p class="mt-3 max-w-2xl text-xs font-black uppercase leading-relaxed tracking-wide text-[#6B7280] md:mt-4 md:text-sm">
-          Add friends, accept requests and prepare your feed for real social training updates.
+          Добавяй приятели, приемай заявки и подготви фийда си за истински социални тренировъчни ъпдейти.
         </p>
       </div>
 
       <div class="rounded-[2rem] border border-[#E5E7EB] bg-white p-5 shadow-sm">
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
-          Friends
+          Приятели
         </p>
 
         <p class="mt-2 text-3xl font-black uppercase text-[#172033]">
@@ -31,7 +31,7 @@
         </p>
 
         <p class="mt-2 text-sm font-bold text-[#6B7280]">
-          accepted athletes
+          приети атлети
         </p>
       </div>
     </div>
@@ -52,11 +52,11 @@
   <article *ngIf="incomingRequests.length > 0" class="sb-panel p-5">
     <div class="border-b border-[#E5E7EB] pb-4">
       <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
-        Friend Requests
+        Заявки за приятелство
       </p>
 
       <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Waiting for your response
+        Чакат твоя отговор
       </h2>
     </div>
 
@@ -65,9 +65,28 @@
         *ngFor="let request of incomingRequests; trackBy: trackByFriend"
         class="border border-[#E5E7EB] bg-white p-4"
       >
-        <p class="text-xl font-black uppercase text-[#172033]">
-          {{ request.friend }}
-        </p>
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-[#F3F4F6]"
+          >
+            <span class="text-xs font-black uppercase text-[#F59E0B]">
+              {{ getInitials(request.friend) }}
+            </span>
+
+            <img
+              *ngIf="getProfileImageUrl(request) as imageUrl"
+              [src]="imageUrl"
+              alt="Profile photo"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover"
+              (error)="markImageFailed(imageUrl)"
+            />
+          </div>
+
+          <p class="min-w-0 truncate text-xl font-black uppercase text-[#172033]">
+            {{ request.friend }}
+          </p>
+        </div>
 
         <div class="mt-4 grid grid-cols-2 gap-2">
           <button
@@ -76,7 +95,7 @@
             [disabled]="actionLoading"
             class="h-11 border border-green-500 bg-green-50 text-xs font-black uppercase text-green-700 disabled:opacity-40"
           >
-            Accept
+            Приеми
           </button>
 
           <button
@@ -85,7 +104,7 @@
             [disabled]="actionLoading"
             class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
           >
-            Decline
+            Откажи
           </button>
         </div>
       </div>
@@ -96,11 +115,11 @@
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-          Suggested Athletes
+          Предложени атлети
         </p>
 
         <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-          Find people
+          Намери хора
         </h2>
       </div>
 
@@ -109,13 +128,13 @@
         (click)="loadSuggestions()"
         class="sb-secondary-btn h-11 px-4 text-xs"
       >
-        Refresh
+        Обнови
       </button>
     </div>
 
     <div *ngIf="suggestions.length === 0" class="mt-4 border border-[#E5E7EB] bg-[#F9FAFB] p-4">
       <p class="text-sm font-bold text-[#6B7280]">
-        No suggestions right now.
+        В момента няма предложения.
       </p>
     </div>
 
@@ -124,14 +143,33 @@
         *ngFor="let user of suggestions; trackBy: trackByUsername"
         class="flex items-center justify-between gap-3 border border-[#E5E7EB] bg-white p-4"
       >
-        <div>
-          <p class="text-lg font-black uppercase text-[#172033]">
-            {{ user.username }}
-          </p>
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-[#F3F4F6]"
+          >
+            <span class="text-xs font-black uppercase text-[#2563EB]">
+              {{ getInitials(user.username) }}
+            </span>
 
-          <p class="text-xs font-black uppercase text-[#6B7280]">
-            {{ user.status }}
-          </p>
+            <img
+              *ngIf="getProfileImageUrl(user) as imageUrl"
+              [src]="imageUrl"
+              alt="Profile photo"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover"
+              (error)="markImageFailed(imageUrl)"
+            />
+          </div>
+
+          <div class="min-w-0">
+            <p class="truncate text-lg font-black uppercase text-[#172033]">
+              {{ user.username }}
+            </p>
+
+            <p class="text-xs font-black uppercase text-[#6B7280]">
+              {{ user.status }}
+            </p>
+          </div>
         </div>
 
         <button
@@ -140,7 +178,7 @@
           [disabled]="actionLoading"
           class="sb-workout-btn h-11 px-4 text-xs disabled:opacity-40"
         >
-          Add
+          Добави
         </button>
       </div>
     </div>
@@ -149,17 +187,17 @@
   <article class="sb-panel p-5">
     <div class="border-b border-[#E5E7EB] pb-4">
       <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-        Friends List
+        Списък с приятели
       </p>
 
       <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Your crew
+        Твоят отбор
       </h2>
     </div>
 
     <div *ngIf="acceptedFriends.length === 0" class="mt-4 border border-[#E5E7EB] bg-[#F9FAFB] p-4">
       <p class="text-sm font-bold text-[#6B7280]">
-        No accepted friends yet.
+        Все още нямаш приети приятели.
       </p>
     </div>
 
@@ -168,14 +206,33 @@
         *ngFor="let friend of acceptedFriends; trackBy: trackByFriend"
         class="flex items-center justify-between gap-3 border border-[#E5E7EB] bg-white p-4"
       >
-        <div>
-          <p class="text-lg font-black uppercase text-[#172033]">
-            {{ friend.friend }}
-          </p>
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-[#F3F4F6]"
+          >
+            <span class="text-xs font-black uppercase text-[#2563EB]">
+              {{ getInitials(friend.friend) }}
+            </span>
 
-          <p class="text-xs font-black uppercase text-green-700">
-            {{ friend.status }}
-          </p>
+            <img
+              *ngIf="getProfileImageUrl(friend) as imageUrl"
+              [src]="imageUrl"
+              alt="Friend photo"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover"
+              (error)="markImageFailed(imageUrl)"
+            />
+          </div>
+
+          <div class="min-w-0">
+            <p class="truncate text-lg font-black uppercase text-[#172033]">
+              {{ friend.friend }}
+            </p>
+
+            <p class="text-xs font-black uppercase text-green-700">
+              {{ friend.status }}
+            </p>
+          </div>
         </div>
 
         <button
@@ -184,7 +241,7 @@
           [disabled]="actionLoading"
           class="h-11 border border-red-300 bg-red-50 px-4 text-xs font-black uppercase text-red-600 disabled:opacity-40"
         >
-          Remove
+          Премахни
         </button>
       </div>
     </div>
@@ -193,11 +250,11 @@
   <article *ngIf="outgoingRequests.length > 0" class="sb-panel p-5">
     <div class="border-b border-[#E5E7EB] pb-4">
       <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
-        Sent Requests
+        Изпратени заявки
       </p>
 
       <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Waiting for them
+        Чакаш техния отговор
       </h2>
     </div>
 
@@ -206,16 +263,35 @@
         *ngFor="let request of outgoingRequests; trackBy: trackByFriend"
         class="border border-[#E5E7EB] bg-white p-4"
       >
-        <p class="text-lg font-black uppercase text-[#172033]">
-          {{ request.friend }}
-        </p>
+        <div class="flex min-w-0 items-center gap-3">
+          <div
+            class="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-[#F3F4F6]"
+          >
+            <span class="text-xs font-black uppercase text-[#6B7280]">
+              {{ getInitials(request.friend) }}
+            </span>
 
-        <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
-          {{ request.status }}
-        </p>
+            <img
+              *ngIf="getProfileImageUrl(request) as imageUrl"
+              [src]="imageUrl"
+              alt="Profile photo"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover"
+              (error)="markImageFailed(imageUrl)"
+            />
+          </div>
+
+          <div class="min-w-0">
+            <p class="truncate text-lg font-black uppercase text-[#172033]">
+              {{ request.friend }}
+            </p>
+
+            <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
+              {{ request.status }}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </article>
-
-  
 </section>

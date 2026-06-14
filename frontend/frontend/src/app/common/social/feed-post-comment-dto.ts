@@ -2,7 +2,7 @@ export interface FeedPostCommentDto {
     id?: number | null;
   content?: string | null;
   username?: string | null;
-
+  profilePhotoUrl: string;
   user?: {
     id?: number;
     uuid?: string;

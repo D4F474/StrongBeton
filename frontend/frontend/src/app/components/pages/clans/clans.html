@@ -17,33 +17,33 @@
     <div class="grid gap-5 xl:grid-cols-[1fr_340px] xl:items-end">
       <div>
         <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
-          StrongBeton Clans
+          Кланове на StrongBeton
         </p>
 
         <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
-          Lift together.
-          <span class="block text-[#2563EB]">Dominate the board.</span>
+          Вдигайте заедно.
+          <span class="block text-[#2563EB]">Покорете класацията.</span>
         </h1>
 
         <p class="mt-3 max-w-2xl text-xs font-black uppercase leading-relaxed tracking-wide text-[#6B7280] md:mt-4 md:text-sm">
-          Build a strength crew, finish workouts, earn points and climb the clan leaderboard.
+          Създай силов отбор, завършвайте тренировки, печелете точки и се изкачвайте в класацията на клановете.
         </p>
       </div>
 
       <div class="rounded-[2rem] border border-[#E5E7EB] bg-white p-5 shadow-sm">
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
-          Status
+          Статус
         </p>
 
         <p class="mt-2 text-3xl font-black uppercase text-[#172033]">
-          {{ hasClan ? 'In clan' : 'No clan' }}
+          {{ hasClan ? 'В клан' : 'Без клан' }}
         </p>
 
         <p class="mt-2 text-sm font-bold text-[#6B7280]">
           {{
             hasClan
               ? myClan?.name
-              : 'Create or join a clan to start earning team points.'
+              : 'Създай или се присъедини към клан, за да започнеш да печелиш отборни точки.'
           }}
         </p>
       </div>
@@ -68,78 +68,78 @@
       (click)="openSettings()"
       class="sb-secondary-btn h-12 px-5 text-xs"
     >
-      Clan Settings
+      Настройки на клана
     </button>
   </div>
 
-<article
-  *ngIf="hasClan && isCurrentUserLeader && pendingRequests.length > 0"
-  class="sb-panel p-5"
->
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
-    <div>
-      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
-        Pending Requests
-      </p>
+  <article
+    *ngIf="hasClan && isCurrentUserLeader && pendingRequests.length > 0"
+    class="sb-panel p-5"
+  >
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
+          Чакащи заявки
+        </p>
 
-      <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Join approvals
-      </h2>
+        <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
+          Одобрения за присъединяване
+        </h2>
+      </div>
+
+      <span class="text-xs font-black uppercase text-[#6B7280]">
+        {{ pendingRequests.length }} чакат
+      </span>
     </div>
 
-    <span class="text-xs font-black uppercase text-[#6B7280]">
-      {{ pendingRequests.length }} waiting
-    </span>
-  </div>
+    <div class="mt-4 grid gap-3 md:grid-cols-2">
+      <div
+        *ngFor="let request of pendingRequests; trackBy: trackByIndex"
+        class="border border-[#E5E7EB] bg-white p-4"
+      >
+        <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
+          Чакащ атлет
+        </p>
 
-  <div class="mt-4 grid gap-3 md:grid-cols-2">
-    <div
-      *ngFor="let request of pendingRequests; trackBy: trackByIndex"
-      class="border border-[#E5E7EB] bg-white p-4"
-    >
-      <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-        Pending athlete
-      </p>
+        <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
+          {{ request.username || 'Атлет' }}
+        </p>
 
-      <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
-        {{ request.username || 'Athlete' }}
-      </p>
+        <div class="mt-4 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            (click)="acceptPendingMember(request.userUuid)"
+            [disabled]="actionLoading || !request.userUuid"
+            class="h-11 border border-green-500 bg-green-50 text-xs font-black uppercase text-green-700 disabled:opacity-40"
+          >
+            Приеми
+          </button>
 
-      <div class="mt-4 grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          (click)="acceptPendingMember(request.userUuid)"
-          [disabled]="actionLoading || !request.userUuid"
-          class="h-11 border border-green-500 bg-green-50 text-xs font-black uppercase text-green-700 disabled:opacity-40"
-        >
-          Accept
-        </button>
-
-        <button
-          type="button"
-          (click)="declinePendingMember(request.userUuid)"
-          [disabled]="actionLoading || !request.userUuid"
-          class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
-        >
-          Decline
-        </button>
+          <button
+            type="button"
+            (click)="declinePendingMember(request.userUuid)"
+            [disabled]="actionLoading || !request.userUuid"
+            class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
+          >
+            Откажи
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-</article>
+  </article>
 
   <ng-container *ngIf="hasClan; else noClanState">
     <div *ngIf="isCurrentUserPending; else acceptedClanView" class="sb-panel p-5">
       <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
-        Pending request
+        Чакаща заявка
       </p>
 
       <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
-        Waiting for approval.
+        Изчаква се одобрение.
       </h2>
 
       <p class="mt-2 text-sm font-bold text-[#6B7280]">
-        Your request to join {{ myClan?.name }} is waiting for a clan leader to accept it.
+        Заявката ти за присъединяване към {{ myClan?.name }} чака одобрение от лидер на клана.
       </p>
 
       <button
@@ -148,70 +148,70 @@
         [disabled]="actionLoading"
         class="sb-secondary-btn mt-5 h-12 px-5 text-xs"
       >
-        Cancel Request
+        Откажи заявката
       </button>
     </div>
 
     <ng-template #acceptedClanView>
       <article
-  *ngIf="isCurrentUserLeader && manageableMembers.length > 0"
-  class="sb-panel p-5"
->
-  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
-    <div>
-      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-        Clan Management
-      </p>
+        *ngIf="isCurrentUserLeader && manageableMembers.length > 0"
+        class="sb-panel p-5"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
+              Управление на клана
+            </p>
 
-      <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-        Manage members
-      </h2>
-    </div>
+            <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
+              Управлявай членовете
+            </h2>
+          </div>
 
-    <span class="text-xs font-black uppercase text-[#6B7280]">
-      Leader actions
-    </span>
-  </div>
+          <span class="text-xs font-black uppercase text-[#6B7280]">
+            Действия за лидера
+          </span>
+        </div>
 
-  <div class="mt-4 grid gap-3 md:grid-cols-2">
-    <div
-      *ngFor="let member of manageableMembers; trackBy: trackByIndex"
-      class="border border-[#E5E7EB] bg-white p-4"
-    >
-      <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-        {{ member.clanRoleType }}
-      </p>
+        <div class="mt-4 grid gap-3 md:grid-cols-2">
+          <div
+            *ngFor="let member of manageableMembers; trackBy: trackByIndex"
+            class="border border-[#E5E7EB] bg-white p-4"
+          >
+            <p class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
+              {{ member.clanRoleType }}
+            </p>
 
-      <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
-        {{ member.username || 'Athlete' }}
-      </p>
+            <p class="mt-2 truncate text-xl font-black uppercase text-[#172033]">
+              {{ member.username || 'Атлет' }}
+            </p>
 
-      <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
-        {{ member.points }} pts
-      </p>
+            <p class="mt-1 text-xs font-black uppercase text-[#6B7280]">
+              {{ member.points }} точки
+            </p>
 
-      <div class="mt-4 grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          (click)="transferLeadership(member.userUuid)"
-          [disabled]="actionLoading || !member.userUuid"
-          class="h-11 border border-[#2563EB] bg-blue-50 text-xs font-black uppercase text-[#2563EB] disabled:opacity-40"
-        >
-          Make Leader
-        </button>
+            <div class="mt-4 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                (click)="transferLeadership(member.userUuid)"
+                [disabled]="actionLoading || !member.userUuid"
+                class="h-11 border border-[#2563EB] bg-blue-50 text-xs font-black uppercase text-[#2563EB] disabled:opacity-40"
+              >
+                Направи лидер
+              </button>
 
-        <button
-          type="button"
-          (click)="kickMember(member.userUuid)"
-          [disabled]="actionLoading || !member.userUuid"
-          class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
-        >
-          Kick
-        </button>
-      </div>
-    </div>
-  </div>
-</article>
+              <button
+                type="button"
+                (click)="kickMember(member.userUuid)"
+                [disabled]="actionLoading || !member.userUuid"
+                class="h-11 border border-red-300 bg-red-50 text-xs font-black uppercase text-red-600 disabled:opacity-40"
+              >
+                Премахни
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
 
       <app-clan-overview [clan]="myClan"></app-clan-overview>
 

@@ -1,7 +1,7 @@
 <header
   class="sb-topbar sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[#E5E7EB] bg-white/95 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.04)] backdrop-blur md:px-6"
 >
-  <!-- LEFT: Brand -->
+  <!-- ЛЯВО: Бранд -->
   <a routerLink="/app/home" class="group flex items-center gap-3">
     <div
       class="flex h-10 w-10 items-center justify-center border border-[#2563EB]/25 bg-[#DBEAFE] text-sm font-black uppercase text-[#2563EB] shadow-[0_8px_18px_rgba(37,99,235,0.12)]"
@@ -18,48 +18,32 @@
       <div
         class="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-[#6B7280] sm:block"
       >
-        Training operating system
+        Операционна система за тренировки
       </div>
     </div>
   </a>
 
-  <!-- RIGHT: Actions -->
+  <!-- ДЯСНО: Действия -->
   <div class="flex items-center gap-2 md:gap-3">
-    <!-- Rank -->
-    <div
-      class="hidden border border-[#E5E7EB] bg-[#F9FAFB] px-4 py-2 text-right shadow-[0_6px_14px_rgba(15,23,42,0.03)] sm:block"
-    >
-      <div class="text-[10px] font-black uppercase tracking-[0.12em] text-[#6B7280]">
-        Rank
-      </div>
-      <div class="text-xs font-black uppercase tracking-tight text-[#F59E0B]">
-        Iron Legion
-      </div>
-    </div>
+    <!-- Ранг -->
 
-    <!-- Profile -->
+    <!-- Профил -->
     <a
       routerLink="/app/profile"
       class="group flex h-10 items-center gap-2 border border-[#E5E7EB] bg-white px-2.5 text-sm font-black text-[#172033] shadow-[0_6px_14px_rgba(15,23,42,0.03)] transition hover:border-[#2563EB]/40 hover:bg-[#EFF6FF]"
-      title="Profile"
+      title="Профил"
     >
-      <span
-        class="flex h-7 w-7 items-center justify-center bg-[#F3F4F6] text-xs font-black uppercase text-[#172033] group-hover:bg-[#DBEAFE] group-hover:text-[#2563EB]"
-      >
-        D
-      </span>
-
       <span class="hidden max-w-[120px] truncate text-xs uppercase md:inline">
-        Profile
+        Профил
       </span>
     </a>
 
-    <!-- Logout -->
+    <!-- Изход -->
     <button
       type="button"
       (click)="logout()"
       class="group flex h-10 items-center gap-2 border border-[#E5E7EB] bg-white px-3 text-sm font-black uppercase text-[#172033] shadow-[0_6px_14px_rgba(15,23,42,0.03)] transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-      title="Logout"
+      title="Изход"
     >
       <svg
         class="h-4 w-4"
@@ -88,7 +72,7 @@
         />
       </svg>
 
-      <span class="hidden sm:inline">Logout</span>
+      <span class="hidden sm:inline">Изход</span>
     </button>
   </div>
 </header>

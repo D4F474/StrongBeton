@@ -14,22 +14,22 @@
     <div class="grid gap-5 xl:grid-cols-[1fr_320px] xl:items-end">
       <div>
         <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
-          StrongBeton Feed
+          Фийд на StrongBeton
         </p>
 
         <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
-          Post your grind.
-          <span class="block text-[#2563EB]">Watch the crew.</span>
+          Покажи тренировката си.
+          <span class="block text-[#2563EB]">Следи отбора.</span>
         </h1>
 
         <p class="mt-3 max-w-2xl text-xs font-black uppercase leading-relaxed tracking-wide text-[#6B7280] md:mt-4 md:text-sm">
-          Share updates, react to friends and keep the strength community alive.
+          Споделяй прогрес, реагирай на приятели и поддържай силовата общност жива.
         </p>
       </div>
 
       <div class="rounded-[2rem] border border-[#E5E7EB] bg-white p-5 shadow-sm">
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
-          Feed status
+          Статус на фийда
         </p>
 
         <p class="mt-2 text-3xl font-black uppercase text-[#172033]">
@@ -37,7 +37,7 @@
         </p>
 
         <p class="mt-2 text-sm font-bold text-[#6B7280]">
-          visible posts
+          видими публикации
         </p>
       </div>
     </div>
@@ -62,21 +62,21 @@
 
   <div *ngIf="posts.length === 0" class="sb-panel p-6 text-center">
     <p class="text-xs font-black uppercase tracking-[0.18em] text-[#6B7280]">
-      No posts yet
+      Все още няма публикации
     </p>
 
     <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
-      Be the first to post.
+      Бъди първият, който публикува.
     </h2>
   </div>
 
   <app-feed-post-card
-  *ngFor="let post of posts; trackBy: trackByPostId"
-  [post]="post"
-  [currentUserUuid]="currentUserUuid"
-  [loading]="isPostBusy(post.id)"
-  (like)="likePost($event)"
-  (delete)="deletePost($event)"
-  (comment)="addComment($event)"
-></app-feed-post-card>
+    *ngFor="let post of posts; trackBy: trackByPostId"
+    [post]="post"
+    [currentUserUuid]="currentUserUuid"
+    [loading]="isPostBusy(post.id)"
+    (like)="likePost($event)"
+    (delete)="deletePost($event)"
+    (comment)="addComment($event)"
+  ></app-feed-post-card>
 </section>

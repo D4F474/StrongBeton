@@ -1,26 +1,26 @@
 <aside class="sb-panel p-5">
   <h2 class="text-sm font-black uppercase tracking-wide text-[#172033]">
-    Your next contribution
+    Следващият ти принос
   </h2>
 
   <p class="mt-3 text-sm font-bold text-[#6B7280]">
-    Finish a workout and your workout score will be added to your clan contribution.
+    Завърши тренировка и резултатът ѝ ще бъде добавен към приноса ти за клана.
   </p>
 
   <a
     routerLink="/app/workout"
     class="sb-workout-btn mt-5 inline-flex h-14 w-full items-center justify-center px-6 text-center text-lg"
   >
-    Train for clan
+    Тренирай за клана
   </a>
 
   <div class="mt-6 border-t border-[#E5E7EB] pt-5">
     <h3 class="text-xs font-black uppercase tracking-wide text-red-600">
-      Danger zone
+      Опасна зона
     </h3>
 
     <p class="mt-2 text-xs font-bold uppercase leading-relaxed text-[#6B7280]">
-      Leave this clan. Leaders must transfer leadership before leaving.
+      Напусни този клан. Лидерите трябва да прехвърлят лидерството, преди да напуснат.
     </p>
 
     <button
@@ -29,7 +29,7 @@
       [disabled]="actionLoading"
       class="mt-4 h-12 w-full border border-red-300 bg-red-50 px-4 text-xs font-black uppercase tracking-wide text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
     >
-      {{ actionLoading ? 'Leaving...' : 'Leave Clan' }}
+      {{ actionLoading ? 'Напускане...' : 'Напусни клана' }}
     </button>
   </div>
 </aside>

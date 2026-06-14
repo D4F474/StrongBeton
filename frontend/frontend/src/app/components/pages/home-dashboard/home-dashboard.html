@@ -13,21 +13,21 @@
   </div>
 </section>
 
-<!-- РЕАЛЕН CONTENT -->
+<!-- РЕАЛНО СЪДЪРЖАНИЕ -->
 <section *ngIf="dashboardReady" class="space-y-4 md:space-y-5">
   <div class="sb-panel overflow-hidden p-4 md:p-8">
     <div class="grid gap-4 md:gap-6 xl:grid-cols-[180px_1fr_320px] xl:items-end">
       <div class="sb-logo-poster hidden aspect-[2/3] xl:block">
         <img
           src="assets/strongbeton-logo.png"
-          alt="StrongBeton logo"
+          alt="Лого на StrongBeton"
           class="object-cover object-top"
         />
       </div>
 
       <div>
         <p class="text-[10px] font-black uppercase tracking-[0.16em] text-[#2563EB] md:text-xs md:tracking-[0.25em]">
-          Bulgarian Strength Club
+          Български силов клуб
         </p>
 
         <h1 class="mt-2 text-3xl font-black uppercase leading-none text-[#172033] sm:text-4xl md:mt-3 md:text-6xl">
@@ -47,16 +47,16 @@
             [queryParams]="primaryWorkoutQueryParams"
             class="sb-workout-btn h-16 px-6 text-center text-xl md:h-20 md:text-2xl"
           >
-            Continue Workout
+            Продължи тренировката
           </a>
         </ng-container>
 
         <ng-template #newWorkoutBtn>
-          <a          
+          <a
             routerLink="/app/workout"
             class="sb-workout-btn h-16 px-6 text-center text-xl md:h-20 md:text-2xl"
           >
-            Train Now
+            Тренирай сега
           </a>
         </ng-template>
 
@@ -64,7 +64,7 @@
           routerLink="/app/progress"
           class="sb-secondary-btn h-12 px-6 text-xs md:h-14 md:text-sm"
         >
-          Check Numbers
+          Виж прогреса
         </a>
       </div>
     </div>
@@ -99,11 +99,11 @@
     <article class="sb-panel p-5">
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
         <h2 class="text-sm font-black uppercase tracking-wide text-[#172033]">
-          Recent Workouts
+          Последни тренировки
         </h2>
 
         <span class="text-xs font-black uppercase text-[#6B7280]">
-          Latest sessions
+          Последни сесии
         </span>
       </div>
 

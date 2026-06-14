@@ -81,22 +81,22 @@ dashboardReady = false;
   }
 
   get heroTitle(): string {
-    return this.hasActiveWorkout ? 'Workout active.' : 'Push Day.';
+    return this.hasActiveWorkout ? 'Доизбутай деня.' : 'Активна тренировка.';
   }
 
   get heroHighlight(): string {
-    return this.hasActiveWorkout ? 'Finish the job.' : 'Start heavy.';
+    return this.hasActiveWorkout ? 'Довърши започнатото.' : 'Започни тежко.';
   }
 
   get heroDescription(): string {
     if (!this.activeWorkout) {
-      return 'Last session is ready. Values repeat automatically. Change only what needs changing.';
+      return 'Последната тренировка е заредена. Стойностите се повтарят автоматично. Промени само това, което трябва.';
     }
-    return `${this.activeWorkout.name} is still active. Continue from where you stopped.`;
+    return `${this.activeWorkout.name} все още е активна. Продължи оттам, докъдето стигна.`;
   }
 
   get primaryButtonText(): string {
-    return this.hasActiveWorkout ? 'Continue Workout' : 'Train Now';
+    return this.hasActiveWorkout ? 'Продължи тренировката' : 'Тренирай сега';
   }
 
   trackByIndex(index: number): number {
@@ -153,33 +153,33 @@ private updateDashboardReady(): void {
 
     return [
       {
-        label: 'Strength Score',
-        value: this.formatNumber(overview.strengthScore ?? 0),
-        helper: `${scoreDelta >= 0 ? '+' : ''}${scoreDelta} this month`,
-        valueClass: 'text-[#F59E0B] text-3xl md:text-5xl',
-        helperClass: scoreDelta >= 0 ? 'text-[#22C55E]' : 'text-red-500',
-      },
-      {
-        label: 'Weekly Volume',
-        value: this.formatNumber(weeklyVolume),
-        helper: `${weeklyVolumePercent}% of ${this.formatNumber(weeklyVolumeTarget)} kg`,
-        valueClass: 'text-[#172033] text-2xl md:text-4xl',
-        helperClass: 'text-[#6B7280]',
-      },
-      {
-        label: 'Training Streak',
-        value: String(trainingStreak),
-        helper: `best streak ${bestStreak}`,
-        valueClass: 'text-[#F59E0B] text-3xl md:text-5xl',
-        helperClass: 'text-[#6B7280]',
-      },
-      {
-        label: 'Personal Records',
-        value: String(personalRecords),
-        helper: `${recordsThisMonth} this month`,
-        valueClass: 'text-[#22C55E] text-3xl md:text-5xl',
-        helperClass: 'text-[#6B7280]',
-      },
+      label: 'Сила',
+      value: this.formatNumber(overview.strengthScore ?? 0),
+      helper: `${scoreDelta >= 0 ? '+' : ''}${scoreDelta} този месец`,
+      valueClass: 'text-[#F59E0B] text-3xl md:text-5xl',
+      helperClass: scoreDelta >= 0 ? 'text-[#22C55E]' : 'text-red-500',
+    },
+    {
+      label: 'Седмичен обем',
+      value: this.formatNumber(weeklyVolume),
+      helper: `${weeklyVolumePercent}% от ${this.formatNumber(weeklyVolumeTarget)} кг`,
+      valueClass: 'text-[#172033] text-2xl md:text-4xl',
+      helperClass: 'text-[#6B7280]',
+    },
+    {
+      label: 'Поредица от тренировки',
+      value: String(trainingStreak),
+      helper: `най-добра поредица ${bestStreak}`,
+      valueClass: 'text-[#F59E0B] text-3xl md:text-5xl',
+      helperClass: 'text-[#6B7280]',
+    },
+    {
+      label: 'Лични рекорди',
+      value: String(personalRecords),
+      helper: `${recordsThisMonth} този месец`,
+      valueClass: 'text-[#22C55E] text-3xl md:text-5xl',
+      helperClass: 'text-[#6B7280]',
+    },
     ];
   }
 
@@ -195,19 +195,19 @@ private updateDashboardReady(): void {
 
   private buildLoadingStats(): DashboardStat[] {
     return [
-      { label: 'Strength Score',   value: '...', helper: 'loading', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
-      { label: 'Weekly Volume',    value: '...', helper: 'loading', valueClass: 'text-[#172033] text-2xl md:text-4xl', helperClass: 'text-[#6B7280]' },
-      { label: 'Training Streak',  value: '...', helper: 'loading', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
-      { label: 'Personal Records', value: '...', helper: 'loading', valueClass: 'text-[#22C55E] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
+      { label: 'Сила',   value: '...', helper: 'loading', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
+      { label: 'Седмичен обем',    value: '...', helper: 'loading', valueClass: 'text-[#172033] text-2xl md:text-4xl', helperClass: 'text-[#6B7280]' },
+      { label: 'Поредица от тренировки',  value: '...', helper: 'loading', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
+      { label: 'Лични рекорди', value: '...', helper: 'loading', valueClass: 'text-[#22C55E] text-3xl md:text-5xl', helperClass: 'text-[#6B7280]' },
     ];
   }
 
   private buildErrorStats(): DashboardStat[] {
     return [
-      { label: 'Strength Score',   value: '-', helper: 'failed to load', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-red-500' },
-      { label: 'Weekly Volume',    value: '-', helper: 'failed to load', valueClass: 'text-[#172033] text-2xl md:text-4xl', helperClass: 'text-red-500' },
-      { label: 'Training Streak',  value: '-', helper: 'failed to load', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-red-500' },
-      { label: 'Personal Records', value: '-', helper: 'failed to load', valueClass: 'text-[#22C55E] text-3xl md:text-5xl', helperClass: 'text-red-500' },
+      { label: 'Сила',   value: '-', helper: 'failed to load', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-red-500' },
+      { label: 'Седмичен обем',    value: '-', helper: 'failed to load', valueClass: 'text-[#172033] text-2xl md:text-4xl', helperClass: 'text-red-500' },
+      { label: 'Поредица от тренировки',  value: '-', helper: 'failed to load', valueClass: 'text-[#F59E0B] text-3xl md:text-5xl', helperClass: 'text-red-500' },
+      { label: 'Лични рекорди', value: '-', helper: 'failed to load', valueClass: 'text-[#22C55E] text-3xl md:text-5xl', helperClass: 'text-red-500' },
     ];
   }
 

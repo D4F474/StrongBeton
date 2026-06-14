@@ -1,29 +1,29 @@
 <div class="grid gap-4 xl:grid-cols-2">
   <article class="sb-panel p-5 md:p-6">
     <p class="text-xs font-black uppercase tracking-[0.16em] text-[#6B7280]">
-      Create clan
+      Създай клан
     </p>
 
     <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
-      Start your own crew.
+      Създай свой собствен отбор.
     </h2>
 
     <p class="mt-2 text-sm font-bold text-[#6B7280]">
-      Create a strength team and become the leader.
+      Създай силов отбор и стани негов лидер.
     </p>
 
     <div class="mt-5 grid gap-3">
       <input
         [(ngModel)]="createName"
         type="text"
-        placeholder="Clan name"
+        placeholder="Име на клана"
         class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
       />
 
       <textarea
         [(ngModel)]="createDescription"
         rows="3"
-        placeholder="Description"
+        placeholder="Описание"
         class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
       ></textarea>
 
@@ -32,7 +32,7 @@
           [(ngModel)]="createInviteOnly"
           type="checkbox"
         />
-        Invite only
+        Само с покана
       </label>
 
       <button
@@ -41,29 +41,29 @@
         [disabled]="actionLoading || !createName.trim()"
         (click)="createClan()"
       >
-        {{ actionLoading ? 'Creating...' : 'Create Clan' }}
+        {{ actionLoading ? 'Създаване...' : 'Създай клан' }}
       </button>
     </div>
   </article>
 
   <article class="sb-panel p-5 md:p-6">
     <p class="text-xs font-black uppercase tracking-[0.16em] text-[#6B7280]">
-      Join clan
+      Присъедини се към клан
     </p>
 
     <h2 class="mt-2 text-2xl font-black uppercase text-[#172033]">
-      Enter an existing clan.
+      Влез в съществуващ клан.
     </h2>
 
     <p class="mt-2 text-sm font-bold text-[#6B7280]">
-      Use a clan ID or join from the leaderboard below.
+      Използвай ID на клан или се присъедини от класацията по-долу.
     </p>
 
     <div class="mt-5 grid gap-3">
       <input
         [(ngModel)]="joinClanId"
         type="number"
-        placeholder="Clan ID"
+        placeholder="ID на клана"
         class="rounded-2xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-bold text-[#172033] outline-none"
       />
 
@@ -73,7 +73,7 @@
         [disabled]="actionLoading || !joinClanId"
         (click)="joinClan()"
       >
-        {{ actionLoading ? 'Joining...' : 'Join Clan' }}
+        {{ actionLoading ? 'Присъединяване...' : 'Присъедини се' }}
       </button>
     </div>
   </article>

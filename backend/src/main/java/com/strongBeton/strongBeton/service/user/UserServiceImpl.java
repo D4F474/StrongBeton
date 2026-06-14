@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setBornDate(user.getAdditionalInfo().getBornDate());
             userDTO.setCm(user.getAdditionalInfo().getCm());
             userDTO.setGender(user.getAdditionalInfo().isGender());
-            photoRepository.findByUserIdAndPhotoType(user.getId(), PROFILE.toString())
+            photoRepository.findByUserIdAndPhoto(user.getId(), PROFILE)
                     .ifPresent(photo -> userDTO.setProfilePhotoUrl(photo.getPhotoUrl()));
             KGLogs kgLogs = kgLogRepository
                 .findTopByUserIdOrderByLoggedAtDesc(user.getId())

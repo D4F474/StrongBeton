@@ -6,11 +6,11 @@
     <header class="flex items-start justify-between border-b border-[#172033] p-5">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-          Clan Settings
+          Настройки на клана
         </p>
 
         <h2 class="mt-1 text-2xl font-black uppercase text-[#172033]">
-          Edit clan
+          Редактирай клана
         </h2>
       </div>
 
@@ -26,7 +26,7 @@
     <div class="grid gap-4 p-5">
       <div>
         <label class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-          Clan name
+          Име на клана
         </label>
 
         <input
@@ -38,7 +38,7 @@
 
       <div>
         <label class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-          Description
+          Описание
         </label>
 
         <textarea
@@ -55,12 +55,12 @@
         />
 
         <span class="text-xs font-black uppercase tracking-wide text-[#6B7280]">
-          Invite only clan
+          Клан само с покана
         </span>
       </label>
 
       <p class="text-xs font-bold uppercase leading-relaxed text-[#6B7280]">
-        If invite only is enabled, new users will join as pending members and must be accepted by clan leadership.
+        Ако режимът само с покана е включен, новите потребители ще влизат като чакащи членове и трябва да бъдат одобрени от лидерството на клана.
       </p>
     </div>
 
@@ -71,7 +71,7 @@
         [disabled]="actionLoading"
         class="sb-secondary-btn h-12 flex-1 text-xs"
       >
-        Cancel
+        Отказ
       </button>
 
       <button
@@ -80,7 +80,7 @@
         [disabled]="actionLoading || !name.trim()"
         class="sb-workout-btn h-12 flex-1 text-xs disabled:opacity-40"
       >
-        {{ actionLoading ? 'Saving...' : 'Save Settings' }}
+        {{ actionLoading ? 'Запазване...' : 'Запази настройките' }}
       </button>
     </footer>
   </section>

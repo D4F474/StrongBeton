@@ -2,11 +2,11 @@
   <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
     <div>
       <h2 class="text-sm font-black uppercase tracking-wide text-[#172033]">
-        Clan Activity
+        Активност на клана
       </h2>
 
       <p class="mt-1 text-xs font-bold uppercase tracking-wide text-[#6B7280]">
-        Recent workout contributions
+        Последни приноси от тренировки
       </p>
     </div>
 
@@ -15,7 +15,7 @@
       (click)="loadActivity()"
       class="sb-secondary-btn h-10 px-4 text-xs"
     >
-      Refresh
+      Обнови
     </button>
   </div>
 
@@ -38,7 +38,7 @@
     >
       <div>
         <div class="text-sm font-black uppercase text-[#172033]">
-          {{ contribution.username || 'Athlete' }}
+          {{ contribution.username || 'Атлет' }}
         </div>
 
         <div class="mt-1 text-xs font-black uppercase text-[#6B7280]">
@@ -48,11 +48,11 @@
 
       <div class="text-right">
         <div class="text-lg font-black text-[#F59E0B]">
-          +{{ contribution.points }} pts
+          +{{ contribution.points }} т.
         </div>
 
         <div class="text-[10px] font-black uppercase text-[#22C55E]">
-          workout finished
+          тренировката е завършена
         </div>
       </div>
     </div>
@@ -63,11 +63,11 @@
     class="mt-4 rounded-[1.5rem] border border-dashed border-[#E5E7EB] bg-white p-5"
   >
     <p class="text-sm font-black uppercase text-[#6B7280]">
-      No activity yet.
+      Все още няма активност.
     </p>
 
     <p class="mt-2 text-sm font-bold text-[#6B7280]">
-      Finish a workout and the contribution will appear here.
+      Завърши тренировка и приносът ще се появи тук.
     </p>
   </div>
 </article>

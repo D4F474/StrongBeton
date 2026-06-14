@@ -42,7 +42,7 @@ public class ImageServiceImpl implements ImageService {
                 return ResponseEntity.badRequest().body(Map.of("error", "Файлът липсва!"));
             }
 
-            Optional<CloudPhoto> profileImageOpt = cloudPhotoRepository.findByUserIdAndPhotoType(user.getId(), PROFILE.getText());
+            Optional<CloudPhoto> profileImageOpt = cloudPhotoRepository.findByUserIdAndPhoto(user.getId(), PROFILE);
 
             CloudPhoto cloudPhoto;
 
@@ -77,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Optional<ImageDataDTO> getProfileImage(int userId) {
-        return cloudPhotoRepository.findByUserIdAndPhotoType(userId, PROFILE.getText())
+        return cloudPhotoRepository.findByUserIdAndPhoto(userId, PROFILE)
                 .map(photo -> {
                     ImageDataDTO dto = new ImageDataDTO();
                     dto.setPhotoUrl(photo.getPhotoUrl());

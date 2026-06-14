@@ -1,5 +1,6 @@
 package com.strongBeton.strongBeton.rest;
 
+import com.strongBeton.strongBeton.dto.user.FriendViewDTO;
 import com.strongBeton.strongBeton.dto.user.UserUpdateDTO;
 import com.strongBeton.strongBeton.dto.workout.InjuriesDTO;
 import com.strongBeton.strongBeton.dto.user.UserDTO;
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -57,17 +60,19 @@ public class UserController {
     }
 
     @GetMapping("/ListAllUsernames")
-    public ResponseEntity<?> findAllUsernames(@AuthenticationPrincipal User currentUser) {
+    public ResponseEntity<Set<UserStatusDTO>> findAllUsernames(@AuthenticationPrincipal User currentUser) {
         Set<UserStatusDTO> usernames = this.friendService.getUsernames(currentUser.getUsername());
-        if(!usernames.isEmpty()) {
-            return ResponseEntity.ok(usernames);
+
+        if (usernames.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptySet());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("There are no people to recommend.");
+
+        return ResponseEntity.ok(usernames);
     }
 
     @GetMapping("/seeAllFriends/{username}")
     public ResponseEntity<?> findAllFriends(@PathVariable("username") String username) {
-        List<FriendView> friends = this.friendService.getFriendsByUsername(username);
+        List<FriendViewDTO> friends = this.friendService.getFriendsByUsername(username);
         if(!friends.isEmpty()){
             return ResponseEntity.ok(friends);
         }

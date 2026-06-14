@@ -17,4 +17,6 @@ public interface CloudPhotoRepository extends JpaRepository<CloudPhoto, Integer>
     )
     Optional<CloudPhoto> findByUserIdAndPhotoType(@Param("userId") int userId,
                                                     @Param("photoType") String photoType);
+
+    Optional<CloudPhoto> findByUserIdAndPhoto(int userId, PhotoType photo);
 }

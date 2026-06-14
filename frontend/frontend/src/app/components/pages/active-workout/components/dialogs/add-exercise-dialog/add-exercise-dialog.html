@@ -3,11 +3,11 @@
     <div class="flex items-start justify-between border-b border-[#172033] p-5">
       <div>
         <p class="text-xs font-black uppercase tracking-[0.18em] text-[#F59E0B]">
-          Add Exercise
+          Добавяне на упражнение
         </p>
 
         <h2 class="mt-1 text-2xl font-black uppercase">
-          Choose exercise
+          Избери упражнение
         </h2>
       </div>
 
@@ -25,7 +25,7 @@
         type="text"
         [(ngModel)]="searchQuery"
         (ngModelChange)="onSearch()"
-        placeholder="Search by name or muscle..."
+        placeholder="Търси по име или мускулна група..."
         class="w-full border border-[#172033] px-4 py-3 text-sm font-black uppercase focus:outline-none focus:border-[#F59E0B]"
       />
     </div>
@@ -55,7 +55,7 @@
       *ngIf="pagedExercises.length === 0"
       class="px-5 py-8 text-center text-xs font-black uppercase text-[#6B7280]"
     >
-      No exercises found.
+      Няма намерени упражнения.
     </div>
 
     <div class="flex items-center justify-between border-t border-[#E5E7EB] px-5 py-3">
@@ -65,7 +65,7 @@
         [disabled]="currentPage === 0"
         class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
       >
-        Back
+        Назад
       </button>
 
       <span class="text-xs font-black uppercase text-[#6B7280]">
@@ -78,7 +78,7 @@
         [disabled]="currentPage >= totalPages - 1"
         class="sb-secondary-btn h-10 px-4 text-xs disabled:opacity-30"
       >
-        Next
+        Напред
       </button>
     </div>
 
@@ -89,7 +89,7 @@
         [disabled]="!selectedExerciseId || !canEditWorkout"
         class="sb-workout-btn h-16 w-full text-sm disabled:opacity-30"
       >
-        Select
+        Избери
       </button>
     </div>
   </div>

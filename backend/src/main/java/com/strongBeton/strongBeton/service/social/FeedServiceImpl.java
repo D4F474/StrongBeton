@@ -3,12 +3,14 @@ package com.strongBeton.strongBeton.service.social;
 import com.strongBeton.strongBeton.dto.social.FeedPostCommentDTO;
 import com.strongBeton.strongBeton.dto.social.FeedPostDTO;
 import com.strongBeton.strongBeton.dao.*;
+import com.strongBeton.strongBeton.dto.user.ImageDataDTO;
 import com.strongBeton.strongBeton.entity.social.FeedPost;
 import com.strongBeton.strongBeton.entity.social.FeedPostComment;
 import com.strongBeton.strongBeton.entity.social.FeedPostLike;
 import com.strongBeton.strongBeton.entity.social.FriendView;
 import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.enums.PostType;
+import com.strongBeton.strongBeton.service.ImageService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -30,17 +32,19 @@ public class FeedServiceImpl implements FeedService{
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private FriendViewRepository friendViewRepository;
+    private ImageService imageService;
 
     @Autowired
     public FeedServiceImpl(FeedPostRepository feedPostRepository, FeedPostLikeRepository feedPostLikeRepository,
                            FeedPostCommentRepository feedPostCommentRepository, UserRepository userRepository,
-                           ModelMapper modelMapper, FriendViewRepository friendViewRepository) {
+                           ModelMapper modelMapper, FriendViewRepository friendViewRepository, ImageService imageService) {
         this.feedPostRepository = feedPostRepository;
         this.feedPostLikeRepository = feedPostLikeRepository;
         this.feedPostCommentRepository = feedPostCommentRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.friendViewRepository = friendViewRepository;
+        this.imageService = imageService;
     }
 
 
@@ -141,7 +145,10 @@ public class FeedServiceImpl implements FeedService{
 
         dto.setId(post.getId());
         dto.setContent(post.getContent());
-
+        Optional< ImageDataDTO> result =  imageService.getProfileImage(currentUser.getId());
+        if(result.isPresent()){
+            dto.setProfilePhotoUrl(result.get().getPhotoUrl());
+        }
         if (post.getPostType() != null) {
             dto.setType(post.getPostType().name());
         }
@@ -179,11 +186,14 @@ public class FeedServiceImpl implements FeedService{
 
     private FeedPostCommentDTO mapCommentToDTO(FeedPostComment comment) {
         FeedPostCommentDTO dto = new FeedPostCommentDTO();
-
-        dto.setId(comment.getId());
-        dto.setContent(comment.getContent());
-        dto.setCreatedAt(comment.getCreatedAt());
-        dto.setUpdatedAt(comment.getUpdatedAt());
+        Optional< ImageDataDTO> result =  imageService.getProfileImage(comment.getUser().getId());
+        if(result.isPresent()){
+            dto.setProfilePhotoUrl(result.get().getPhotoUrl());
+        }
+            dto.setId(comment.getId());
+            dto.setContent(comment.getContent());
+            dto.setCreatedAt(comment.getCreatedAt());
+            dto.setUpdatedAt(comment.getUpdatedAt());
 
         if (comment.getUser() != null) {
             dto.setUsername(comment.getUser().getUsername());

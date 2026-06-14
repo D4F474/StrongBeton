@@ -1,17 +1,36 @@
 <article class="sb-panel overflow-hidden p-5">
   <header class="flex flex-wrap items-start justify-between gap-3 border-b border-[#E5E7EB] pb-4">
-    <div>
-      <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
-        {{ getPostType() }}
-      </p>
+    <div class="flex min-w-0 items-start gap-3">
+      <div
+        class="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-[#F3F4F6]"
+      >
+        <span class="text-sm font-black uppercase text-[#2563EB]">
+          {{ getInitials(getAuthorName()) }}
+        </span>
 
-      <h2 class="mt-1 text-xl font-black uppercase text-[#172033]">
-        {{ getAuthorName() }}
-      </h2>
+        <img
+          *ngIf="post.profilePhotoUrl"
+          [src]="post.profilePhotoUrl"
+          alt="Profile photo"
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover"
+          (error)="($any($event.target).style.display = 'none')"
+        />
+      </div>
 
-      <p class="mt-1 text-xs font-bold uppercase text-[#6B7280]">
-        {{ formatDate(post.createdAt) }}
-      </p>
+      <div class="min-w-0">
+        <p class="text-xs font-black uppercase tracking-[0.18em] text-[#2563EB]">
+          {{ getPostType() }}
+        </p>
+
+        <h2 class="mt-1 truncate text-xl font-black uppercase text-[#172033]">
+          {{ getAuthorName() }}
+        </h2>
+
+        <p class="mt-1 text-xs font-bold uppercase text-[#6B7280]">
+          {{ formatDate(post.createdAt) }}
+        </p>
+      </div>
     </div>
 
     <button
@@ -21,7 +40,7 @@
       [disabled]="loading"
       class="h-10 border border-red-300 bg-red-50 px-4 text-xs font-black uppercase text-red-600 disabled:opacity-40"
     >
-      Delete
+      Изтрий
     </button>
   </header>
 
@@ -31,34 +50,53 @@
 
   <div class="mt-5 flex flex-wrap items-center gap-3 border-t border-[#E5E7EB] pt-4">
     <button
-  type="button"
-  (click)="like.emit(post)"
-  [disabled]="loading"
-  class="sb-secondary-btn h-11 px-5 text-xs disabled:opacity-40"
-  [class.border-[#2563EB]]="isLikedByCurrentUser()"
-  [class.bg-[#EFF6FF]]="isLikedByCurrentUser()"
-  [class.text-[#2563EB]]="isLikedByCurrentUser()"
->
-  {{ isLikedByCurrentUser() ? 'Liked' : 'Like' }} · {{ getLikesCount() }}
-</button>
+      type="button"
+      (click)="like.emit(post)"
+      [disabled]="loading"
+      class="sb-secondary-btn h-11 px-5 text-xs disabled:opacity-40"
+      [class.border-[#2563EB]]="isLikedByCurrentUser()"
+      [class.bg-[#EFF6FF]]="isLikedByCurrentUser()"
+      [class.text-[#2563EB]]="isLikedByCurrentUser()"
+    >
+      {{ isLikedByCurrentUser() ? 'Харесано' : 'Харесай' }} · {{ getLikesCount() }}
+    </button>
 
     <span class="text-xs font-black uppercase text-[#6B7280]">
-      {{ getCommentsCount() }} comments
+      {{ getCommentsCount() }} коментара
     </span>
   </div>
 
   <div *ngIf="getComments().length > 0" class="mt-4 grid gap-2">
     <div
       *ngFor="let comment of getComments(); trackBy: trackByIndex"
-      class="border border-[#E5E7EB] bg-[#F9FAFB] p-3"
+      class="flex gap-3 border border-[#E5E7EB] bg-[#F9FAFB] p-3"
     >
-      <p class="text-xs font-black uppercase text-[#6B7280]">
-        {{ getCommentAuthor(comment) }}
-      </p>
+      <div
+        class="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5E7EB] bg-white"
+      >
+        <span class="text-xs font-black uppercase text-[#F59E0B]">
+          {{ getInitials(getCommentAuthor(comment)) }}
+        </span>
 
-      <p class="mt-1 text-sm font-bold text-[#172033]">
-        {{ comment.content }}
-      </p>
+        <img
+          *ngIf="comment.profilePhotoUrl"
+          [src]="comment.profilePhotoUrl"
+          alt="Comment author photo"
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover"
+          (error)="($any($event.target).style.display = 'none')"
+        />
+      </div>
+
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-xs font-black uppercase text-[#6B7280]">
+          {{ getCommentAuthor(comment) }}
+        </p>
+
+        <p class="mt-1 text-sm font-bold text-[#172033]">
+          {{ comment.content }}
+        </p>
+      </div>
     </div>
   </div>
 
@@ -66,7 +104,7 @@
     <input
       type="text"
       [(ngModel)]="commentContent"
-      placeholder="Write a comment..."
+      placeholder="Напиши коментар..."
       class="min-w-0 flex-1 border border-[#172033] px-4 py-3 text-sm font-bold text-[#172033] outline-none focus:border-[#F59E0B]"
     />
 
@@ -76,7 +114,7 @@
       [disabled]="loading || !commentContent.trim()"
       class="sb-workout-btn h-12 px-5 text-xs disabled:opacity-40"
     >
-      Send
+      Изпрати
     </button>
   </div>
 </article>

@@ -15,6 +15,7 @@ public class FeedPostCommentDTO {
 
     private String username;
     private UUID userUuid;
+    private String profilePhotoUrl;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -22,13 +23,16 @@ public class FeedPostCommentDTO {
     public FeedPostCommentDTO() {
     }
 
-    public FeedPostCommentDTO(Integer id, String content, String username, UUID userUuid, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public FeedPostCommentDTO(Integer id, String content, String username,
+                              UUID userUuid, LocalDateTime createdAt, LocalDateTime updatedAt,
+                              String profilePhotoUrl) {
         this.id = id;
         this.content = content;
         this.username = username;
         this.userUuid = userUuid;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 
     public Integer getId() {
@@ -77,5 +81,13 @@ public class FeedPostCommentDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getProfilePhotoUrl() {
+        return profilePhotoUrl;
+    }
+
+    public void setProfilePhotoUrl(String profilePhotoUrl) {
+        this.profilePhotoUrl = profilePhotoUrl;
     }
 }

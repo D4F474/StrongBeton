@@ -1,121 +1,130 @@
 <div class="min-h-screen bg-[#F7FAFC] text-[#172033]">
-  <header class="border-b border-[#E5E7EB] bg-[#FFFFFF] px-5 py-4">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4">
-      <a routerLink="/" class="flex items-center gap-3">
-        <div class="sb-logo-poster h-12 w-12">
+  <header class="border-b border-[#E5E7EB] bg-[#FFFFFF] px-4 py-3 sm:px-5 sm:py-4">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
+      <a routerLink="/" class="flex min-w-0 items-center gap-3">
+        <div class="sb-logo-poster h-10 w-10 shrink-0 sm:h-12 sm:w-12">
           <img src="assets/strongbeton-logo.png" alt="StrongBeton logo" class="object-top" />
         </div>
-        <div>
-          <div class="text-xl font-black uppercase leading-none text-[#172033]">StrongBeton</div>
-          <div class="mt-1 text-[10px] font-black uppercase tracking-[0.22em] text-[#2563EB]">
-            Strength Club
+
+        <div class="min-w-0">
+          <div class="truncate text-lg font-black uppercase leading-none text-[#172033] sm:text-xl">
+            StrongBeton
+          </div>
+          <div class="mt-1 text-[9px] font-black uppercase tracking-[0.18em] text-[#2563EB] sm:text-[10px] sm:tracking-[0.22em]">
+            Тренирай в числа
           </div>
         </div>
       </a>
 
       <nav class="hidden items-center gap-8 text-xs font-black uppercase tracking-wider text-[#6B7280] md:flex">
-        <a href="#features" class="hover:text-[#F59E0B]">System</a>
-        <a href="#score" class="hover:text-[#F59E0B]">Score</a>
-        <a href="#clans" class="hover:text-[#F59E0B]">Clans</a>
-        <a href="#coaching" class="hover:text-[#F59E0B]">Coach</a>
+        <a href="#features" class="hover:text-[#F59E0B]">Система</a>
+        <a href="#score" class="hover:text-[#F59E0B]">Точки</a>
+        <a href="#clans" class="hover:text-[#F59E0B]">Кланове</a>
+        <a href="#coaching" class="hover:text-[#F59E0B]">Треньори</a>
       </nav>
 
-      <div class="flex items-center gap-3">
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
         <a
-          routerLink="/login"
-          class="hidden text-xs font-black uppercase tracking-wider text-[#6B7280] hover:text-[#172033] sm:inline-block"
-        >
-          Sign In
-        </a>
+  routerLink="/login"
+  class="inline-flex h-9 items-center justify-center px-2 text-[10px] font-black uppercase tracking-wider text-[#6B7280] hover:text-[#172033] sm:px-3 sm:text-xs"
+>
+  Вход
+</a>
 
-        <a routerLink="/register" class="sb-primary-btn px-4 py-2 text-xs">
-          Join
-        </a>
+<a
+  routerLink="/register"
+  class="sb-primary-btn h-9 px-3 text-[10px] sm:px-4 sm:text-xs"
+>
+  Регистрация
+</a>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="border-b border-[#E5E7EB] px-5 py-10 md:py-16">
-      <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_420px] lg:items-center">
+    <section class="border-b border-[#E5E7EB] px-4 py-8 sm:px-5 md:py-16">
+      <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_360px] lg:items-center">
         <div>
-          <p class="sb-club-label text-xs">
-            Retro Bulgarian fitness operating system
+          <p class="sb-club-label text-[10px] sm:text-xs">
+            Българско фитнес приложение
           </p>
 
-          <h1 class="mt-5 text-5xl font-black uppercase leading-[0.92] text-[#172033] md:text-7xl">
-            Train hard.
-            <span class="block text-[#F59E0B]">Log fast.</span>
-            <span class="block text-[#2563EB]">No excuses.</span>
+          <h1 class="mt-5 text-4xl font-black uppercase leading-[0.95] text-[#172033] sm:text-5xl md:text-7xl md:leading-[0.92]">
+            Блъскай здраво
+            <span class="block text-[#F59E0B]">Записвай бързо.</span>
+            <span class="block text-[#2563EB]">Оправдания — не.</span>
           </h1>
 
-          <p class="mt-6 max-w-2xl text-base font-bold leading-relaxed text-[#6B7280] md:text-lg">
-            StrongBeton is a serious training system with a retro club soul: fast set logging,
-            visible progress, clan pressure, and numbers that matter.
+          <p class="mt-5 max-w-2xl text-sm font-bold leading-relaxed text-[#6B7280] sm:mt-6 sm:text-base md:text-lg">
+            StrongBeton е сериозно фитнес приложение с ретро дух и модерен контрол върху прогреса.
+            Записваш тренировките бързо, следиш развитието си в числа и участваш в общество,
+            където постоянството и силата имат значение.
           </p>
 
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a routerLink="/register" class="sb-primary-btn h-14 px-7 text-sm">
-              Start Training
+          <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-4">
+            <a routerLink="/register" class="sb-primary-btn inline-flex h-13 w-full items-center justify-center px-7 text-sm sm:h-14 sm:w-auto">
+              Започни тренировка
             </a>
 
-            <a href="#features" class="sb-secondary-btn h-14 px-7 text-sm">
-              View System
+            <a href="#features" class="sb-secondary-btn inline-flex h-13 w-full items-center justify-center px-7 text-sm sm:h-14 sm:w-auto">
+              Разгледай системата
             </a>
           </div>
         </div>
 
-        <div class="sb-logo-poster mx-auto aspect-[2/3] w-full max-w-sm lg:max-w-none">
+        <div class="sb-logo-poster mx-auto aspect-[2/3] w-full max-w-[230px] sm:max-w-[280px] md:max-w-xs lg:max-w-[360px]">
           <img src="assets/strongbeton-logo.png" alt="StrongBeton lion lifting barbell" class="object-cover" />
         </div>
       </div>
     </section>
 
-    <section id="features" class="px-5 py-12">
-      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <article class="sb-panel p-5">
+    <section id="features" class="px-4 py-10 sm:px-5 sm:py-12">
+      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article class="sb-panel p-4 sm:p-5">
           <div class="text-2xl font-black text-[#F59E0B]">01</div>
-          <h3 class="mt-5 text-xl font-black uppercase">Fast Log</h3>
+          <h3 class="mt-5 text-lg font-black uppercase sm:text-xl">Записвай бързо</h3>
           <p class="mt-3 text-sm text-[#6B7280]">
-            Big controls, repeat last set, minimum typing. Built for the gym floor.
+            Големи бутони, повторение на серии и минимално писане. Направено за реална употреба в залата.
           </p>
         </article>
 
-        <article id="score" class="sb-panel p-5">
+        <article id="score" class="sb-panel p-4 sm:p-5">
           <div class="text-2xl font-black text-[#F59E0B]">02</div>
-          <h3 class="mt-5 text-xl font-black uppercase">Strength Score</h3>
+          <h3 class="mt-5 text-lg font-black uppercase sm:text-xl">Силови точки</h3>
           <p class="mt-3 text-sm text-[#6B7280]">
-            Gold progress signals for volume, consistency, rank, and real strength.
+            Следи прогрес, постоянство, ранг и реална сила чрез ясна точкова система.
           </p>
         </article>
 
-        <article id="clans" class="sb-panel p-5">
+        <article id="clans" class="sb-panel p-4 sm:p-5">
           <div class="text-2xl font-black text-[#F59E0B]">03</div>
-          <h3 class="mt-5 text-xl font-black uppercase">Iron Clans</h3>
+          <h3 class="mt-5 text-lg font-black uppercase sm:text-xl">Арматурни групи</h3>
           <p class="mt-3 text-sm text-[#6B7280]">
-            Bulgarian club pressure without casino energy or fake hype.
+            Създавай групи и се състезавай с други по килограми, постоянство и резултати — не по снимки.
           </p>
         </article>
 
-        <article id="coaching" class="sb-panel p-5">
+        <article id="coaching" class="sb-panel p-4 sm:p-5">
           <div class="text-2xl font-black text-[#F59E0B]">04</div>
-          <h3 class="mt-5 text-xl font-black uppercase">Coach Control</h3>
+          <h3 class="mt-5 text-lg font-black uppercase sm:text-xl">Треньорски модул</h3>
           <p class="mt-3 text-sm text-[#6B7280]">
-            Programs, readiness, review queues, and direct training feedback.
+            Програми, тренировъчни опашки, преглед на изпълнение и директна обратна връзка.
           </p>
         </article>
       </div>
     </section>
 
-    <footer class="border-t border-[#E5E7EB] bg-[#FFFFFF] px-5 py-6">
-      <div class="mx-auto flex max-w-6xl flex-col justify-between gap-4 text-xs uppercase tracking-wider text-[#6B7280] md:flex-row">
+    <footer class="border-t border-[#E5E7EB] bg-[#FFFFFF] px-4 py-6 sm:px-5">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-center text-[10px] uppercase tracking-wider text-[#6B7280] sm:text-xs md:flex-row md:text-left">
         <div class="font-black text-[#172033]">StrongBeton</div>
-        <div class="flex gap-5">
-          <span>Privacy Policy</span>
-          <span>Terms</span>
-          <span>Support</span>
+
+        <div class="flex flex-wrap justify-center gap-3 sm:gap-5">
+          <span>Политика за поверителност</span>
+          <span>Общи условия</span>
+          <span>Поддръжка</span>
         </div>
-        <div>2026 StrongBeton. Built for strength.</div>
+
+        <div>2026 StrongBeton. Направено с българска сила!</div>
       </div>
     </footer>
   </main>
