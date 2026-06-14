@@ -145,7 +145,7 @@ public class FeedServiceImpl implements FeedService{
 
         dto.setId(post.getId());
         dto.setContent(post.getContent());
-        Optional< ImageDataDTO> result =  imageService.getProfileImage(currentUser.getId());
+        Optional< ImageDataDTO> result =  imageService.getProfileImage(post.getUser().getId());
         if(result.isPresent()){
             dto.setProfilePhotoUrl(result.get().getPhotoUrl());
         }
