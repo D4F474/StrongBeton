@@ -22,6 +22,7 @@ public class FeedPostDTO {
     private int likesCount;
     private int commentsCount;
     private boolean likedByMe;
+    private boolean commentsLocked;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -111,6 +112,14 @@ public class FeedPostDTO {
 
     public void setLikedByMe(boolean likedByMe) {
         this.likedByMe = likedByMe;
+    }
+
+    public boolean isCommentsLocked() {
+        return commentsLocked;
+    }
+
+    public void setCommentsLocked(boolean commentsLocked) {
+        this.commentsLocked = commentsLocked;
     }
 
     public LocalDateTime getCreatedAt() {

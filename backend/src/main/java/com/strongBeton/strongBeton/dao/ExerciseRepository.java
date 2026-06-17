@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
 
+    //Намира упражнение с неговото име
     Optional<Exercise> findByName(String name);
 }

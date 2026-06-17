@@ -12,4 +12,5 @@ export interface userDto {
     friends: FriendViewDTO[];
     profilePhotoUrl: string | null;
     email: string;
+    role?: string | null;
 }

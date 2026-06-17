@@ -1,0 +1,352 @@
+<section class="min-h-screen text-[#172033]">
+  <div class="mx-auto max-w-7xl pb-24 md:pb-10">
+    <!-- HEADER -->
+    <header class="mb-6 border-b border-[#172033] pb-5">
+      <p class="text-[10px] font-black uppercase tracking-[0.22em] text-[#6B7280]">
+        StrongBeton Админ
+      </p>
+
+      <div class="mt-2 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <h1 class="text-3xl font-black uppercase tracking-tight md:text-5xl">
+            Контрол на feed-а
+          </h1>
+
+          <p class="mt-2 max-w-2xl text-sm font-bold text-[#6B7280]">
+            Управление на постове, коментари, репорти и видимост във feed-а.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="border-2 border-[#172033] bg-[#F59E0B] px-5 py-3 text-xs font-black uppercase tracking-wide text-[#172033] shadow-[4px_4px_0_#172033] transition hover:-translate-y-0.5"
+          (click)="loadPanel()"
+        >
+          Обнови feed-а
+        </button>
+      </div>
+    </header>
+
+    <!-- ERROR -->
+    <div
+      *ngIf="errorMessage"
+      class="mb-5 border-2 border-red-700 bg-red-50 px-4 py-3 text-sm font-black text-red-800"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <!-- STATS -->
+    <section *ngIf="stats" class="mb-6 grid grid-cols-2 gap-3 md:grid-cols-6">
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Постове
+        </p>
+        <p class="mt-2 text-3xl font-black">{{ stats.totalPosts }}</p>
+      </article>
+
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Видими
+        </p>
+        <p class="mt-2 text-3xl font-black text-green-700">
+          {{ stats.visiblePosts }}
+        </p>
+      </article>
+
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Скрити
+        </p>
+        <p class="mt-2 text-3xl font-black text-red-700">
+          {{ stats.hiddenPosts }}
+        </p>
+      </article>
+
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Закачени
+        </p>
+        <p class="mt-2 text-3xl font-black">
+          {{ stats.pinnedPosts }}
+        </p>
+      </article>
+
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Репорти
+        </p>
+        <p class="mt-2 text-3xl font-black text-red-700">
+          {{ stats.reportedPosts }}
+        </p>
+      </article>
+
+      <article class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033]">
+        <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+          Коментари
+        </p>
+        <p class="mt-2 text-3xl font-black">
+          {{ stats.totalComments }}
+        </p>
+      </article>
+    </section>
+
+    <!-- FILTERS -->
+    <section class="mb-5 border-2 border-[#E5E7EB] bg-white p-4">
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let filter of filters"
+            type="button"
+            class="border-2 px-4 py-2 text-[10px] font-black uppercase tracking-wide transition"
+            [ngClass]="
+              activeFilter === filter.value
+                ? 'border-[#172033] bg-[#172033] text-white shadow-[3px_3px_0_#F59E0B]'
+                : 'border-[#E5E7EB] bg-white text-[#172033] hover:border-[#172033]'
+            "
+            (click)="setFilter(filter.value)"
+          >
+            {{ filter.label }}
+          </button>
+        </div>
+
+        <div class="flex w-full gap-2 lg:w-[420px]">
+          <input
+            type="text"
+            [(ngModel)]="search"
+            placeholder="Търси по съдържание или потребителско име..."
+            class="w-full border-2 border-[#E5E7EB] px-4 py-3 text-sm font-bold outline-none focus:border-[#172033]"
+            (keydown.enter)="loadPosts()"
+          />
+
+          <button
+            type="button"
+            class="border-2 border-[#172033] bg-[#F59E0B] px-5 py-3 text-xs font-black uppercase text-[#172033]"
+            (click)="loadPosts()"
+          >
+            Търси
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <div
+      *ngIf="isLoading"
+      class="border-2 border-[#E5E7EB] bg-white p-6"
+    >
+      <div class="animate-pulse space-y-4">
+        <div class="h-5 w-48 rounded bg-[#E5E7EB]"></div>
+        <div class="h-28 rounded bg-[#E5E7EB]"></div>
+        <div class="h-28 rounded bg-[#E5E7EB]"></div>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <section *ngIf="!isLoading" class="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+      <!-- POSTS LIST -->
+      <div class="space-y-4">
+        <article
+          *ngFor="let post of posts; trackBy: trackByPostId"
+          class="border-2 bg-white p-4 transition"
+          [ngClass]="
+            selectedPost?.id === post.id
+              ? 'border-[#172033] shadow-[4px_4px_0_#F59E0B]'
+              : 'border-[#E5E7EB] hover:border-[#172033]'
+          "
+        >
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="border px-2 py-1 text-[10px] font-black uppercase"
+                  [ngClass]="
+                    post.hidden
+                      ? 'border-red-700 bg-red-50 text-red-800'
+                      : 'border-green-700 bg-green-50 text-green-800'
+                  "
+                >
+                  {{ post.hidden ? 'Скрит' : 'Видим' }}
+                </span>
+
+                <span
+                  *ngIf="post.pinned"
+                  class="border border-[#172033] bg-[#F59E0B] px-2 py-1 text-[10px] font-black uppercase"
+                >
+                  Закачен
+                </span>
+
+                <span
+                  *ngIf="post.commentsLocked"
+                  class="border border-[#172033] bg-[#F3F4F6] px-2 py-1 text-[10px] font-black uppercase"
+                >
+                  Коментарите са заключени
+                </span>
+
+                <span
+                  *ngIf="post.reportsCount > 0"
+                  class="border border-red-700 bg-red-50 px-2 py-1 text-[10px] font-black uppercase text-red-800"
+                >
+                  {{ post.reportsCount }} репорта
+                </span>
+              </div>
+
+              <p class="mt-3 text-xs font-black uppercase tracking-wide text-[#6B7280]">
+                {{ post.username }} · {{ post.postType || post.type || 'ПОСТ' }} ·
+                {{ formatDate(post.createdAt) }}
+              </p>
+
+              <p class="mt-2 whitespace-pre-line break-words text-sm font-bold leading-relaxed">
+                {{ post.content }}
+              </p>
+
+              <div class="mt-4 flex flex-wrap gap-3 text-xs font-black text-[#6B7280]">
+                <span>Харесвания: {{ post.likesCount }}</span>
+                <span>Коментари: {{ post.commentsCount }}</span>
+              </div>
+            </div>
+
+            <div class="flex shrink-0 flex-wrap gap-2 md:flex-col">
+              <button
+                type="button"
+                class="border-2 border-[#172033] px-3 py-2 text-[10px] font-black uppercase"
+                (click)="selectPost(post)"
+              >
+                Коментари
+              </button>
+
+              <button
+                type="button"
+                class="border-2 border-[#172033] px-3 py-2 text-[10px] font-black uppercase"
+                (click)="toggleHidden(post)"
+              >
+                {{ post.hidden ? 'Покажи' : 'Скрий' }}
+              </button>
+
+              <button
+                type="button"
+                class="border-2 border-[#172033] bg-[#F59E0B] px-3 py-2 text-[10px] font-black uppercase"
+                (click)="togglePinned(post)"
+              >
+                {{ post.pinned ? 'Откачи' : 'Закачи' }}
+              </button>
+
+              <button
+                type="button"
+                class="border-2 border-[#172033] px-3 py-2 text-[10px] font-black uppercase"
+                (click)="toggleCommentsLocked(post)"
+              >
+                {{ post.commentsLocked ? 'Отключи' : 'Заключи' }}
+              </button>
+
+              <button
+                type="button"
+                class="border-2 border-red-700 bg-red-50 px-3 py-2 text-[10px] font-black uppercase text-red-800"
+                (click)="deletePost(post)"
+              >
+                Изтрий
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div
+          *ngIf="posts.length === 0"
+          class="border-2 border-[#E5E7EB] bg-white p-8 text-center text-sm font-black text-[#6B7280]"
+        >
+          Няма намерени feed постове.
+        </div>
+      </div>
+
+      <!-- COMMENTS PANEL -->
+      <aside class="border-2 border-[#172033] bg-white p-4 shadow-[4px_4px_0_#172033] xl:sticky xl:top-20 xl:h-max">
+        <ng-container *ngIf="selectedPost; else noPostSelected">
+          <div class="border-b-2 border-[#172033] pb-4">
+            <p class="text-[10px] font-black uppercase tracking-wide text-[#6B7280]">
+              Избран пост
+            </p>
+
+            <h2 class="mt-1 text-xl font-black uppercase">
+              {{ selectedPost.username }}
+            </h2>
+
+            <p class="mt-2 line-clamp-3 text-sm font-bold text-[#6B7280]">
+              {{ selectedPost.content }}
+            </p>
+          </div>
+
+          <div *ngIf="isLoadingComments" class="py-6 text-sm font-black text-[#6B7280]">
+            Зареждане на коментари...
+          </div>
+
+          <div *ngIf="!isLoadingComments" class="mt-4 space-y-3">
+            <article
+              *ngFor="let comment of selectedPostComments; trackBy: trackByCommentId"
+              class="border-2 border-[#E5E7EB] p-3"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-xs font-black uppercase">
+                      {{ comment.username }}
+                    </p>
+
+                    <span
+                      *ngIf="comment.hidden"
+                      class="border border-red-700 bg-red-50 px-2 py-1 text-[9px] font-black uppercase text-red-800"
+                    >
+                      Скрит
+                    </span>
+                  </div>
+
+                  <p class="mt-1 text-xs font-bold text-[#6B7280]">
+                    {{ formatDate(comment.createdAt) }}
+                  </p>
+
+                  <p class="mt-2 break-words text-sm font-bold">
+                    {{ comment.content }}
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="border border-[#172033] px-3 py-2 text-[10px] font-black uppercase disabled:opacity-40"
+                  [disabled]="isCommentBusy(comment.id)"
+                  (click)="toggleCommentHidden(comment)"
+                >
+                  {{ isCommentBusy(comment.id) ? 'Запазване...' : comment.hidden ? 'Покажи' : 'Скрий' }}
+                </button>
+
+                <button
+                  type="button"
+                  class="border border-red-700 bg-red-50 px-3 py-2 text-[10px] font-black uppercase text-red-800 disabled:opacity-40"
+                  [disabled]="isCommentBusy(comment.id)"
+                  (click)="deleteComment(comment)"
+                >
+                  {{ isCommentBusy(comment.id) ? 'Изтриване...' : 'Изтрий' }}
+                </button>
+              </div>
+            </article>
+
+            <div
+              *ngIf="selectedPostComments.length === 0"
+              class="py-8 text-center text-sm font-black text-[#6B7280]"
+            >
+              Този пост няма коментари.
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noPostSelected>
+          <div class="py-12 text-center">
+            <p class="text-3xl font-black">FEED</p>
+            <p class="mt-2 text-sm font-bold text-[#6B7280]">
+              Избери пост, за да управляваш коментарите му.
+            </p>
+          </div>
+        </ng-template>
+      </aside>
+    </section>
+  </div>
+</section>

@@ -29,6 +29,15 @@
 
     <!-- Профил -->
     <a
+      *ngIf="canModerateFeed"
+      routerLink="/app/pravomoshten"
+      class="group flex h-10 items-center gap-2 border border-[#F59E0B] bg-[#FEF3C7] px-3 text-xs font-black uppercase text-[#172033] shadow-[0_6px_14px_rgba(245,158,11,0.12)] transition hover:border-[#B45309] hover:bg-[#F59E0B]"
+      title="Feed moderation"
+    >
+      <span>Moderator</span>
+    </a>
+
+    <a
       routerLink="/app/profile"
       class="group flex h-10 items-center gap-2 border border-[#E5E7EB] bg-white px-2.5 text-sm font-black text-[#172033] shadow-[0_6px_14px_rgba(15,23,42,0.03)] transition hover:border-[#2563EB]/40 hover:bg-[#EFF6FF]"
       title="Профил"

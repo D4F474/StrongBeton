@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "feed_post")
 public class FeedPost {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +41,15 @@ public class FeedPost {
     private PostType postType;
     public FeedPost() {
     }
+
+    @Column(name = "hidden")
+    private boolean hidden = false;
+
+    @Column(name = "pinned")
+    private boolean pinned = false;
+
+    @Column(name = "comments_locked")
+    private boolean commentsLocked = false;
 
     public FeedPost(User user, String content, LocalDateTime createdAt, LocalDateTime updatedAt, PostType postType) {
         this.user = user;
@@ -113,5 +121,29 @@ public class FeedPost {
 
     public void setLikes(List<FeedPostLike> likes) {
         this.likes = likes;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public boolean isCommentsLocked() {
+        return commentsLocked;
+    }
+
+    public void setCommentsLocked(boolean commentsLocked) {
+        this.commentsLocked = commentsLocked;
     }
 }

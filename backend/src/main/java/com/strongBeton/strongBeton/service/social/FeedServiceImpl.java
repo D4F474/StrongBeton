@@ -80,6 +80,10 @@ public class FeedServiceImpl implements FeedService{
         FeedPost feedPost = this.feedPostRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
+        if (feedPost.isHidden()) {
+            throw new IllegalArgumentException("Post is hidden");
+        }
+
         User managedUser = userRepository.findByUuid(user.getUuid())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -109,6 +113,14 @@ public class FeedServiceImpl implements FeedService{
     public FeedPostCommentDTO commentPost(int postId, FeedPostCommentDTO commentDTO, User user) {
         FeedPost feedPost = this.feedPostRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        if (feedPost.isHidden()) {
+            throw new IllegalArgumentException("Post is hidden");
+        }
+
+        if (feedPost.isCommentsLocked()) {
+            throw new IllegalArgumentException("Comments are locked for this post");
+        }
 
         User managedUser = userRepository.findByUuid(user.getUuid())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -162,7 +174,17 @@ public class FeedServiceImpl implements FeedService{
         }
 
         dto.setLikesCount(post.getLikes() == null ? 0 : post.getLikes().size());
-        dto.setCommentsCount(post.getComments() == null ? 0 : post.getComments().size());
+        dto.setCommentsLocked(post.isCommentsLocked());
+
+        List<FeedPostCommentDTO> comments = post.getComments() == null
+                ? List.of()
+                : post.getComments()
+                .stream()
+                .filter(comment -> !comment.isHidden())
+                .map(this::mapCommentToDTO)
+                .toList();
+
+        dto.setCommentsCount(comments.size());
 
         boolean likedByMe = post.getLikes() != null &&
                 post.getLikes()
@@ -171,13 +193,6 @@ public class FeedServiceImpl implements FeedService{
                                 like.getUser().getId() == currentUser.getId());
 
         dto.setLikedByMe(likedByMe);
-
-        List<FeedPostCommentDTO> comments = post.getComments() == null
-                ? List.of()
-                : post.getComments()
-                .stream()
-                .map(this::mapCommentToDTO)
-                .toList();
 
         dto.setComments(comments);
 

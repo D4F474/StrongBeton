@@ -21,6 +21,7 @@ export interface FeedPostDto {
   likesCount?: number | null;
   commentsCount?: number | null;
   likedByMe?: boolean | null;
+  commentsLocked?: boolean | null;
 
   likes?: unknown[] | null;
   comments?: FeedPostCommentDto[] | null;

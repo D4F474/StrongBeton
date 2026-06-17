@@ -54,10 +54,15 @@ public class SecurityConfig {
                             // public leaderboard
                             .requestMatchers("/api/leaderBoard").permitAll()
 
+                            // feed moderation
+                            .requestMatchers("/api/admin/feed/**").hasAnyRole("OWNER", "FEED_MODERATOR")
+
                             // protected
                             .requestMatchers("/api/**").authenticated()
                             .requestMatchers("/users/**").authenticated()
                             .requestMatchers("/upload").authenticated()
+
+                            .requestMatchers("/api/admin/feed/**").hasAnyRole("FEED_MODERATOR")
 
                             .anyRequest().authenticated()
                     )
@@ -75,7 +80,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
 
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
         configuration.setAllowCredentials(true);

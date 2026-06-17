@@ -11,8 +11,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface FeedPostCommentRepository extends JpaRepository<FeedPostComment, Integer> {
+    //Намира пост и неговия създател (потребител)
     Optional<FeedPostComment> findByFeedPostAndUser(FeedPost feedPost, User managedUser);
 
+    //Изтрива пост на потребител
     @Modifying
     @Query("DELETE FROM FeedPostLike fpl WHERE fpl.feedPost = :feedPost")
     void deleteByFeedPost(@Param("feedPost") FeedPost feedPost);

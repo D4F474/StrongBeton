@@ -25,6 +25,9 @@ public class FeedPostComment {
     @Column(name="content")
     private String content;
 
+    @Column(name = "hidden")
+    private boolean hidden = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -88,5 +91,13 @@ public class FeedPostComment {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

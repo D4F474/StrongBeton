@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setId(user.getUuid());
             userDTO.setUsername(user.getUsername());
             userDTO.setEmail(user.getEmail());
+            userDTO.setRole(user.getRole() == null ? null : user.getRole().getRoleName());
             userDTO.setFirstName(user.getAdditionalInfo().getFirstName());
             userDTO.setLastName(user.getAdditionalInfo().getLastName());
             userDTO.setBornDate(user.getAdditionalInfo().getBornDate());
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = new UserDTO();
         resultUser.ifPresent(user ->{
             userDTO.setUsername(user.getUsername());
+            userDTO.setRole(user.getRole() == null ? null : user.getRole().getRoleName());
             userDTO.setBornDate(user.getAdditionalInfo().getBornDate());
             userDTO.setFirstName(user.getAdditionalInfo().getFirstName());
             userDTO.setLastName(user.getAdditionalInfo().getLastName());
@@ -115,6 +117,7 @@ public class UserServiceImpl implements UserService {
         userDto.setId(user.getUuid());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
+        userDto.setRole(user.getRole() == null ? null : user.getRole().getRoleName());
         userDto.setFirstName(additionalInfo.getFirstName());
         userDto.setLastName(additionalInfo.getLastName());
         userDto.setKg(kgLogs.getKg());

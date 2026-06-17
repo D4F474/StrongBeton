@@ -35,7 +35,7 @@ export class FeedPostCardComponent {
   submitComment(): void {
     const content = this.commentContent.trim();
 
-    if (!content || this.loading) {
+    if (!content || this.loading || this.areCommentsLocked()) {
       return;
     }
 
@@ -85,6 +85,10 @@ export class FeedPostCardComponent {
 
   getCommentsCount(): number {
     return this.getComments().length;
+  }
+
+  areCommentsLocked(): boolean {
+    return !!this.post?.commentsLocked;
   }
 
   getCommentAuthor(comment: any): string {

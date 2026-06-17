@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ClanMemberContributionRepository extends JpaRepository<ClanMemberContribution, Integer> {
+
+    // Взима последните приноси към даден клан, заедно с потребителя и клана, подредени от най-новите към най-старите.
     @Query("""
             SELECT c
             FROM ClanMemberContribution c
@@ -23,6 +25,7 @@ public interface ClanMemberContributionRepository extends JpaRepository<ClanMemb
             Pageable pageable
     );
 
+    // Изчислява общия брой точки, спечелени от конкретен потребител в конкретен клан за даден период
     @Query("""
             SELECT COALESCE(SUM(c.points), 0)
             FROM ClanMemberContribution c
@@ -38,6 +41,7 @@ public interface ClanMemberContributionRepository extends JpaRepository<ClanMemb
             @Param("to") LocalDateTime to
     );
 
+    // Брои колко приноса има конкретен потребител в конкретен клан за даден период.
     @Query("""
             SELECT COUNT(c)
             FROM ClanMemberContribution c

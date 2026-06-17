@@ -100,7 +100,7 @@
     </div>
   </div>
 
-  <div *ngIf="post.id" class="mt-4 flex gap-2">
+  <div *ngIf="post.id && !areCommentsLocked()" class="mt-4 flex gap-2">
     <input
       type="text"
       [(ngModel)]="commentContent"

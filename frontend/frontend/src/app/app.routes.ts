@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { PublicLayout } from './components/layouts/public-layout/public-layout';
 import { AppLayout } from './components/layouts/app-layout/app-layout';
+import { feedModeratorGuard } from './guards/feed-moderator-guard-guard';
 
 import { LandingPage } from './components/pages/landing-page/landing-page';
 import { Login } from './components/pages/login/login';
@@ -18,6 +19,7 @@ import { Settings } from './components/pages/settings/settings';
 import { authGuard } from './guards/auth-guard';
 import { Friends } from './components/pages/friends/friends';
 import { Feed } from './components/pages/feed/feed';
+import { AdminPanel } from './components/pages/admin-panel/admin-panel';
 
 
 export const routes: Routes = [
@@ -47,6 +49,7 @@ export const routes: Routes = [
       { path: 'settings', component: Settings },
       { path: 'friends', component: Friends, canActivate: [authGuard] },
       { path: 'feed', component: Feed, canActivate: [authGuard] },
+      { path: 'pravomoshten', component: AdminPanel, canActivate: [authGuard, feedModeratorGuard]}
     ],
   },
 ];

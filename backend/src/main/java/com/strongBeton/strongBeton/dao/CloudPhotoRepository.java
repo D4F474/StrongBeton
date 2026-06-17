@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public interface CloudPhotoRepository extends JpaRepository<CloudPhoto, Integer> {
 
+    //Намира снимка на потребител и нейния тип(Профилна, сертификат)
     @Query(
             value = "SELECT * FROM photos WHERE user_id = :userId AND photo_type = :photoType",
             nativeQuery = true
@@ -18,5 +19,6 @@ public interface CloudPhotoRepository extends JpaRepository<CloudPhoto, Integer>
     Optional<CloudPhoto> findByUserIdAndPhotoType(@Param("userId") int userId,
                                                     @Param("photoType") String photoType);
 
+    //Връща потребител и неговата профилна снимка
     Optional<CloudPhoto> findByUserIdAndPhoto(int userId, PhotoType photo);
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ClanRepository extends JpaRepository<Clan, Integer> {
+    //Намира клан по име
     Optional<Clan> findByName(String name);
 
 }
