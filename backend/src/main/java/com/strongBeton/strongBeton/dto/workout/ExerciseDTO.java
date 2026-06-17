@@ -10,15 +10,18 @@ public class ExerciseDTO {
     private String muscleGroup;
     private ExerciseDifficulty exerciseDifficulty;
     private ExerciseEquipment exerciseEquipment;
+    private String imageUrl;
 
     public ExerciseDTO() {
     }
 
-    public ExerciseDTO(String name, String muscleGroup, ExerciseDifficulty exerciseDifficulty, ExerciseEquipment exerciseEquipment) {
+    public ExerciseDTO(String name, String muscleGroup, ExerciseDifficulty exerciseDifficulty,
+                       ExerciseEquipment exerciseEquipment, String imageUrl) {
         this.name = name;
         this.muscleGroup = muscleGroup;
         this.exerciseDifficulty = exerciseDifficulty;
         this.exerciseEquipment = exerciseEquipment;
+        this.imageUrl = imageUrl;
     }
 
     public void setId(int id) {
@@ -59,6 +62,14 @@ public class ExerciseDTO {
 
     public void setExerciseEquipment(ExerciseEquipment exerciseEquipment) {
         this.exerciseEquipment = exerciseEquipment;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

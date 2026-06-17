@@ -1,6 +1,7 @@
 package com.strongBeton.strongBeton.scoring;
 
 import com.strongBeton.strongBeton.enums.ExerciseDifficulty;
+import com.strongBeton.strongBeton.enums.ExerciseEquipment;
 import org.springframework.stereotype.Component;
 
 import java.util.OptionalDouble;
@@ -67,4 +68,40 @@ public class StrengthScoreCalculator {
         double scale = Math.pow(10, places);
         return Math.round(value * scale) / scale;
     }
+
+    public double calculateEffectiveWeight(
+            double enteredWeight,
+            double bodyWeight,
+            ExerciseEquipment equipment,
+            String exerciseName
+    ) {
+        if (equipment != ExerciseEquipment.BODYWEIGHT) {
+            return enteredWeight;
+        }
+
+        if (bodyWeight <= 0) {
+            return enteredWeight;
+        }
+
+        return bodyWeight * getBodyweightCoefficient(exerciseName) + Math.max(0, enteredWeight);
+    }
+
+    private double getBodyweightCoefficient(String exerciseName) {
+        if (exerciseName == null) {
+            return 0.50;
+        }
+
+        String name = exerciseName.toLowerCase();
+
+        if (name.contains("pull-up")) return 0.95;
+        if (name.contains("dip")) return 0.90;
+        if (name.contains("glute bridge")) return 0.55;
+        if (name.contains("leg raise")) return 0.45;
+        if (name.contains("crunch")) return 0.35;
+        if (name.contains("plank")) return 0.30;
+
+        return 0.50;
+    }
+
+
 }

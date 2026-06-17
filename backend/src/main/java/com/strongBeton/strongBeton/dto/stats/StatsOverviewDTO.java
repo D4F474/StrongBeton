@@ -21,6 +21,7 @@ public class StatsOverviewDTO {
 
     private List<WeeklyVolumeDTO> weeklyVolumeBars;
     private List<RecentRecordDTO> recentRecords;
+    private List<WeightHistoryDTO> weightHistory;
 
     public StatsOverviewDTO() {
     }
@@ -127,5 +128,13 @@ public class StatsOverviewDTO {
 
     public void setRecentRecords(List<RecentRecordDTO> recentRecords) {
         this.recentRecords = recentRecords;
+    }
+
+    public List<WeightHistoryDTO> getWeightHistory() {
+        return weightHistory;
+    }
+
+    public void setWeightHistory(List<WeightHistoryDTO> weightHistory) {
+        this.weightHistory = weightHistory;
     }
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { WorkoutDetailsDto } from '../../../../../common/workout';
+import { ExerciseDto, WorkoutDetailsDto } from '../../../../../common/workout';
 
 @Component({
   selector: 'app-exercise-queue',
@@ -18,6 +18,26 @@ export class ExerciseQueue {
 
   @Output() selectDetail = new EventEmitter<WorkoutDetailsDto>();
   @Output() deleteDetail = new EventEmitter<WorkoutDetailsDto>();
+
+  hideBrokenImage(event: Event): void {
+    const image = event.target as HTMLImageElement;
+    image.hidden = true;
+  }
+
+  getExerciseImageUrl(exercise: ExerciseDto): string {
+    if (exercise.imageUrl) {
+      return exercise.imageUrl;
+    }
+
+    return `assets/exercises/${this.slugifyExerciseName(exercise.name)}.png`;
+  }
+
+  private slugifyExerciseName(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
 
   onDelete(detail: WorkoutDetailsDto, event: MouseEvent): void {
     event.stopPropagation();

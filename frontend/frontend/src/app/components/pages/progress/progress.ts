@@ -60,4 +60,39 @@ export class Progress implements OnInit {
     if (!volume || volume <= 0) return 0;
     return Math.round((volume / this.maxWeeklyVolume) * 100);
   }
+
+  get weightHistory() {
+    if (this.state.status !== 'success') return [];
+    return this.state.data.weightHistory ?? [];
+  }
+
+  get currentWeight(): number | null {
+    const history = this.weightHistory;
+    if (history.length === 0) return null;
+    return history[history.length - 1].kg;
+  }
+
+  get weightChange(): number {
+    const history = this.weightHistory;
+    if (history.length < 2) return 0;
+    return Math.round((history[history.length - 1].kg - history[0].kg) * 10) / 10;
+  }
+
+  get minWeight(): number {
+    const history = this.weightHistory;
+    if (history.length === 0) return 0;
+    return Math.min(...history.map((item) => item.kg));
+  }
+
+  get maxWeight(): number {
+    const history = this.weightHistory;
+    if (history.length === 0) return 1;
+    return Math.max(...history.map((item) => item.kg));
+  }
+
+  getWeightPointTop(kg: number): number {
+    const range = this.maxWeight - this.minWeight;
+    if (range <= 0) return 50;
+    return 88 - ((kg - this.minWeight) / range) * 76;
+  }
 }

@@ -29,16 +29,19 @@ public class Exercise {
     @Column(name = "equipment_type", nullable = false)
     private ExerciseEquipment exerciseEquipment;
 
-
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public Exercise() {
     }
 
-    public Exercise(String name, MuscleGroup muscleGroup, ExerciseDifficulty exerciseDifficulty, ExerciseEquipment exerciseEquipment) {
+    public Exercise(String name, MuscleGroup muscleGroup, ExerciseDifficulty exerciseDifficulty,
+                    ExerciseEquipment exerciseEquipment, String imageUrl) {
         this.name = name;
         this.muscleGroup = muscleGroup;
         this.exerciseDifficulty = exerciseDifficulty;
         this.exerciseEquipment = exerciseEquipment;
+        this.imageUrl = imageUrl;
     }
 
     public int getId() {
@@ -79,6 +82,14 @@ public class Exercise {
 
     public void setExerciseEquipment(ExerciseEquipment exerciseEquipment) {
         this.exerciseEquipment = exerciseEquipment;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override

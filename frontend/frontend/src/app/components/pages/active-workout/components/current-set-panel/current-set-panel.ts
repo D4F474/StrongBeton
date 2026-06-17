@@ -73,7 +73,7 @@ export class CurrentSetPanel {
   }
 
   saveEditedSet(set: SetDto): void {
-    if (!this.canEditWorkout || this.editKg <= 0 || this.editReps <= 0) {
+    if (!this.canEditWorkout || this.editKg < 0 || this.editReps <= 0) {
       return;
     }
 

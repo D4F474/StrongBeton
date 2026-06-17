@@ -1,5 +1,6 @@
 import { RecentRecordDto } from "./recent-record-dto";
 import { WeeklyVolumeDto } from "./weekly-volume-dto";
+import { WeightHistoryDto } from "./weight-history-dto";
 
 export interface StatsOverviewDto {
   strengthScore: number;
@@ -20,4 +21,5 @@ export interface StatsOverviewDto {
 
   weeklyVolumeBars?: WeeklyVolumeDto[];
   recentRecords?: RecentRecordDto[];
+  weightHistory?: WeightHistoryDto[];
 }

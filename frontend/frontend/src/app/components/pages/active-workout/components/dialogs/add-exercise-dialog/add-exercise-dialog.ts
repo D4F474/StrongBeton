@@ -57,6 +57,26 @@ export class AddExerciseDialog {
     }
   }
 
+  hideBrokenImage(event: Event): void {
+    const image = event.target as HTMLImageElement;
+    image.hidden = true;
+  }
+
+  getExerciseImageUrl(exercise: ExerciseDto): string {
+    if (exercise.imageUrl) {
+      return exercise.imageUrl;
+    }
+
+    return `assets/exercises/${this.slugifyExerciseName(exercise.name)}.png`;
+  }
+
+  private slugifyExerciseName(name: string): string {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
   submit(): void {
     if (!this.selectedExerciseId || !this.canEditWorkout) {
       return;

@@ -9,13 +9,24 @@
     </button>
 
     <ng-container *ngIf="selectedDetail; else workoutTitle">
-      <h1 class="text-xl font-black uppercase md:text-3xl">
-        {{ selectedDetail.exercise.name }}
-      </h1>
+      <div class="flex items-center gap-4">
+        <img
+          [src]="getExerciseImageUrl(selectedDetail.exercise)"
+          [alt]="selectedDetail.exercise.name"
+          (error)="hideBrokenImage($event)"
+          class="h-16 w-16 shrink-0 border border-[#172033] object-cover"
+        />
 
-      <p class="text-xs text-[#6B7280] font-black uppercase mt-1">
-        {{ selectedDetail.exercise.muscleGroup }}
-      </p>
+        <div>
+          <h1 class="text-xl font-black uppercase md:text-3xl">
+            {{ selectedDetail.exercise.name }}
+          </h1>
+
+          <p class="text-xs text-[#6B7280] font-black uppercase mt-1">
+            {{ selectedDetail.exercise.muscleGroup }}
+          </p>
+        </div>
+      </div>
     </ng-container>
 
     <ng-template #workoutTitle>

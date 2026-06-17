@@ -281,6 +281,7 @@ CREATE TABLE IF NOT EXISTS `strong_beton`.`exercise` (
   `equipment_type` ENUM('BARBELL', 'DUMBBELL', 'MACHINE', 'CABLE', 'BODYWEIGHT', 'OTHER') NOT NULL DEFAULT 'OTHER',
   `active` TINYINT(1) NOT NULL DEFAULT '1',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `image_url` VARCHAR(500) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
   INDEX `fk_exercise_muscle_group` (`muscle_group_id` ASC) VISIBLE,

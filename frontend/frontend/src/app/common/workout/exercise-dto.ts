@@ -4,4 +4,5 @@ export interface ExerciseDto {
      muscleGroup: string;
      exerciseDifficulty?: string;
      exerciseEquipment?: string;
+     imageUrl?: string | null;
 }

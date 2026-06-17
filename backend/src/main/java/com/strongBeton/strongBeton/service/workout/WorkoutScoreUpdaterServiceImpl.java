@@ -62,24 +62,44 @@ public class WorkoutScoreUpdaterServiceImpl implements WorkoutScoreUpdaterServic
             workoutDetailsRepository.save(detail);
             return;
         }
-
-        double totalVolume = sets.stream()
-                .mapToDouble(set -> strengthScoreCalculator.calculateSetVolume(
-                        set.getKg(),
-                        set.getReps()
-                ))
-                .sum();
-
-        double bestOneRepMax = sets.stream()
-                .filter(set -> set.getEstimatedOneRepMax() != null)
-                .mapToDouble(Sets::getEstimatedOneRepMax)
-                .max()
-                .orElse(0.0);
-
         double bodyWeight = kgLogRepository
                 .findTopByUserIdOrderByLoggedAtDesc(workout.getUser().getId())
                 .map(kgLog -> kgLog.getKg())
                 .orElseThrow(() -> new RuntimeException("User has no body weight log"));
+
+        double totalVolume = sets.stream()
+                .mapToDouble(set -> {
+                    double effectiveWeight = strengthScoreCalculator.calculateEffectiveWeight(
+                            set.getKg(),
+                            bodyWeight,
+                            detail.getExercise().getExerciseEquipment(),
+                            detail.getExercise().getName()
+                    );
+
+                    return strengthScoreCalculator.calculateSetVolume(
+                            effectiveWeight,
+                            set.getReps()
+                    );
+                })
+                .sum();
+
+        double bestOneRepMax = sets.stream()
+                .mapToDouble(set -> {
+                    double effectiveWeight = strengthScoreCalculator.calculateEffectiveWeight(
+                            set.getKg(),
+                            bodyWeight,
+                            detail.getExercise().getExerciseEquipment(),
+                            detail.getExercise().getName()
+                    );
+
+                    return strengthScoreCalculator.estimateOneRepMax(
+                            effectiveWeight,
+                            set.getReps()
+                    ).orElse(0.0);
+                })
+                .max()
+                .orElse(0.0);
+
 
         ExerciseDifficulty difficulty = detail.getExercise().getExerciseDifficulty();
 
@@ -124,4 +144,5 @@ public class WorkoutScoreUpdaterServiceImpl implements WorkoutScoreUpdaterServic
 
         workoutDetailsRepository.save(detail);
     }
+
 }

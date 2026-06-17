@@ -107,9 +107,12 @@ public class UserServiceImpl implements UserService {
         KGLogs kgLogs = this.kgLogRepository.findTopByUserIdOrderByLoggedAtDesc(user.getId()).orElseThrow();
 
         if (Double.compare(kgLogs.getKg(), userUpdateDTO.getKg()) != 0) {
-            kgLogs.setKg(userUpdateDTO.getKg());
-            kgLogs.setUser(user);
-            kgLogs.setLoggedAt(LocalDateTime.now());
+            kgLogs = new KGLogs(
+                    userUpdateDTO.getKg(),
+                    user,
+                    LocalDateTime.now(),
+                    LocalDateTime.now()
+            );
             this.kgLogRepository.save(kgLogs);
         }
 

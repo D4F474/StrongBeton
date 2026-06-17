@@ -1,12 +1,15 @@
 package com.strongBeton.strongBeton.service;
 
+import com.strongBeton.strongBeton.dao.KGLogRepository;
 import com.strongBeton.strongBeton.dao.WorkoutDetailsRepository;
 import com.strongBeton.strongBeton.dao.WorkoutRepository;
 import com.strongBeton.strongBeton.dao.projection.DailyVolumeRow;
 import com.strongBeton.strongBeton.dao.projection.RecentRecordRow;
 import com.strongBeton.strongBeton.dto.stats.RecentRecordDTO;
 import com.strongBeton.strongBeton.dto.stats.StatsOverviewDTO;
+import com.strongBeton.strongBeton.dto.stats.WeightHistoryDTO;
 import com.strongBeton.strongBeton.dto.stats.WeeklyVolumeDTO;
+import com.strongBeton.strongBeton.entity.user.KGLogs;
 import com.strongBeton.strongBeton.entity.user.User;
 import com.strongBeton.strongBeton.entity.workout.Workout;
 import com.strongBeton.strongBeton.enums.WorkoutStatus;
@@ -28,13 +31,16 @@ public class StatsServiceImpl implements StatsService {
 
     private final WorkoutRepository workoutRepository;
     private final WorkoutDetailsRepository workoutDetailsRepository;
+    private final KGLogRepository kgLogRepository;
 
     public StatsServiceImpl(
             WorkoutRepository workoutRepository,
-            WorkoutDetailsRepository workoutDetailsRepository
+            WorkoutDetailsRepository workoutDetailsRepository,
+            KGLogRepository kgLogRepository
     ) {
         this.workoutRepository = workoutRepository;
         this.workoutDetailsRepository = workoutDetailsRepository;
+        this.kgLogRepository = kgLogRepository;
     }
 
     @Override
@@ -104,7 +110,26 @@ public class StatsServiceImpl implements StatsService {
                 buildRecentRecords(userId, finishedStatus)
         );
 
+        dto.setWeightHistory(
+                buildWeightHistory(userId)
+        );
+
         return dto;
+    }
+
+    private List<WeightHistoryDTO> buildWeightHistory(int userId) {
+        List<KGLogs> logs = kgLogRepository.findByUserIdOrderByLoggedAtAsc(userId);
+
+        if (logs == null || logs.isEmpty()) {
+            return List.of();
+        }
+
+        return logs.stream()
+                .map(log -> new WeightHistoryDTO(
+                        log.getKg(),
+                        log.getLoggedAt()
+                ))
+                .toList();
     }
 
     private int calculateStrengthScoreDelta(

@@ -254,7 +254,7 @@ export class ActiveWorkout implements OnInit {
   }
 
   logSet(): void {
-    if (!this.canEditWorkout || !this.selectedDetail || this.currentKg <= 0 || this.currentReps <= 0) {
+    if (!this.canEditWorkout || !this.selectedDetail || this.currentKg < 0 || this.currentReps <= 0) {
       return;
     }
 

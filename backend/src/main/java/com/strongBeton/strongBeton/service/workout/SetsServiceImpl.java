@@ -127,8 +127,8 @@ public class SetsServiceImpl implements SetsService {
             throw new IllegalArgumentException("Reps must be positive");
         }
 
-        if (sets.getKg() <= 0) {
-            throw new IllegalArgumentException("Weight must be positive");
+        if (sets.getKg() < 0) {
+            throw new IllegalArgumentException("Weight cant be negative");
         }
 
         if (sets.getSetNumber() <= 0) {

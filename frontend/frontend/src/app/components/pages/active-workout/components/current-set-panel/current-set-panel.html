@@ -89,7 +89,7 @@
           <button
             type="button"
             (click)="saveEditedSet(set)"
-            [disabled]="savingEditedSetId === set.id || editKg <= 0 || editReps <= 0"
+            [disabled]="savingEditedSetId === set.id || editKg < 0 || editReps <= 0"
             class="border border-[#22C55E] bg-[#22C55E] px-4 py-3 text-[10px] font-black uppercase tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             {{ savingEditedSetId === set.id ? 'Записване...' : 'Запази' }}
@@ -196,13 +196,13 @@
   <button
     type="button"
     (click)="logSet.emit()"
-    [disabled]="!canEditWorkout || !selectedDetail || currentKg <= 0 || currentReps <= 0"
+    [disabled]="!canEditWorkout || !selectedDetail || currentKg < 0 || currentReps <= 0"
     class="sb-workout-btn mx-auto mt-4 flex h-16 w-full text-2xl disabled:opacity-40"
   >
     Запиши серия
   </button>
 
-  <p *ngIf="currentKg <= 0 || currentReps <= 0" class="mt-2 text-xs font-bold text-red-600">
+  <p *ngIf="currentKg < 0 || currentReps <= 0" class="mt-2 text-xs font-bold text-red-600">
     Добави тежест и повторения, преди да запишеш серията.
   </p>
 </ng-container>
