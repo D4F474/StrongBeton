@@ -163,6 +163,24 @@ public interface WorkoutDetailsRepository extends JpaRepository<WorkoutDetails, 
     );
 
     @Query(value = """
+    SELECT wd.estimated_1rm
+    FROM workout_details wd
+    JOIN workout w ON w.uuid_workout = wd.workout_uuid
+    WHERE w.user_id = :userId
+      AND wd.exercise_id = :exerciseId
+      AND w.date < :currentWorkoutDate
+      AND wd.estimated_1rm IS NOT NULL
+      AND wd.estimated_1rm > 0
+    ORDER BY w.date DESC
+    LIMIT 10
+    """, nativeQuery = true)
+    List<Double> findPreviousOneRepMaxValues(
+            @Param("userId") int userId,
+            @Param("exerciseId") int exerciseId,
+            @Param("currentWorkoutDate") LocalDate currentWorkoutDate
+    );
+
+    @Query(value = """
         SELECT MAX(w.date)
         FROM workout_details wd
         JOIN workout w ON w.uuid_workout = wd.workout_uuid

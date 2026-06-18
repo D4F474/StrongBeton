@@ -132,10 +132,17 @@ public class WorkoutScoreUpdaterServiceImpl implements WorkoutScoreUpdaterServic
             daysSincePrevious = ChronoUnit.DAYS.between(previousWorkoutDate, workout.getDate());
         }
 
+        List<Double> previousOneRepMaxValues = workoutDetailsRepository.findPreviousOneRepMaxValues(
+                workout.getUser().getId(),
+                detail.getExercise().getId(),
+                workout.getDate()
+        );
+
         AnomalyResult anomalyResult = anomalyDetector.detect(
                 bestOneRepMax,
                 previousBestOneRepMax,
-                daysSincePrevious
+                daysSincePrevious,
+                previousOneRepMaxValues
         );
 
         detail.setSuspicious(anomalyResult.suspicious());

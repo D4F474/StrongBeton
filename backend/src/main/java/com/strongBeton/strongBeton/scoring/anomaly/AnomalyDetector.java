@@ -13,8 +13,10 @@ public class AnomalyDetector {
     public AnomalyResult detect(
             double currentOneRepMax,
             Double previousBestOneRepMax,
-            Long daysSincePrevious
+            Long daysSincePrevious,
+            List<Double> previousValues
     ) {
+
         if (currentOneRepMax <= 0) {
             return AnomalyResult.normal();
         }
@@ -44,6 +46,15 @@ public class AnomalyDetector {
                         "Unusually fast progress rate"
                 );
             }
+        }
+        double zScore = calculateZScore(currentOneRepMax, previousValues);
+
+        if (zScore >= 3.0) {
+            return new AnomalyResult(
+                    true,
+                    round(zScore, 4),
+                    "Statistical outlier based on previous performance"
+            );
         }
 
         return AnomalyResult.normal();
